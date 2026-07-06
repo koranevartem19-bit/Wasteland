@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Wasteland Echoes: Overdrive</title>
+    <style>
+        :root {
+            --bg-main: #06080c;
+            --panel-bg: rgba(18, 22, 32, 0.95);
+            --border-neon: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+            --neon-red: #ff2a5f;
+            --neon-blue: #00f0ff;
+            --neon-green: #39ff14;
+            --neon-gold: #ffb703;
+            --neon-purple: #bf5af2;
+            --grad-accent: linear-gradient(135deg, #ff2a5f, #ff00a0);
+            --grad-blue: linear-gradient(135deg, #00f0ff, #0072ff);
+            --grad-gold: linear-gradient(135deg, #ffb703, #ff6600);
+            --grad-purple: linear-gradient(135deg, #da22ff, #9114ff);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-main); background-image: radial-gradient(circle at 50% 10%, #111827 0%, var(--bg-main) 80%); color: var(--text-main); overflow: hidden; height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
+        
+        #tutorial-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(0,0,0,0.4); z-index: 5000; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; padding: 20px; padding-top: 160px; pointer-events: none; }
+        .tut-card { background: #111622; border: 2px solid var(--neon-blue); border-radius: 16px; padding: 18px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 0 25px rgba(0, 240, 255, 0.5); pointer-events: auto; }
+        
+        .highlight-action { position: relative; z-index: 5500 !important; box-shadow: 0 0 20px var(--neon-blue) !important; border-color: var(--neon-blue) !important; background: rgba(0, 240, 255, 0.2) !important; animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
+
+        #death-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(15, 5, 8, 0.98); z-index: 7000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
+        #gacha-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4, 6, 10, 0.95); z-index: 6000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        
+        .cube { width: 120px; height: 120px; border-radius: 24px; margin-bottom: 30px; animation: cubeSpin 1.2s infinite alternate ease-in-out; }
+        @keyframes cubeSpin { from { transform: rotate(0deg) scale(0.8); } to { transform: rotate(360deg) scale(1.1); } }
+        .reward-card { text-align: center; display: none; }
+
+        .status-bar { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 140px; 
+            background: var(--panel-bg); 
+            border-bottom: 1px solid var(--border-neon); 
+            padding: 12px; 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 8px; 
+            z-index: 999; 
+        }
+        .stat-container { display: flex; flex-direction: column; gap: 2px; }
+        .stat-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; }
+        .progress-bar-outer { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+        .progress-bar-inner { height: 100%; width: 100%; transition: width 0.3s ease; }
+        .meta-info { grid-column: span 2; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; border: 1px solid var(--border-neon); font-size: 11px; gap: 4px; }
+
+        .game-log { 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100dvh;
+            overflow-y: auto; 
+            padding: 14px; 
+            padding-top: 155px; 
+            padding-bottom: 155px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            z-index: 10;
+        }
+        .log-entry { background: var(--panel-bg); border-left: 4px solid var(--text-muted); padding: 12px; border-radius: 6px; font-size: 13.5px; line-height: 1.5; border: 1px solid var(--border-neon); border-left-width: 4px; }
+        .log-entry.system { border-left-color: var(--neon-blue); }
+        .log-entry.combat-win { border-left-color: var(--neon-green); }
+        .log-entry.combat-lose { border-left-color: var(--neon-red); }
+        .log-entry.loot { border-left-color: var(--neon-gold); }
+
+        .screen-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100dvh; 
+            background: var(--bg-main); 
+            z-index: 100; 
+            display: none; 
+            flex-direction: column; 
+            padding: 16px; 
+            padding-top: 155px; 
+            padding-bottom: 155px; 
+            overflow-y: auto; 
+        }
+        .screen-overlay.active { display: flex; }
+        .screen-title { font-size: 13px; font-weight: 800; margin: 12px 0 6px 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; }
+
+        .list-item { background: var(--panel-bg); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-neon); }
+        .map-card { background: var(--panel-bg); border: 1px solid var(--border-neon); padding: 16px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .map-card.current { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0,240,255,0.15); }
+
+        .bp-container { background: rgba(24, 18, 36, 0.75); border: 2px solid var(--neon-purple); border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 15px rgba(191, 90, 242, 0.2); }
+        .bp-header-tabs { display: flex; gap: 6px; }
+        .bp-tab-sub { flex: 1; padding: 8px; font-size: 11px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-neon); color: var(--text-muted); border-radius: 6px; }
+        .bp-tab-sub.active { background: var(--neon-purple); color: #fff; border: none; font-weight: bold; }
+        
+        .pass-tier-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .pass-tier-box.unlocked { border-color: rgba(191, 90, 242, 0.4); background: rgba(191, 90, 242, 0.03); }
+        
+        .track-card { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid transparent; }
+        .track-card.free { background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.15); }
+        .track-card.premium { background: rgba(255, 183, 3, 0.06); border-color: rgba(255, 183, 3, 0.25); }
+        
+        .bp-claim-btn { padding: 4px 8px; font-size: 10px; border-radius: 4px; font-weight: bold; background: var(--neon-blue); border: none; color: #000; }
+        .bp-claim-btn:disabled { background: #2d3748; color: #718096; }
+
+        .bottom-ui-container { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100vw; 
+            background: var(--panel-bg); 
+            border-top: 1px solid var(--border-neon); 
+            z-index: 400; 
+        }
+        .action-panel { padding: 12px 14px 8px 14px; }
+        .buttons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        
+        button { background: rgba(255,255,255,0.04); border: 1px solid var(--border-neon); color: var(--text-main); padding: 14px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        button:active { transform: scale(0.97); }
+        button.primary { background: var(--grad-accent); border: none; }
+        button.success { background: var(--grad-blue); border: none; }
+        button.gold { background: var(--grad-gold); border: none; color: #000; }
+        button.purple { background: var(--grad-purple); border: none; color: #fff; }
+        button:disabled { opacity: 0.25; transform: none; cursor: not-allowed; z-index: 1 !important; }
+
+        .tabs { display: flex; background: #090c12; height: 60px; border-top: 1px solid var(--border-neon); }
+        .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; font-size: 11px; height: 100%; }
+        .tab-btn.active { color: var(--neon-blue); background: rgba(0, 240, 255, 0.02); border-top: 2px solid var(--neon-blue); }
+        .timer-badge { font-size: 10px; color: var(--neon-red); display: block; font-weight: normal; margin-top: 2px;}
+    </style>
+</head>
+<body>
+
+    <div id="death-overlay">
+        <h1 style="color: var(--neon-red); font-size: 32px; margin-bottom: 10px; letter-spacing: 2px;">ВЫ ПОГИБЛИ</h1>
+        <p style="color: var(--text-muted); max-width: 300px; margin-bottom: 30px; font-size: 14px;">Пустошь не прощает ошибок. Но за скромное пожертвование контрабандисты могут вытащить ваше тело...</p>
+        <div style="background: rgba(0,0,0,0.4); padding: 16px; border: 1px solid var(--neon-red); border-radius: 12px; margin-bottom: 30px; min-width: 260px;">
+            <div style="font-size: 12px; color: var(--text-muted);">Будет списано крышек:</div>
+            <div style="font-size: 24px; color: var(--neon-gold); font-weight: 800; margin: 4px 0;"><span id="death-cost-caps">0</span> 🪙</div>
+            <div style="font-size: 12px; color: var(--neon-green);">Вы воскреснете с ОЗ: +<span id="death-heal-hp">0</span> ❤️</div>
+        </div>
+        <button class="primary" style="padding: 16px 40px; font-size: 14px; box-shadow: 0 0 15px var(--neon-red);" onclick="Core.respawn()">Воскреснуть</button>
+    </div>
+
+    <div id="gacha-overlay">
+        <div class="cube" id="gacha-cube"></div>
+        <div class="reward-card" id="gacha-reward">
+            <h2 style="color: var(--neon-gold); margin-bottom: 8px;">НАХОДКА ИЗ ЯЩИКА</h2>
+            <p id="reward-name" style="font-size: 18px; font-weight: 800; margin-bottom: 24px; color: var(--neon-blue);"></p>
+            <button class="primary" id="gacha-close-btn" style="padding: 10px 30px;" onclick="Core.closeGacha()">В инвентарь</button>
+        </div>
+    </div>
+
+    <div id="tutorial-overlay">
+        <div class="tut-card">
+            <h3 id="tut-title" style="color: var(--neon-blue); margin-bottom: 8px;">Обучение</h3>
+            <p id="tut-text" style="font-size: 13.5px; color: #fff; line-height: 1.5; margin-bottom: 14px;"></p>
+            <button class="primary" id="tut-next-btn" style="width: 100%;" onclick="Tut.nextManualStep()">Далее</button>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="stat-container">
+            <div class="stat-header"><span>❤️ ЖИЗНЬ</span><span id="hp-val">50/50</span></div>
+            <div class="progress-bar-outer"><div id="hp-bar" class="progress-bar-inner" style="background: var(--grad-accent);"></div></div>
+        </div>
+        <div class="stat-container">
+            <div class="stat-header"><span>⚡ ЭНЕРГИЯ</span><span id="en-val">100/100</span></div>
+            <div class="progress-bar-outer"><div id="en-bar" class="progress-bar-inner" style="background: var(--grad-blue);"></div></div>
+        </div>
+        <div class="stat-container" style="grid-column: span 2;">
+            <div class="stat-header" style="color: var(--neon-green)"><span>☢️ РАДИАЦИЯ</span><span id="rad-val">0%</span></div>
+            <div class="progress-bar-outer"><div id="rad-bar" class="progress-bar-inner" style="background: var(--neon-green);"></div></div>
+        </div>
+        <div class="meta-info">
+            <div style="color: var(--neon-blue)">🎖️ Лвл: <span id="lvl-val">1</span> (<span id="exp-val">0</span>/<span id="next-exp-val">50</span>)</div>
+            <div style="color: var(--neon-gold)">🪙 <span id="caps-val">30</span></div>
+            <div style="color: var(--neon-purple); font-weight: bold;">🏷️ <span id="vouchers-val">0</span></div>
+            <div id="current-location-badge" style="color: var(--text-muted)">📍 Руины</div>
+        </div>
+    </div>
+
+    <div class="game-log" id="log"></div>
+
+    <div id="screen-inv" class="screen-overlay">
+        <div class="screen-title">⚔️ Доступный Арсенал & Модернизация</div>
+        <div id="weapon-list"></div>
+        <div class="screen-title">🍏 Припасы и Еда</div>
+        <div id="food-list"></div>
+        <div class="screen-title">📦 Ресурсы</div>
+        <div id="inv-list"></div>
+    </div>
+
+    <div id="screen-craft" class="screen-overlay">
+        <div class="screen-title">👨‍🍳 Приготовление пищи</div>
+        <div id="cook-list"></div>
+        <div class="screen-title">🛠️ Верстак Снаряжения</div>
+        <div id="craft-list"></div>
+    </div>
+
+    <div id="screen-map" class="screen-overlay">
+        <div class="screen-title">🗺️ Телепортация по биомам и вызовы Боссов</div>
+        <div id="map-list"></div>
+    </div>
+
+    <div id="screen-shop" class="screen-overlay">
+        <div class="bp-container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="color: var(--neon-purple); font-weight: 900; font-size: 14px;">🌵 ПУСТЫННЫЙ ПРОПУСК</span>
+                    <div style="font-size: 9px; color: var(--neon-gold); font-weight: bold; text-transform: uppercase;">🔥 Самая выгодная акция в игре!</div>
+                </div>
+                <div id="bp-level-badge" style="background: var(--neon-purple); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold;">Лвл 1 (0/20)</div>
+            </div>
+            
+            <div style="display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.2); padding: 6px; border-radius: 6px; border: 1px dashed rgba(255,255,255,0.1);">
+                <div style="font-size: 11px; flex: 1; color: var(--text-main);">Пропустить этап:</div>
+                <button id="bp-buy-level-btn" class="gold" style="padding: 6px 12px; font-size: 11px; height: auto;" onclick="Core.buyBpLevelWithCaps()">+1 Ур. за 50 🪙</button>
+            </div>
+
+            <div class="bp-header-tabs">
+                <button class="bp-tab-sub active" id="bp-sub-rewards" onclick="Core.setBpSubTab('rewards')">🎁 Награды</button>
+                <button class="bp-tab-sub" id="bp-sub-quests" onclick="Core.setBpSubTab('quests')">📜 Задания</button>
+            </div>
+            <div id="bp-premium-status" style="font-size: 11px; text-align: center;"></div>
+            <div id="bp-content-render" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+        <div class="screen-title">📅 Пост Снабжения</div>
+        <div class="list-item" style="border-color: var(--neon-green);">
+            <div>Ежедневный паёк</div>
+            <button id="daily-btn" class="success" style="padding: 8px 16px;" onclick="Core.claimDaily()">Взять</button>
+        </div>
+        <div class="screen-title" style="margin-top: 12px;">🏪 Прямые Поставки Медсредств</div>
+        <div id="direct-shop-list"></div>
+        <div class="screen-title" style="margin-top: 12px;">🏪 Контейнеры</div>
+        <div id="shop-list"></div>
+    </div>
+
+    <div class="bottom-ui-container">
+        <div class="action-panel">
+            <div id="default-actions" class="buttons-grid">
+                <button id="btn-explore" class="primary" onclick="Core.explore()">🚶 Разведка (3⚡)</button>
+                <button id="btn-rest" onclick="Core.rest()">
+                    ⛺ Привал (<span id="rest-count">5</span>/5)
+                    <span id="rest-timer" class="timer-badge" style="display:none;">Откат</span>
+                </button>
+            </div>
+            <div id="combat-actions" style="display: none; flex-direction: column; gap: 8px;">
+                <div class="buttons-grid">
+                    <button id="btn-attack-fast" class="primary" onclick="Core.executeAttack('fast')">⚡ Быстрый выпад</button>
+                    <button id="btn-attack-heavy" class="primary" style="background: var(--grad-gold); color:#000;" onclick="Core.executeAttack('heavy')">💥 Тяжёлый удар</button>
+                </div>
+                <div class="buttons-grid">
+                    <button id="btn-attack-bleed" class="primary" style="background: var(--grad-accent);" onclick="Core.executeAttack('bleed')">🩸 Рассечение</button>
+                    <button id="btn-block" class="success" onclick="Core.executeAttack('block')">🛡️ Занять Блок</button>
+                </div>
+                <button id="btn-flee" style="width:100%;" onclick="Core.executeFlee()">🏃 Сбежать (50%)</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button id="tab-main" class="tab-btn active" onclick="Core.switchTab('main', this)">🌍 Биом</button>
+            <button id="tab-inv" class="tab-btn" onclick="Core.switchTab('inv', this)">🎒 Инвентарь</button>
+            <button id="tab-craft" class="tab-btn" onclick="Core.switchTab('craft', this)">🛠️ Крафт</button>
+            <button id="tab-map" class="tab-btn" onclick="Core.switchTab('map', this)">🗺️ Карта</button>
+            <button id="tab-shop" class="tab-btn" onclick="Core.switchTab('shop', this)">🏪 Магазин</button>
+        </div>
+    </div>
+
+    <script>
+        const Sound = {
+            ctx: null,
+            init() { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} },
+            play(type) { if (!this.ctx) this.init(); if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (!this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.connect(gain); gain.connect(this.ctx.destination); const now = this.ctx.currentTime; if (type === 'click') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); gain.gain.setValueAtTime(0.03, now); osc.start(now); osc.stop(now + 0.05); } else if (type === 'hit') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1, now); osc.start(now); osc.stop(now + 0.08); } else if (type === 'loot') { osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now + 0.1); gain.gain.setValueAtTime(0.08, now); osc.start(now); osc.stop(now + 0.2); } }
+        };
+
+        const Tut = {
+            active: false, step: 0,
+            slides: [
+                { type: "click", trigger: "btn-explore", text: "Добро пожаловать в Пустошь! Нажми кнопку «🚶 Разведка», чтобы исследовать местность." },
+                { type: "click", trigger: "tab-inv", text: "Супер! Давай проверим твои припасы. Нажми снизу на вкладку «🎒 Рюкзак»." },
+                { type: "manual", text: "Здесь хранится твоё оружие, ресурсы и еда. Кнопка «Съесть» восстановит ОЗ, когда ты добудешь или скрафтишь припасы." },
+                { type: "click", trigger: "tab-craft", text: "А еда берется из готовки! Перейди во вкладку «🛠️ Крафт»." },
+                { type: "manual", text: "На верстаке крафта можно жарить мясо крыс для лечения или собирать мощное оружие по чертежам." },
+                { type: "click", trigger: "tab-shop", text: "Аптечки и сундуки покупаются на рынке. Нажми «🏪 Магазин»." },
+                { type: "manual", text: "Тут продаются Мед-Пакеты, Батареи энергии, новый Пустынный Пропуск и Ящики!" },
+                { type: "click", trigger: "tab-map", text: "И последнее — путешествия. Нажми на «🗺️ Карта»." },
+                { type: "manual", text: "По достижении новых уровней и побед над Боссами тут откроются опасные биомы. Возвращаемся в бой!" },
+                { type: "click", trigger: "tab-main", text: "Нажми «🌍 Мир», чтобы закрыть карту. Обучение завершено, удачи!" }
+            ],
+            init() { if(!localStorage.getItem('w_save_v7')) { this.active = true; this.show(); } else { document.getElementById('tutorial-overlay').style.display = 'none'; } },
+            show() {
+                let s = this.slides[this.step];
+                document.getElementById('tut-title').innerText = `Обучение (${this.step + 1}/${this.slides.length})`;
+                document.getElementById('tut-text').innerText = s.text;
+                document.querySelectorAll('.highlight-action').forEach(el => el.classList.remove('highlight-action'));
+                
+                if(s.type === "click") {
+                    document.getElementById('tut-next-btn').innerText = "Нажми подсвеченную кнопку";
+                    document.getElementById('tut-next-btn').disabled = true;
+                    let t = document.getElementById(s.trigger); if(t) t.classList.add('highlight-action');
+                } else {
+                    document.getElementById('tut-next-btn').innerText = "Далее →";
+                    document.getElementById('tut-next-btn').disabled = false;
+                }
+            },
+            actionTriggered(id) { if(!this.active) return; if(this.slides[this.step].trigger === id) { this.step++; if(this.step >= this.slides.length) { this.complete(); } else { this.show(); } } },
+            nextManualStep() { if(!this.active) return; if(this.slides[this.step].type === "manual") { this.step++; if(this.step >= this.slides.length) { this.complete(); } else { this.show(); } } },
+            complete() { this.active = false; document.getElementById('tutorial-overlay').style.display = 'none'; document.querySelectorAll('.highlight-action').forEach(el => el.classList.remove('highlight-action')); }
+        };
+
+        // Генерация наград до 50 уровня с сохранением исходного количества ваучеров
+        const generateBpRewards = () => {
+            const list = [];
+            const oldRewards = [
+                { lvl: 1, free: { name: "Запчасти x2", type: "item", item: "Запчасти", qty: 2 }, prem: { name: "🔫 Самопал", type: "wpn", wpnId: "pistol" } },
+                { lvl: 2, free: { name: "Крышки x5", type: "caps", qty: 5 }, prem: { name: "Запчасти x10", type: "item", item: "Запчасти", qty: 10 } },
+                { lvl: 3, free: { name: "Сырое мясо x1", type: "item", item: "Сырое мясо", qty: 1 }, prem: { name: "🏷️ Ваучеры x3", type: "voucher", qty: 3 } },
+                { lvl: 4, free: { name: "Крышки x10", type: "caps", qty: 10 }, prem: { name: "🔋 Блок x2", type: "energy_pack", qty: 2 } },
+                { lvl: 5, free: { name: "🏷️ Ваучер x1", type: "voucher", qty: 1 }, prem: { name: "💉 Мед-Пакет x3", type: "hp_pack", qty: 3 } },
+                { lvl: 6, free: { name: "Запчасти x3", type: "item", item: "Запчасти", qty: 3 }, prem: { name: "🏷️ Ваучеры x5", type: "voucher", qty: 5 } },
+                { lvl: 7, free: { name: "Жареная крыса x1", type: "food", food: "Жареное мясо крысы", qty: 1 }, prem: { name: "Тяжелый Хлам x5", type: "item", item: "Тяжелый Хлам", qty: 5 } },
+                { lvl: 8, free: { name: "🏷️ Ваучеры x3", type: "voucher", qty: 3 }, prem: { name: "🏷️ Ваучеры x5", type: "voucher", qty: 5 } },
+                { lvl: 9, free: { name: "Крышки x15", type: "caps", qty: 15 }, prem: { name: "🧬 Сыворотка ОЗ x2", type: "maxhp", qty: 2 } },
+                { lvl: 10, free: { name: "🏷️ Ваучеры x6", type: "voucher", qty: 6 }, prem: { name: "🔥 Винтовка Гаусса", type: "wpn", wpnId: "gauss" } }
+            ];
+
+            for (let i = 1; i <= 50; i++) {
+                if (i % 5 === 0 && i <= 50) {
+                    // Перераспределяем старые награды на уровни, кратные 5, сохраняя контент
+                    let oldIdx = (i / 5) * i <= 10 ? (i / 5) - 1 : Math.floor((i - 1) / 5) % oldRewards.length;
+                    let source = oldRewards[oldIdx] || oldRewards[9];
+                    list.push({ lvl: i, free: JSON.parse(JSON.stringify(source.free)), prem: JSON.parse(JSON.stringify(source.prem)) });
+                } else {
+                    // Промежуточные новые уровни (без добавления лишних ваучеров)
+                    list.push({
+                        lvl: i,
+                        free: { name: `Запчасти x${1 + (i%3)}`, type: "item", item: "Запчасти", qty: 1 + (i%3) },
+                        prem: { name: `Крышки x${10 + (i%5)*2}`, type: "caps", qty: 10 + (i%5)*2 }
+                    });
+                }
+            }
+            // Точечно переносим ключевые уникальные предметы в конец, чтобы сохранить мотивацию
+            list[0].prem = oldRewards[0].prem; // Самопал на 1 уровне
+            list[49].prem = oldRewards[9].prem; // Гаусс на 50 уровне
+            
+            // Фиксируем ровно то же количество ваучеров из исходного кода, очищая дубли на других этапах
+            let originalVoucherLevels = [3, 5, 6, 8, 10];
+            let originalVoucherRewards = [
+                { lvl: 3, free: null, prem: { name: "🏷️ Ваучеры x3", type: "voucher", qty: 3 } },
+                { lvl: 5, free: { name: "🏷️ Ваучер x1", type: "voucher", qty: 1 }, prem: null },
+                { lvl: 6, free: null, prem: { name: "🏷️ Ваучеры x5", type: "voucher", qty: 5 } },
+                { lvl: 8, free: { name: "🏷️ Ваучеры x3", type: "voucher", qty: 3 }, prem: { name: "🏷️ Ваучеры x5", type: "voucher", qty: 5 } },
+                { lvl: 10, free: { name: "🏷️ Ваучеры x6", type: "voucher", qty: 6 }, prem: null }
+            ];
+            
+            // Принудительно очищаем автогенерацию ваучеров и ставим их строго на их новые позиции (например, х5 от старых)
+            list.forEach(item => {
+                if(item.free.type === 'voucher') item.free = { name: "Запчасти x3", type: "item", item: "Запчасти", qty: 3 };
+                if(item.prem.type === 'voucher') item.prem = { name: "Крышки x20", type: "caps", qty: 20 };
+            });
+            
+            // Назначаем ваучеры на фиксированные уровни (умноженные на 5, чтобы распределить до 50)
+            originalVoucherLevels.forEach((oldLvl, idx) => {
+                let newLvl = oldLvl * 5;
+                let data = originalVoucherRewards[idx];
+                if(data.free) list[newLvl-1].free = data.free;
+                if(data.prem) list[newLvl-1].prem = data.prem;
+            });
+
+            return list;
+        };
+
+        const DB = {
+            biomes: [
+                { id: 0, name: "🪨 Неоновые Руины", minLvl: 1, bossDefeatedId: null, enemies: [{ name: "Рад-Таракан", hp: 40, dmg: 8, armor: 0, class: "Быстрый", exp: 15 }, { name: "Кибер-Крыса", hp: 67, dmg: 12, armor: 1, class: "Обычный", exp: 25 }], boss: { name: "👑 Взбешенный Минори", hp: 115, dmg: 7, armor: 3, class: "Босс", exp: 120, rewardCaps: 50 } },
+                { id: 1, name: "🏚️ Ржавый Посёлок", minLvl: 10, bossDefeatedId: 0, enemies: [{ name: "Слепой Гуль", hp: 65, dmg: 10, armor: 2, class: "Кровожадный", exp: 35 }, { name: "Сточный Клерк", hp: 80, dmg: 12, armor: 4, class: "Бронированный", exp: 45 }], boss: { name: "👑 Мясник Коллектора", hp: 280, dmg: 20, armor: 8, class: "Босс", exp: 300, rewardCaps: 120 } },
+                { id: 2, name: "🌆 Неоновый Сити-Центр", minLvl: 20, bossDefeatedId: 1, enemies: [{ name: "Дрон-Охотник", hp: 120, dmg: 18, armor: 6, class: "Быстрый", exp: 70 }, { name: "Штурмотрон v5", hp: 160, dmg: 24, armor: 10, class: "Бронированный", exp: 100 }], boss: { name: "👑 Главный Архитектор", hp: 550, dmg: 38, armor: 15, class: "Босс", exp: 600, rewardCaps: 250 } },
+                { id: 3, name: "☢️ Радиоактивный Лес", minLvl: 30, bossDefeatedId: 2, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 500 } },
+                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 1000 } },
+                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 2000 } },
+                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 5000 } },
+                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 15000 } }
+            ],
+            weapons: [
+                { id: "fists", name: "Кулаки", dmg: 5, crit: 5 },
+                { id: "pipe", name: "Ржавая Труба", dmg: 9, crit: 8 },
+                { id: "pistol", name: "Самопал", dmg: 16, crit: 12 },
+                { id: "plasma", name: "Плазменный Резак", dmg: 35, crit: 15 },
+                { id: "gauss", name: "Винтовка Гаусса", dmg: 80, crit: 25 }
+            ],
+            blueprints: [
+                { id: "craft_pipe", name: "Ржавая Труба", reqLvl: 1, cost: { "Запчасти": 4 }, type: "weapon", targetId: "pipe" },
+                { id: "craft_pistol", name: "Самопал", reqLvl: 6, cost: { "Запчасти": 12, "Тяжелый Хлам": 2 }, type: "weapon", targetId: "pistol" },
+                { id: "craft_gauss", name: "Винтовка Гаусса", reqLvl: 45, cost: { "Запчасти": 150, "Тяжелый Хлам": 40, "Ядерная Батарея": 10 }, type: "weapon", targetId: "gauss" }
+            ],
+            cooking: [
+                { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 15 },
+                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 35 }
+            ],
+            lootboxes: [
+                { name: "Скрап-Ящик", price: 15, color: "#00f0ff", maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.7 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.3 }] },
+                { name: "Продуктовый ящик", price: 20, color: "#39ff14", maxVouchers: 3, table: [{ item: "Сырое мясо x2", chance: 0.6 }, { item: "Жареное мясо крысы x1", chance: 0.4 }] },
+                { name: "Сейф Минори", price: 45, color: "#ffb703", maxVouchers: 5, table: [{ item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.4 }, { item: "🔋 Микро-батарея (+20 Энергии)", chance: 0.3 }, { item: "Сырое мясо x3", chance: 0.3 }] }
+            ],
+            bpRewards: generateBpRewards()
+        };
+
+        const Core = {
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 }, activeWeapon: "fists", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [] },
+            combatState: null, dailyClaimed: false, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
+            
+            quests: [
+                { id: "q1", text: "Убить 5 мутантов-крыс", progress: 0, target: 5, points: 20, done: false, trigger: "kill_Кибер-Крыса" },
+                { id: "q2", text: "Убить 3 рад-тараканов", progress: 0, target: 3, points: 20, done: false, trigger: "kill_Рад-Таракан" },
+                { id: "q3", text: "Успешно сбежать из боя", progress: 0, target: 1, points: 15, done: false, trigger: "flee" },
+                { id: "q4", text: "Провести 12 разведок местности", progress: 0, target: 12, points: 25, done: false, trigger: "explore" },
+                { id: "q5", text: "Перекусить на привале 4 раза", progress: 0, target: 4, points: 20, done: false, trigger: "rest" },
+                { id: "q7", text: "Потратить 60 крышек в магазине", progress: 0, target: 60, points: 30, done: false, trigger: "spend_caps" },
+                { id: "q8", text: "Приготовить еду на костре", progress: 0, target: 1, points: 25, done: false, trigger: "craft_food" }
+            ],
+
+            init() { this.load(); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
+            save() { localStorage.setItem('w_save_v7', JSON.stringify({ p: this.p, daily: this.dailyClaimed, restUses: this.restUses, t: this.nextRestTick, q: this.quests })); },
+            load() { 
+                let data = localStorage.getItem('w_save_v7'); 
+                if(data) { 
+                    let parsed = JSON.parse(data); 
+                    this.p = parsed.p; this.dailyClaimed = parsed.daily; this.restUses = parsed.restUses; this.nextRestTick = parsed.t; 
+                    if(parsed.q) this.quests = parsed.q;
+                    if(!this.p.wpnUpgrades) this.p.wpnUpgrades = { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 };
+                    if(!this.p.bossesDefeated) this.p.bossesDefeated = [];
+                    if(this.p.armor === undefined) this.p.armor = 2;
+                    if(this.p.dodgeChance === undefined) this.p.dodgeChance = 8;
+                } 
+            },
+            
+            updateUI() {
+                let allowedMax = Math.max(5, this.p.maxHp - this.p.rad); if (this.p.hp > allowedMax) this.p.hp = allowedMax;
+                document.getElementById('hp-val').innerText = `${this.p.hp}/${allowedMax}`;
+                document.getElementById('hp-bar').style.width = (this.p.hp / this.p.maxHp * 100) + '%';
+                document.getElementById('en-val').innerText = `${this.p.energy}/${this.p.maxEnergy}`;
+                document.getElementById('en-bar').style.width = (this.p.energy / this.p.maxEnergy * 100) + '%';
+                document.getElementById('rad-val').innerText = `${this.p.rad}%`;
+                document.getElementById('rad-bar').style.width = this.p.rad + '%';
+                document.getElementById('lvl-val').innerText = this.p.lvl;
+                document.getElementById('exp-val').innerText = this.p.exp;
+                document.getElementById('next-exp-val').innerText = this.p.nextExp;
+                document.getElementById('caps-val').innerText = this.p.caps;
+                document.getElementById('vouchers-val').innerText = this.p.vouchers;
+                document.getElementById('rest-count').innerText = this.restUses;
+                document.getElementById('current-location-badge').innerText = `📍 ${DB.biomes[this.p.currentBiome].name}`;
+                document.getElementById('daily-btn').disabled = this.dailyClaimed;
+                
+                // Кнопка покупки уровней БП блокируется на капе
+                const buyLvlBtn = document.getElementById('bp-buy-level-btn');
+                if(buyLvlBtn) {
+                    buyLvlBtn.disabled = this.p.bpLvl >= 50 || this.p.caps < 50;
+                }
+
+                this.renderInventory(); this.renderCrafting(); this.renderShop(); this.renderMap(); this.renderBp();
+            },
+            log(msg, type = '') { const box = document.getElementById('log'); const e = document.createElement('div'); e.className = `log-entry ${type}`; e.innerText = msg; box.appendChild(e); box.scrollTop = box.scrollHeight; },
+            getRestTime() { return Math.max(8, Math.round(180 * Math.pow(0.75, this.p.lvl - 1))); },
+
+            loop() {
+                if (this.p.hp <= 0) return;
+                if (this.restUses < 5) {
+                    let period = this.getRestTime() * 1000;
+                    if (!this.nextRestTick) this.nextRestTick = Date.now() + period;
+                    let remaining = Math.ceil((this.nextRestTick - Date.now()) / 1000);
+                    if (remaining <= 0) {
+                        this.restUses++;
+                        this.log(`⛺ Привал готов. Откат: ${this.getRestTime()}с.`, "system");
+                        this.nextRestTick = this.restUses < 5 ? Date.now() + (this.getRestTime() * 1000) : null;
+                        this.save(); this.updateUI();
+                    } else {
+                        let timerBadge = document.getElementById('rest-timer');
+                        if (timerBadge) {
+                            timerBadge.style.display = 'block';
+                            timerBadge.innerText = `+1 через ${remaining}с`;
+                        }
+                    }
+                } else { this.nextRestTick = null; let tb = document.getElementById('rest-timer'); if(tb) tb.style.display = 'none'; }
+            },
+
+            triggerQuest(action, qty = 1) {
+                this.quests.forEach(q => {
+                    if(!q.done && q.trigger === action) {
+                        q.progress += qty;
+                        if(q.progress >= q.target) {
+                            q.done = true; q.progress = q.target;
+                            this.p.bpPoints += q.points;
+                            this.log(`📜 Задание выполнено! +${q.points} очков Пустынного пропуска.`, "system");
+                            this.checkBpLvl();
+                        }
+                    }
+                });
+            },
+
+            checkBpLvl() {
+                while(true) {
+                    let req = this.p.bpLvl * 10; 
+                    if(this.p.bpLvl < 50 && this.p.bpPoints >= req) {
+                        this.p.bpPoints -= req;
+                        this.p.bpLvl++;
+                        this.log(`🌵 Уровень Пустынного Пропуска повышен до ${this.p.bpLvl}!`, "loot");
+                    } else { break; }
+                }
+            },
+
+            // Метод платного пропуска уровня БП за 50 крышек
+            buyBpLevelWithCaps() {
+                if(this.p.bpLvl >= 50) return alert("Достигнут максимальный уровень Болевого Пропуска!");
+                if(this.p.caps < 50) return alert("Недостаточно крышек для покупки уровня!");
+                
+                Sound.play('loot');
+                this.p.caps -= 50;
+                this.p.bpLvl++;
+                this.p.bpPoints = 0; // Сброс очков текущего уровня при покупке
+                this.log(`💰 Уровень пропуска куплен за 50 крышек! Текущий уровень: ${this.p.bpLvl}`, "loot");
+                this.triggerQuest("spend_caps", 50);
+                this.save();
+                this.updateUI();
+            },
+
+            explore() {
+                Sound.play('click'); if (this.combatState || this.p.energy < 3) return;
+                this.p.energy -= 3; Tut.actionTriggered('btn-explore');
+                this.triggerQuest("explore");
+                let roll = Math.random();
+                if (roll < 0.45) {
+                    let c = Math.floor(Math.random() * 6) + 2; this.p.caps += c;
+                    let lootRoll = Math.random();
+                    if(lootRoll < 0.5) { this.p.inv["Запчасти"]++; this.log(`🎁 Найдено: Запчасти x1, Крышки (+${c} 🪙). +10 XP.`, "loot"); }
+                    else if(lootRoll < 0.8) { this.p.inv["Сырое мясо"] = (this.p.inv["Сырое мясо"]||0)+1; this.log(`🥩 Найдено: Сырое мясо x1, Крышки (+${c} 🪙). +10 XP.`, "loot"); }
+                    else { this.p.inv["Тяжелый Хлам"] = (this.p.inv["Тяжелый Хлам"]||0)+1; this.log(`⚙️ Найдено: Тяжелый Хлам x1, Крышки (+${c} 🪙). +15 XP.`, "loot"); }
+                    this.p.exp += 10; this.checkLvl();
+                } else if (roll < 0.85) { this.startCombat(false); } else { this.log("Локация чиста. Ничего интересного."); }
+                this.save(); this.updateUI();
+            },
+
+            rest() {
+                if (this.restUses <= 0) return Sound.play('hit');
+                Sound.play('click'); this.restUses--;
+                this.triggerQuest("rest");
+                this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20);
+                this.log(`⛺ Вы отдохнули на привале. Энергия восстановлена на +20 ед.`);
+                this.save(); this.updateUI();
+            },
+
+            startCombat(isBossFight = false) {
+                let activeBiome = DB.biomes[this.p.currentBiome];
+                if(isBossFight) {
+                    this.combatState = { ...activeBiome.boss, isBoss: true, bleedTicks: 0, stunned: false, maxHp: activeBiome.boss.hp };
+                    this.log(`🚨 ВНИМАНИЕ! Пробужден страж биома: ${this.combatState.name} (ОЗ: ${this.combatState.hp}, Урон: ${this.combatState.dmg}, Броня: ${this.combatState.armor}, Класс: ${this.combatState.class})`, "combat-lose");
+                } else {
+                    let randomEnemy = activeBiome.enemies[Math.floor(Math.random() * activeBiome.enemies.length)];
+                    this.combatState = { ...randomEnemy, isBoss: false, bleedTicks: 0, stunned: false, maxHp: randomEnemy.hp };
+                    this.log(`🚨 Враг обнаружен: [${this.combatState.class}] ${this.combatState.name} (ОЗ: ${this.combatState.hp}, Урон: ${this.combatState.dmg}, Броня: ${this.combatState.armor})`, "combat-lose");
+                }
+                document.getElementById('default-actions').style.display = 'none';
+                document.getElementById('combat-actions').style.display = 'flex';
+            },
+
+            executeAttack(attackType) {
+                if(!this.combatState) return; Sound.play('hit');
+                let currentWpn = DB.weapons.find(w => w.id === this.p.activeWeapon) || DB.weapons[0];
+                let upLvl = this.p.wpnUpgrades[this.p.activeWeapon] || 0;
+                
+                let baseDmg = Math.round(currentWpn.dmg * (1 + upLvl * 0.25));
+                let damageSpread = (Math.random() * 0.4) - 0.2; 
+                let calculatedDmg = Math.round(baseDmg * (1 + damageSpread));
+                
+                let playerCrit = currentWpn.crit + upLvl;
+                let isPlayerCrit = Math.random() * 100 < playerCrit;
+                let playerBlock = false;
+
+                if (attackType === 'fast') {
+                    calculatedDmg = Math.round(calculatedDmg * 0.85); 
+                    playerCrit = 0; 
+                } else if (attackType === 'heavy') {
+                    calculatedDmg = Math.round(calculatedDmg * 1.3); 
+                    playerCrit += 15;
+                    if(Math.random() < 0.35) {
+                        this.combatState.stunned = true;
+                        this.log("💥 Оглушение! Враг пропускает следующий ход.", "system");
+                    }
+                } else if (attackType === 'bleed') {
+                    calculatedDmg = Math.round(calculatedDmg * 0.9);
+                    this.combatState.bleedTicks = 3;
+                    this.log("🩸 Нанесена глубокая рана! Враг истекает кровью.", "combat-lose");
+                } else if (attackType === 'block') {
+                    playerBlock = true;
+                    calculatedDmg = 0;
+                    this.log("🛡️ Вы ушли в глухую оборону, готовясь поглотить урон.");
+                }
+
+                if (calculatedDmg > 0) {
+                    if (isPlayerCrit) { calculatedDmg = Math.round(calculatedDmg * 1.75); }
+                    let netEnemyDmg = Math.max(1, calculatedDmg - this.combatState.armor);
+                    this.combatState.hp = Math.max(0, this.combatState.hp - netEnemyDmg);
+                    this.log(`Вы бьете (${attackType}): -${netEnemyDmg} ОЗ врагу. У него осталось: ${this.combatState.hp} ОЗ. ${isPlayerCrit ? '🔥 КРИТ!' : ''}`);
+                }
+
+                if(this.combatState.hp <= 0) {
+                    this.processVictory();
+                    return;
+                }
+
+                if(this.combatState.bleedTicks > 0) {
+                    let bleedDmg = Math.round(this.combatState.maxHp * 0.05) + 2;
+                    this.combatState.hp = Math.max(0, this.combatState.hp - bleedDmg);
+                    this.combatState.bleedTicks--;
+                    this.log(`🩸 Кровотечение наносит врагу -${bleedDmg} ОЗ. (Осталось: ${this.combatState.hp} ОЗ, ходов дебаффа: ${this.combatState.bleedTicks})`);
+                    if(this.combatState.hp <= 0) { this.processVictory(); return; }
+                }
+
+                if (this.combatState.stunned) {
+                    this.combatState.stunned = false; 
+                } else {
+                    let bossRageMult = 1.0;
+                    if (this.combatState.isBoss && (this.combatState.hp / this.combatState.maxHp < 0.3)) {
+                        bossRageMult = 1.5;
+                        this.log(`😡 БОСС ВПАЛ В ЯРОСТЬ! Его атака становится смертоноснее!`, "combat-lose");
+                    }
+
+                    let enemyBaseDmg = Math.round(this.combatState.dmg * bossRageMult * (1 + (Math.random() * 0.2 - 0.1)));
+                    let isDodge = Math.random() * 100 < this.p.dodgeChance;
+                    
+                    if (isDodge && !playerBlock) {
+                        this.log(`⚡ Уклонение! Вы полностью избежали атаки [${this.combatState.name}].`, "combat-win");
+                    } else {
+                        let finalIncoming = Math.max(1, enemyBaseDmg - this.p.armor);
+                        if (playerBlock) {
+                            finalIncoming = Math.round(finalIncoming * 0.5);
+                            this.log(`🛡️ Блок поглотил половину входящего урона!`);
+                        }
+                        
+                        this.p.hp = Math.max(0, this.p.hp - finalIncoming);
+                        this.log(`💥 ${this.combatState.name} атакует вас: -${finalIncoming} ОЗ. (Ваше здоровье: ${this.p.hp} ОЗ)`, "combat-lose");
+                        
+                        if(this.p.hp <= 0) { this.triggerDeath(); return; }
+                    }
+                }
+
+                this.save(); this.updateUI();
+            },
+
+            processVictory() {
+                if(this.combatState.isBoss) {
+                    this.p.bossesDefeated.push(this.p.currentBiome);
+                    this.p.caps += this.combatState.rewardCaps;
+                    this.log(`🏆 ЛЕГЕНДАРНО! Сверх-босс ${this.combatState.name} пал! Получено крышек: +${this.combatState.rewardCaps} 🪙. Опыт: +${this.combatState.exp} XP.`, "combat-win");
+                } else {
+                    this.log(`🎉 Победа! Противник ${this.combatState.name} уничтожен. +${this.combatState.exp} XP.`, "combat-win");
+                    this.triggerQuest(`kill_${this.combatState.name}`);
+                }
+                this.p.exp += this.combatState.exp; this.checkLvl(); this.endCombat();
+            },
+
+            executeFlee() {
+                if(!this.combatState) return;
+                if(this.combatState.isBoss) return alert("От Босса нельзя сбежать!");
+                if(Math.random() < 0.5) {
+                    let fleeExp = Math.floor(this.combatState.exp / 2);
+                    this.log(`🏃 Успешный тактический побег! Получено частичное ХР: +${fleeExp}.`);
+                    this.triggerQuest("flee");
+                    this.p.exp += fleeExp; this.checkLvl(); this.endCombat();
+                } else {
+                    this.log("❌ Сбежать не удалось! Получен удар в спину.", "combat-lose");
+                    let finalIncoming = Math.max(1, this.combatState.dmg - this.p.armor);
+                    this.p.hp = Math.max(0, this.p.hp - finalIncoming); if(this.p.hp <= 0) this.triggerDeath();
+                    this.save(); this.updateUI();
+                }
+            },
+            endCombat() { this.combatState = null; document.getElementById('combat-actions').style.display = 'none'; document.getElementById('default-actions').style.display = 'grid'; this.save(); this.updateUI(); },
+
+            triggerDeath() {
+                this.p.hp = 0;
+                document.getElementById('death-cost-caps').innerText = this.p.caps;
+                document.getElementById('death-heal-hp').innerText = Math.max(1, this.p.caps);
+                document.getElementById('death-overlay').style.display = 'flex';
+            },
+            respawn() {
+                let conversionHeal = Math.max(5, this.p.caps); this.p.caps = 0; this.p.hp = Math.min(this.p.maxHp, conversionHeal);
+                document.getElementById('death-overlay').style.display = 'none';
+                this.log("🧟 Вы воскресны у костра. Все наличные крышки изъяты мародерами.", "system"); this.endCombat();
+            },
+
+            checkLvl() {
+                if (this.p.exp >= this.p.nextExp) {
+                    this.p.lvl++; this.p.exp -= this.p.nextExp; this.p.nextExp = Math.floor(this.p.nextExp + 25); this.nextRestTick = null;
+                    this.p.maxHp += 5; this.p.armor += 1; 
+                    this.log(`🌟 Уровень повышен: ${this.p.lvl}! Макс ОЗ +5, Броня +1.`, "system");
+                }
+            },
+
+            teleport(biomeId) {
+                Sound.play('click');
+                let target = DB.biomes[biomeId];
+                if (this.p.lvl < target.minLvl) return alert(`Ваш уровень слишком мал! Требуется уровень: ${target.minLvl}`);
+                if (target.bossDefeatedId !== null && !this.p.bossesDefeated.includes(target.bossDefeatedId)) {
+                    return alert(`Переход заблокирован! Сначала победите Босса локации: ${DB.biomes[target.bossDefeatedId].name}`);
+                }
+                this.p.currentBiome = biomeId; this.save(); this.updateUI();
+            },
+
+            eatFood(foodKey) {
+                if((this.p.food[foodKey] || 0) <= 0) return; Sound.play('loot');
+                let foodItem = DB.cooking.find(c => c.name === foodKey); let healVal = foodItem ? foodItem.heal : 10;
+                this.p.food[foodKey]--; let allowedMax = Math.max(5, this.p.maxHp - this.p.rad);
+                this.p.hp = Math.min(allowedMax, this.p.hp + healVal); this.log(`🍏 Употреблено ${foodKey}: +${healVal} ОЗ.`);
+                this.save(); this.updateUI();
+            },
+
+            equipWeapon(wpnId) { Sound.play('click'); this.p.activeWeapon = wpnId; this.log(`⚔️ Экипировано: ${DB.weapons.find(w => w.id === wpnId).name}`); this.save(); this.updateUI(); },
+            
+            upgradeWeapon(wpnId, cost) {
+                if ((this.p.inv["Запчасти"] || 0) < cost) return alert("Недостаточно запчастей для улучшения ствола!");
+                this.p.inv["Запчасти"] -= cost;
+                this.p.wpnUpgrades[wpnId] = (this.p.wpnUpgrades[wpnId] || 0) + 1;
+                Sound.play('loot');
+                this.log(`🔺 Запчасти распределены. Оружие модернизировано!`);
+                this.save(); this.updateUI();
+            },
+
+            buyDirectPack(type) {
+                if(type === 'hp') {
+                    if(this.p.caps < 20) return alert("Мало крышек!"); this.p.caps -= 20; this.triggerQuest("spend_caps", 20);
+                    let allowedMax = Math.max(5, this.p.maxHp - this.p.rad); this.p.hp = Math.min(allowedMax, this.p.hp + 20); this.log("💉 Мед-Пакет: +20 ОЗ.");
+                } else if(type === 'energy') {
+                    if(this.p.caps < 15) return alert("Мало крышек!"); this.p.caps -= 15; this.triggerQuest("spend_caps", 15);
+                    this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); this.log("🔋 Батарейный Блок: +20 Энергии.");
+                }
+                Sound.play('loot'); this.save(); this.updateUI();
+            },
+
+            renderInventory() {
+                const wEl = document.getElementById('weapon-list'); wEl.innerHTML = '';
+                this.p.weaponsOwned.forEach(wId => {
+                    let wpn = DB.weapons.find(w => w.id === wId);
+                    let upLvl = this.p.wpnUpgrades[wId] || 0;
+                    let totalDmg = Math.round(wpn.dmg * (1 + upLvl * 0.25));
+                    let isActive = this.p.activeWeapon === wId;
+                    let upgradeCost = (upLvl + 1) * 5; 
+                    
+                    wEl.innerHTML += `
+                        <div class="list-item" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>🔫 <b>${wpn.name}</b> [Ур. ${upLvl}]</div>
+                                <div style="color: var(--neon-gold)">⚔️ Урон: ${totalDmg} (Крит: ${wpn.crit + upLvl}%)</div>
+                            </div>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="${isActive?'success':'primary'}" style="flex: 1; padding: 6px;" ${isActive?'disabled':''} onclick="Core.equipWeapon('${wId}')">
+                                    ${isActive?'⚡ Активно':'Экипировать'}
+                                </button>
+                                <button class="gold" style="flex: 1; padding: 6px; font-size: 11px; color:#000;" onclick="Core.upgradeWeapon('${wId}', ${upgradeCost})">
+                                    🔺 Апгрейд (🔧 ${upgradeCost})
+                                </button>
+                            </div>
+                        </div>`;
+                });
+
+                const fEl = document.getElementById('food-list'); fEl.innerHTML = ''; let hasFood = false;
+                for(let key in this.p.food) { if(this.p.food[key] > 0) { hasFood = true; fEl.innerHTML += `<div class="list-item"><div>🍏 ${key} (x${this.p.food[key]})</div><button class="success" style="padding:6px 12px;" onclick="Core.eatFood('${key}')">Съесть</button></div>`; } }
+                if(!hasFood) fEl.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:4px;">Нет готовой еды.</div>`;
+
+                const rEl = document.getElementById('inv-list'); rEl.innerHTML = '';
+                for (let k in this.p.inv) { if (this.p.inv[k] >= 0) rEl.innerHTML += `<div class="list-item"><div>📦 ${k}</div><div>x${this.p.inv[k]}</div></div>`; }
+            },
+
+            renderCrafting() {
+                const cEl = document.getElementById('cook-list'); cEl.innerHTML = '';
+                DB.cooking.forEach(recipe => {
+                    let reqs = Object.entries(recipe.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ');
+                    cEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
+                        <div style="display:flex; justify-content:space-between; width:100%;"><b>${recipe.name}</b> <span style="color:var(--neon-green)">+${recipe.heal} ОЗ</span></div>
+                        <div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${reqs}</div>
+                        <button class="success" style="width:100%; padding:6px; font-size:11px;" onclick="Core.craftFood('${recipe.id}')">Приготовить</button>
+                    </div>`;
+                });
+
+                const wEl = document.getElementById('craft-list'); wEl.innerHTML = '';
+                DB.blueprints.forEach(bp => {
+                    let meetsLvl = this.p.lvl >= bp.reqLvl; let wpnData = DB.weapons.find(w => w.id === bp.targetId);
+                    let reqs = Object.entries(bp.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ');
+                    wEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; opacity: ${meetsLvl?1:0.4}">
+                        <div style="display:flex; justify-content:space-between; width:100%;"><b>${bp.name}</b> <span style="color:var(--neon-gold)">Урон: ${wpnData.dmg}</span></div>
+                        <div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${reqs}</div>
+                        <button class="primary" style="width:100%; padding:6px; font-size:11px;" ${meetsLvl?'':'disabled'} onclick="Core.craftWeapon('${bp.id}')">Собрать (Лвл ${bp.reqLvl})</button>
+                    </div>`;
+                });
+            },
+
+            craftFood(id) {
+                let recipe = DB.cooking.find(c => c.id === id);
+                for(let [res, count] of Object.entries(recipe.cost)) { if((this.p.inv[res]||0) < count) return alert("Мало ингредиентов!"); }
+                for(let [res, count] of Object.entries(recipe.cost)) { this.p.inv[res] -= count; }
+                this.p.food[recipe.name] = (this.p.food[recipe.name]||0) + 1;
+                this.triggerQuest("craft_food");
+                this.save(); this.updateUI();
+            },
+
+            craftWeapon(id) {
+                let bp = DB.blueprints.find(b => b.id === id);
+                for(let [res, count] of Object.entries(bp.cost)) { if((this.p.inv[res]||0) < count) return alert("Мало компонентов!"); }
+                if(this.p.weaponsOwned.includes(bp.targetId)) return alert("Уже создано!");
+                for(let [res, count] of Object.entries(bp.cost)) { this.p.inv[res] -= count; }
+                this.p.weaponsOwned.push(bp.targetId); this.save(); this.updateUI();
+            },
+
+            renderMap() {
+                const el = document.getElementById('map-list'); el.innerHTML = '';
+                DB.biomes.forEach(b => {
+                    let isLvlLocked = this.p.lvl < b.minLvl;
+                    let isBossLocked = b.bossDefeatedId !== null && !this.p.bossesDefeated.includes(b.bossDefeatedId);
+                    let isCurrent = this.p.currentBiome === b.id;
+                    
+                    let statusText = "";
+                    if (isLvlLocked) statusText = `🔒 Лвл ${b.minLvl}`;
+                    else if (isBossLocked) statusText = `🔒 Сначала Босс: ${DB.biomes[b.bossDefeatedId].name.split(' ')[1]}`;
+                    else statusText = isCurrent ? `📍 Текущий` : `Доступен`;
+
+                    let btnHtml = (isLvlLocked || isBossLocked) 
+                        ? `<button disabled style="background:#221115; font-size:11px;">${statusText}</button>` 
+                        : (isCurrent ? `<span style="color:var(--neon-blue); font-size:11px; font-weight:bold;">📍 Развернут</span>` : `<button class="success" style="padding:6px 12px; font-size:11px;" onclick="Core.teleport(${b.id})">Перейти</button>`);
+                    
+                    let bossBtn = "";
+                    if (isCurrent && !this.p.bossesDefeated.includes(b.id) && !this.combatState) {
+                        bossBtn = `<button class="primary" style="background:var(--grad-accent); padding:4px 8px; font-size:10px; margin-top:4px;" onclick="Core.startCombat(true)">👁️ Вызвать БОССА биома</button>`;
+                    } else if (this.p.bossesDefeated.includes(b.id)) {
+                        bossBtn = `<div style="font-size:10px; color:var(--neon-green)">🏆 Босс ликвидирован</div>`;
+                    }
+
+                    el.innerHTML += `
+                        <div class="map-card ${isCurrent?'current':''}">
+                            <div>
+                                <div style="font-weight:bold; color:${(isLvlLocked||isBossLocked)?'var(--text-muted)':'#fff'}">${b.name}</div>
+                                ${bossBtn}
+                            </div>
+                            <div>${btnHtml}</div>
+                        </div>`;
+                });
+            },
+
+            renderShop() {
+                const dEl = document.getElementById('direct-shop-list'); dEl.innerHTML = `
+                    <div class="list-item"><div>💉 Мед-Пакет (+20 ОЗ)</div><button class="primary" style="padding: 8px 12px;" onclick="Core.buyDirectPack('hp')">20 🪙</button></div>
+                    <div class="list-item"><div>🔋 Батарейный Блок (+20⚡)</div><button class="primary" style="padding: 8px 12px;" onclick="Core.buyDirectPack('energy')">15 🪙</button></div>
+                `;
+
+                const el = document.getElementById('shop-list'); el.innerHTML = '';
+                DB.lootboxes.forEach((box, idx) => {
+                    el.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; border-left: 4px solid ${box.color}"><div style="font-weight:bold; color:${box.color}">${box.name}</div><button class="gold" style="width:100%; margin-top:4px;" onclick="Core.buyBox(${idx})">📦 Вскрыть за ${box.price} 🪙</button></div>`;
+                });
+            },
+
+            buyBox(idx) {
+                const box = DB.lootboxes[idx]; if (this.p.caps < box.price) return alert("Не хватает крышек!");
+                this.p.caps -= box.price; this.triggerQuest("spend_caps", box.price);
+                const overlay = document.getElementById('gacha-overlay'); const cube = document.getElementById('gacha-cube');
+                const rewardCard = document.getElementById('gacha-reward'); const rName = document.getElementById('reward-name');
+                cube.style.background = box.color; overlay.style.display = 'flex'; cube.style.display = 'block'; rewardCard.style.display = 'none';
+
+                let chosen = "", itemsObtained = []; let rand = Math.random(), accum = 0;
+                for (let i = 0; i < box.table.length; i++) { accum += box.table[i].chance; if (rand <= accum) { chosen = box.table[i].item; break; } }
+
+                if (chosen.includes("🧬")) { this.p.maxHp += 10; this.p.hp = Math.min(this.p.maxHp, this.p.hp + 10); itemsObtained.push(chosen); } 
+                else if (chosen.includes("🔋")) { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); itemsObtained.push(chosen); } 
+                else if (chosen.includes("Жареное")) { this.p.food["Жареное мясо крысы"] = (this.p.food["Жареное мясо крысы"]||0) + 1; itemsObtained.push(chosen); }
+                else { let clean = chosen.split(" x")[0], qty = parseInt(chosen.split(" x")[1]) || 1; this.p.inv[clean] = (this.p.inv[clean] || 0) + qty; itemsObtained.push(chosen); }
+
+                if(Math.random() < 0.15) {
+                    let count = Math.floor(Math.random() * box.maxVouchers) + 1;
+                    this.p.vouchers += count; itemsObtained.push(`🏷️ Ваучеры x${count}`);
+                }
+                let finalRewardString = itemsObtained.join(" + ");
+                setTimeout(() => {
+                    Sound.play('loot'); cube.style.display = 'none'; rName.innerText = finalRewardString; rewardCard.style.display = 'block';
+                    this.log(`📦 Извлечено: ${finalRewardString}`, "loot"); this.save(); this.updateUI();
+                }, 1000);
+            },
+
+            closeGacha() { document.getElementById('gacha-overlay').style.display = 'none'; },
+            claimDaily() { if(this.dailyClaimed) return; this.dailyClaimed = true; this.p.caps += 15; this.save(); this.updateUI(); },
+            
+            setBpSubTab(tab) { this.bpSubTab = tab; document.getElementById('bp-sub-rewards').className = tab==='rewards'?'bp-tab-sub active':'bp-tab-sub'; document.getElementById('bp-sub-quests').className = tab==='quests'?'bp-tab-sub active':'bp-tab-sub'; this.renderBp(); },
+            buyBpPremium() {
+                if(this.p.vouchers < 49) return alert("Недостаточно ваучеров! Нужен премиум-контракт: 49 🏷️");
+                this.p.vouchers -= 49; this.p.bpPremium = true;
+                this.log("🌵 Активирован Элитный контракт Пустынного пропуска!", "loot");
+                this.save(); this.updateUI();
+            },
+
+            claimBpReward(lvl, path) {
+                if(this.p.bpLvl < lvl) return;
+                if(path === 'free') {
+                    if(this.p.bpClaimedFree.includes(lvl)) return;
+                    this.p.bpClaimedFree.push(lvl);
+                    this.rewardDispatcher(DB.bpRewards[lvl-1].free);
+                } else {
+                    if(!this.p.bpPremium || this.p.bpClaimedPrem.includes(lvl)) return;
+                    this.p.bpClaimedPrem.push(lvl);
+                    this.rewardDispatcher(DB.bpRewards[lvl-1].prem);
+                }
+                this.save(); this.updateUI();
+            },
+
+            rewardDispatcher(r) {
+                if(!r) return; Sound.play('loot');
+                if(r.type === 'item') { this.p.inv[r.item] = (this.p.inv[r.item]||0) + r.qty; this.log(`🎁 Награда БП: ${r.item} x${r.qty}`); }
+                else if(r.type === 'caps') { this.p.caps += r.qty; this.log(`🎁 Награда БП: Крышки +${r.qty} 🪙`); }
+                else if(r.type === 'voucher') { this.p.vouchers += r.qty; this.log(`🎁 Награда БП: Ваучеры +${r.qty} 🏷️`); }
+                else if(r.type === 'wpn') { if(!this.p.weaponsOwned.includes(r.wpnId)) this.p.weaponsOwned.push(r.wpnId); this.log(`🎁 Награда БП: Оружие ${r.name}`); }
+                else if(r.type === 'food') { this.p.food[r.food] = (this.p.food[r.food]||0) + r.qty; this.log(`🎁 Награда БП: ${r.food}`); }
+                else if(r.type === 'energy_pack') { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 30); this.log("🎁 Награда БП: Энергия +30"); }
+                else if(r.type === 'hp_pack') { this.p.hp = Math.min(this.p.maxHp, this.p.hp + 40); this.log("🎁 Награда БП: Восстановление ОЗ +40"); }
+                else if(r.type === 'maxhp') { this.p.maxHp += 20; this.log("🎁 Награда БП: Лимит здоровья увеличен на +20 ОЗ"); }
+            },
+
+            renderBp() {
+                let reqPoints = this.p.bpLvl * 10;
+                document.getElementById('bp-level-badge').innerText = this.p.bpLvl >= 50 ? "МАКС УРОВЕНЬ" : `Лвл ${this.p.bpLvl} (${this.p.bpPoints}/${reqPoints})`;
+                let statusEl = document.getElementById('bp-premium-status');
+                if(this.p.bpPremium) { statusEl.innerHTML = `<span style="color: var(--neon-gold); font-weight:bold;">✨ ПУСТЫННЫЙ ПРЕМИУМ АКТИВЕН</span>`; }
+                else { statusEl.innerHTML = `<button class="purple" style="padding:4px 10px; font-size:11px; border-radius:6px; margin: 4px 0;" onclick="Core.buyBpPremium()">Открыть Премиум (49 🏷️)</button>`; }
+
+                let container = document.getElementById('bp-content-render'); container.innerHTML = '';
+                if(this.bpSubTab === 'rewards') {
+                    DB.bpRewards.forEach(r => {
+                        let isLvlUnlocked = this.p.bpLvl >= r.lvl;
+                        let freeClaimed = this.p.bpClaimedFree.includes(r.lvl);
+                        let premClaimed = this.p.bpClaimedPrem.includes(r.lvl);
+
+                        let freeBtn = freeClaimed ? "✅" : (isLvlUnlocked ? `<button class="bp-claim-btn" onclick="Core.claimBpReward(${r.lvl}, 'free')">Взять</button>` : "🔒");
+                        let premBtn = premClaimed ? "✅" : ((isLvlUnlocked && this.p.bpPremium) ? `<button class="bp-claim-btn" style="background:var(--neon-gold)" onclick="Core.claimBpReward(${r.lvl}, 'prem')">Взять</button>` : "🔒");
+
+                        container.innerHTML += `
+                        <div class="pass-tier-box ${isLvlUnlocked?'unlocked':''}">
+                            <div style="font-size:11px; font-weight:900; color:var(--neon-purple)">ЭТАП №${r.lvl} ${isLvlUnlocked?'🔓':'🔒'}</div>
+                            <div class="track-card free">
+                                <div>⚪ Бесплатно: <span style="color:#fff">${r.free ? r.free.name : 'Пусто'}</span></div>
+                                <div>${freeBtn}</div>
+                            </div>
+                            <div class="track-card premium">
+                                <div>🟡 Премиум: <span style="color:var(--neon-gold)">${r.prem ? r.prem.name : 'Пусто'}</span></div>
+                                <div>${premBtn}</div>
+                            </div>
+                        </div>`;
+                    });
+                } else {
+                    this.quests.forEach(q => {
+                        container.innerHTML += `<div class="list-item" style="margin-bottom:4px; padding:8px;">
+                            <div style="font-size:11px;">
+                                <b>${q.text}</b>
+                                <div style="color:var(--text-muted)">Прогресс: ${q.progress}/${q.target} (+${q.points} очков)</div>
+                            </div>
+                            <div>${q.done?'✅':''}</div>
+                        </div>`;
+                    });
+                }
+            },
+
+            switchTab(tab, btn) {
+                Sound.play('click');
+                document.querySelectorAll('.screen-overlay').forEach(e => e.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+                
+                btn.classList.add('active');
+                
+                if (tab === 'main') {
+                    document.getElementById('log').style.display = 'flex';
+                } else {
+                    document.getElementById('log').style.display = 'none';
+                    document.getElementById(`screen-${tab}`).classList.add('active');
+                }
+                Tut.actionTriggered(btn.id);
+            }
+        };
+
+        window.onload = () => Core.init();
+    </script>
+</body>
+</html>
