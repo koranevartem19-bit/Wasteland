@@ -64,19 +64,71 @@
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
 
         #death-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(15, 5, 8, 0.98); z-index: 7000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
-        #gacha-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4, 6, 10, 0.95); z-index: 6000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        #gacha-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: radial-gradient(ellipse at center top, rgba(20,30,60,0.7) 0%, rgba(4, 6, 10, 0.95) 70%); z-index: 6000; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
         
-        .cube { width: 120px; height: 120px; border-radius: 24px; margin-bottom: 30px; animation: cubeShake 0.45s infinite ease-in-out; }
-        @keyframes cubeShake { 0%, 100% { transform: rotate(-8deg) scale(1); } 25% { transform: rotate(8deg) scale(1.06); } 50% { transform: rotate(-5deg) scale(0.95); } 75% { transform: rotate(5deg) scale(1.04); } }
-        .cube.cube-burst { animation: cubeBurst 0.3s ease-out forwards; }
-        @keyframes cubeBurst { 0% { transform: scale(1) rotate(0); opacity: 1; } 100% { transform: scale(1.8) rotate(15deg); opacity: 0; } }
+        .crate-scene { perspective: 1000px; margin-bottom: 40px; }
+        .crate { position: relative; width: 140px; height: 130px; transform-style: preserve-3d; animation: crateShake 0.55s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95); --box-color: #00f0ff; }
+        .crate.opening { animation: crateShakeIntense 0.12s infinite; }
+        .crate.opened { animation: none; transform: none; }
+        
+        @keyframes crateShake { 0%, 100% { transform: rotateZ(-3deg) rotateY(2deg); } 50% { transform: rotateZ(3deg) rotateY(-2deg); } }
+        @keyframes crateShakeIntense { 0%, 100% { transform: rotateZ(-8deg) rotateY(4deg) scale(1.02); } 50% { transform: rotateZ(8deg) rotateY(-4deg) scale(0.98); } }
+        
+        /* Тело ящика (дерево/металл) */
+        .crate-body { position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; background: linear-gradient(155deg, #4a4a5a 0%, #2a2a3a 50%, #1a1a2a 100%); border-radius: 8px 8px 10px 10px; box-shadow: inset 0 1px 3px rgba(255,255,255,0.15), inset 0 -2px 6px rgba(0,0,0,0.8), 0 12px 28px rgba(0,0,0,0.7); border: 2px solid rgba(0,0,0,0.5); }
+        .crate-body::before { content: ''; position: absolute; inset: 2px; border-radius: 6px 6px 8px 8px; background: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0,0,0,0.2) 8px, rgba(0,0,0,0.2) 9px); }
+        
+        /* Полосы на боках */
+        .crate-bands { position: absolute; top: 15%; left: 8%; width: 6px; height: 50%; background: linear-gradient(90deg, #8b7355 0%, #6a5a4a 50%, #5a4a3a 100%); border-radius: 2px; box-shadow: inset 0 1px 2px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.6); }
+        .crate-bands.right { left: auto; right: 8%; }
+        
+        /* Замок посередине */
+        .crate-lock { position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); font-size: 22px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); z-index: 10; }
+        
+        /* Крышка с петлями */
+        .crate-lid { position: absolute; top: -3px; left: 0; width: 100%; height: 32%; background: linear-gradient(160deg, #5a5a6a 0%, #3a3a4a 50%, #2a2a3a 100%); border-radius: 10px 10px 6px 6px; transform-origin: bottom center; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.25, 1.2, 0.4, 1); box-shadow: inset 0 1px 3px rgba(255,255,255,0.1), inset 0 -1px 2px rgba(0,0,0,0.8), 0 8px 16px rgba(0,0,0,0.6); border: 2px solid rgba(0,0,0,0.5); z-index: 20; }
+        .crate-lid::before { content: ''; position: absolute; inset: 1px; border-radius: 9px 9px 5px 5px; background: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0,0,0,0.15) 8px, rgba(0,0,0,0.15) 9px); }
+        
+        /* Петли на крышке */
+        .crate-hinge { position: absolute; width: 12px; height: 8px; background: linear-gradient(180deg, #b8860b 0%, #8b6914 100%); border-radius: 2px; top: -2px; box-shadow: inset 0 1px 2px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.5); }
+        .crate-hinge.left { left: 16px; }
+        .crate-hinge.right { right: 16px; }
+        
+        .crate.opened .crate-lid { transform: rotateX(-140deg) translateY(-8px); }
+        
+        /* Светло-темный блеск внутри при открытии */
+        .crate-inner-glow { position: absolute; top: 8%; left: 5%; width: 90%; height: 60%; background: radial-gradient(ellipse 60% 80% at 50% 20%, rgba(255,255,255,0.08), transparent); opacity: 0; border-radius: 6px; pointer-events: none; }
+        .crate.opened .crate-inner-glow { animation: innerGlowFlash 0.6s ease-out; }
+        @keyframes innerGlowFlash { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+        
+        /* Свечение при открытии */
+        .crate-glow { position: absolute; inset: -45px; border-radius: 50%; background: radial-gradient(circle, var(--box-color) 0%, transparent 70%); opacity: 0; filter: blur(32px); pointer-events: none; z-index: 5; }
+        .crate.opened .crate-glow { animation: crateGlowPulse 1s ease-out; }
+        @keyframes crateGlowPulse { 0% { opacity: 0; transform: scale(0.3); } 35% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(2); } }
+        
+        /* Награда вылезает из ящика */
+        .reward-emerge { position: absolute; left: 50%; bottom: 35%; transform: translate(-50%, 20px) scale(0); opacity: 0; z-index: 15; font-size: 56px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.7)); text-shadow: 0 0 20px var(--box-color); }
+        .crate.opened .reward-emerge { animation: rewardEmergeFloat 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes rewardEmergeFloat { 
+          0% { transform: translate(-50%, 30px) scale(0) rotateZ(-45deg); opacity: 0; } 
+          45% { transform: translate(-50%, -110px) scale(1.4) rotateZ(8deg); opacity: 1; } 
+          100% { transform: translate(-50%, -95px) scale(1) rotateZ(0deg); opacity: 1; } 
+        }
+        
+        .gacha-burst { position: absolute; top: 50%; left: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 6001; display: none; }
+        .gacha-burst.active { display: block; animation: burstRing 0.7s ease-out forwards; }
+        @keyframes burstRing { 0% { box-shadow: 0 0 0 0 var(--burst-color, #fff); opacity: 1; } 100% { box-shadow: 0 0 0 180px var(--burst-color, #fff); opacity: 0; } }
 
-        .gacha-burst { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 6001; display: none; }
-        .gacha-burst.active { display: block; animation: burstRing 0.6s ease-out forwards; }
-        @keyframes burstRing { 0% { box-shadow: 0 0 0 0 var(--burst-color, #fff); opacity: 1; } 100% { box-shadow: 0 0 0 160px var(--burst-color, #fff); opacity: 0; } }
-
-        .reward-card { text-align: center; display: none; background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: var(--glass-shadow); animation: rewardPop 0.45s cubic-bezier(.34,1.56,.64,1); }
-        @keyframes rewardPop { 0% { opacity: 0; transform: scale(0.4) translateY(10px); } 60% { opacity: 1; } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .reward-card { text-align: center; display: none; position: relative; background: linear-gradient(155deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%), rgba(15, 20, 35, 0.8); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 2px solid rgba(255,255,255,0.25); border-radius: 24px; padding: 28px 20px; max-width: 320px; box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15); animation: rewardCardSlideUp 0.65s cubic-bezier(0.25, 1.4, 0.4, 1); }
+        .reward-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 100% at 50% 0%, rgba(var(--reward-color-r, 0), var(--reward-color-g, 240), var(--reward-color-b, 255), 0.15) 0%, transparent 70%); border-radius: 22px; pointer-events: none; }
+        @keyframes rewardCardSlideUp { 0% { opacity: 0; transform: translateY(30px) scale(0.9); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .reward-icon { font-size: 64px; margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); animation: rewardIconBounce 0.6s cubic-bezier(0.25, 1.5, 0.4, 1); }
+        @keyframes rewardIconBounce { 0% { transform: scale(0) rotateZ(-30deg); } 60% { transform: scale(1.15); } 100% { transform: scale(1) rotateZ(0); } }
+        
+        .reward-title { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+        .reward-name { font-size: 16px; font-weight: 800; color: var(--reward-color, #00f0ff); text-shadow: 0 0 12px var(--reward-color, #00f0ff); margin-bottom: 16px; line-height: 1.3; }
+        .reward-button { padding: 10px 26px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
          @keyframes enemyAppear{
 
 0%{
@@ -359,11 +411,38 @@ onclick="Core.declineEncounter()">
 </div>
 <div id="gacha-overlay">
         <div class="gacha-burst" id="gacha-burst"></div>
-        <div class="cube" id="gacha-cube"></div>
+        
+        <div class="crate-scene">
+            <div class="crate" id="gacha-crate">
+                <div class="crate-glow" id="crate-glow"></div>
+                <div class="crate-inner-glow"></div>
+                
+                <!-- Тело ящика -->
+                <div class="crate-body"></div>
+                
+                <!-- Полосы по бокам -->
+                <div class="crate-bands"></div>
+                <div class="crate-bands right"></div>
+                
+                <!-- Замок -->
+                <div class="crate-lock">🔒</div>
+                
+                <!-- Крышка с петлями -->
+                <div class="crate-lid">
+                    <div class="crate-hinge left"></div>
+                    <div class="crate-hinge right"></div>
+                </div>
+                
+                <!-- Награда вылезает из ящика -->
+                <div class="reward-emerge" id="reward-emerge"></div>
+            </div>
+        </div>
+        
         <div class="reward-card" id="gacha-reward">
-            <h2 style="color: var(--neon-gold); margin-bottom: 8px;">НАХОДКА ИЗ ЯЩИКА</h2>
-            <p id="reward-name" style="font-size: 18px; font-weight: 800; margin-bottom: 24px; color: var(--neon-blue);"></p>
-            <button class="primary" id="gacha-close-btn" style="padding: 10px 30px;" onclick="Core.closeGacha()">В инвентарь</button>
+            <div class="reward-icon" id="reward-icon"></div>
+            <div class="reward-title">Награда</div>
+            <div class="reward-name" id="reward-name"></div>
+            <button class="primary reward-button" id="gacha-close-btn" onclick="Core.closeGacha()">Принять</button>
         </div>
     </div>
 
@@ -1296,39 +1375,68 @@ startCombat(isBossFight = false) {
             buyBox(idx) {
                 const box = DB.lootboxes[idx]; if (this.p.caps < box.price) return alert("Не хватает крышек!");
                 this.p.caps -= box.price; this.triggerQuest("spend_caps", box.price);
-                const overlay = document.getElementById('gacha-overlay'); const cube = document.getElementById('gacha-cube');
-                const rewardCard = document.getElementById('gacha-reward'); const rName = document.getElementById('reward-name');
+                
+                const overlay = document.getElementById('gacha-overlay');
+                const crate = document.getElementById('gacha-crate');
+                const rewardEmerge = document.getElementById('reward-emerge');
+                const rewardCard = document.getElementById('gacha-reward');
+                const rewardIcon = document.getElementById('reward-icon');
+                const rName = document.getElementById('reward-name');
                 const burst = document.getElementById('gacha-burst');
-
-                cube.style.background = box.color; cube.style.boxShadow = `0 0 40px ${box.color}`; cube.classList.remove('cube-burst');
-                overlay.style.display = 'flex'; cube.style.display = 'block'; rewardCard.style.display = 'none';
-                burst.style.setProperty('--burst-color', box.color); burst.classList.remove('active');
-
-                let chosen = "", itemsObtained = []; let rand = Math.random(), accum = 0;
+                const crateGlow = document.getElementById('crate-glow');
+                
+                // Установка цвета ящика
+                crate.style.setProperty('--box-color', box.color);
+                rewardCard.style.setProperty('--reward-color', box.color);
+                
+                // Парсим цвет в RGB для градиента карточки
+                let rgb = box.color.match(/\w\w/g).map(x => parseInt(x, 16));
+                rewardCard.style.setProperty('--reward-color-r', rgb[0]);
+                rewardCard.style.setProperty('--reward-color-g', rgb[1]);
+                rewardCard.style.setProperty('--reward-color-b', rgb[2]);
+                
+                overlay.style.display = 'flex';
+                crate.classList.remove('opened');
+                rewardCard.style.display = 'none';
+                burst.classList.remove('active');
+                
+                // Выбираем награду
+                let chosen = "", chosenIcon = "📦"; let rand = Math.random(), accum = 0;
                 for (let i = 0; i < box.table.length; i++) { accum += box.table[i].chance; if (rand <= accum) { chosen = box.table[i].item; break; } }
-
-                if (chosen.includes("🧬")) { this.p.maxHp += 10; this.p.hp = Math.min(this.p.maxHp, this.p.hp + 10); itemsObtained.push(chosen); } 
-                else if (chosen.includes("🔋")) { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); itemsObtained.push(chosen); } 
-                else if (chosen.includes("Жареное")) { this.p.food["Жареное мясо крысы"] = (this.p.food["Жареное мясо крысы"]||0) + 1; itemsObtained.push(chosen); }
-                else if (chosen.includes("Привал")) { this.restUses = Math.min(5, this.restUses + 1); itemsObtained.push(chosen); }
-                else { let clean = chosen.split(" x")[0], qty = parseInt(chosen.split(" x")[1]) || 1; this.p.inv[clean] = (this.p.inv[clean] || 0) + qty; itemsObtained.push(chosen); }
-
+                
+                if (chosen.includes("🧬")) { this.p.maxHp += 10; this.p.hp = Math.min(this.p.maxHp, this.p.hp + 10); chosenIcon = "🧬"; } 
+                else if (chosen.includes("🔋")) { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); chosenIcon = "🔋"; } 
+                else if (chosen.includes("Жареное")) { this.p.food["Жареное мясо крысы"] = (this.p.food["Жареное мясо крысы"]||0) + 1; chosenIcon = "🍗"; }
+                else if (chosen.includes("Привал")) { this.restUses = Math.min(5, this.restUses + 1); chosenIcon = "⛺"; }
+                else { let clean = chosen.split(" x")[0], qty = parseInt(chosen.split(" x")[1]) || 1; this.p.inv[clean] = (this.p.inv[clean] || 0) + qty; chosenIcon = clean.includes("Запчасти") ? "⚙️" : clean.includes("мясо") ? "🥩" : "⚙️"; }
+                
                 if(Math.random() < 0.15) {
                     let count = Math.floor(Math.random() * box.maxVouchers) + 1;
-                    this.p.vouchers += count; itemsObtained.push(`🏷️ Ваучеры x${count}`);
+                    this.p.vouchers += count; chosen += ` + 🏷️ x${count}`;
                 }
-                let finalRewardString = itemsObtained.join(" + ");
-
+                
+                rewardEmerge.textContent = chosenIcon;
+                
+                // Фаза 1: трясём ящик 700ms
+                crate.classList.add('opening');
+                
                 setTimeout(() => {
-                    // Ящик "лопается", вспышка разлетается
-                    cube.classList.add('cube-burst');
+                    // Фаза 2: открываем крышку, вспышка, награда вылезает
+                    crate.classList.remove('opening');
+                    crate.classList.add('opened');
+                    burst.style.setProperty('--burst-color', box.color);
                     burst.classList.add('active');
                     Sound.play('loot');
+                    
+                    // Фаза 3: показываем карточку награды после вылезания награды
                     setTimeout(() => {
-                        cube.style.display = 'none'; cube.classList.remove('cube-burst'); burst.classList.remove('active');
-                        rName.innerText = finalRewardString; rewardCard.style.display = 'block';
-                        this.log(`📦 Извлечено: ${finalRewardString}`, "loot"); this.save(); this.updateUI();
-                    }, 320);
+                        rewardIcon.textContent = chosenIcon;
+                        rName.innerText = chosen;
+                        rewardCard.style.display = 'block';
+                        this.log(`📦 Извлечено: ${chosen}`, "loot"); 
+                        this.save(); 
+                        this.updateUI();
+                    }, 900);
                 }, 700);
             },
 
