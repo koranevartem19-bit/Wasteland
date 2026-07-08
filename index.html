@@ -10,7 +10,7 @@
             --panel-bg: rgba(18, 22, 32, 0.95);
             --border-neon: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
-            --text-muted: #64748b;
+            --text-muted: #a3b0c2;
             --neon-red: #ff2a5f;
             --neon-blue: #00f0ff;
             --neon-green: #39ff14;
@@ -20,13 +20,45 @@
             --grad-blue: linear-gradient(135deg, #00f0ff, #0072ff);
             --grad-gold: linear-gradient(135deg, #ffb703, #ff6600);
             --grad-purple: linear-gradient(135deg, #da22ff, #9114ff);
+
+            --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 100%), rgba(8, 10, 16, 0.5);
+            --glass-bg-strong: linear-gradient(145deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 100%), rgba(10, 12, 18, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.38);
+            --glass-blur: 36px;
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+            --glass-shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-main); background-image: radial-gradient(circle at 50% 10%, #111827 0%, var(--bg-main) 80%); color: var(--text-main); overflow: hidden; height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
+        body.no-glass {
+            --glass-bg: var(--panel-bg);
+            --glass-bg-strong: var(--panel-bg);
+            --glass-border: var(--border-neon);
+            --glass-blur: 0px;
+            --glass-shadow: none;
+            --glass-shadow-soft: none;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, sans-serif; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55); }
+        body { background-color: var(--bg-main); background-image: radial-gradient(circle at 50% 10%, #111827 0%, var(--bg-main) 80%); color: var(--text-main); overflow: hidden; height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); position: relative; }
+        body.no-glass * { text-shadow: none; }
+
+        #neon-bg-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .neon-blob { position: absolute; opacity: 0.7; mix-blend-mode: screen; will-change: transform, filter, border-radius; }
+        .blob1 { width: 60vw; height: 60vw; background: var(--neon-blue); top: -22%; left: -18%; animation: blobMove1 24s ease-in-out infinite alternate, blobMorphA 10s ease-in-out infinite alternate, blobHue 22s linear infinite; }
+        .blob2 { width: 55vw; height: 55vw; background: var(--neon-purple); bottom: -25%; right: -15%; animation: blobMove2 29s ease-in-out infinite alternate, blobMorphB 12s ease-in-out infinite alternate, blobHue 26s linear infinite reverse; }
+        .blob3 { width: 45vw; height: 45vw; background: var(--neon-red); top: 32%; right: -18%; animation: blobMove3 21s ease-in-out infinite alternate, blobMorphA 8s ease-in-out infinite alternate-reverse, blobHue 19s linear infinite; }
+        .blob4 { width: 42vw; height: 42vw; background: var(--neon-gold); bottom: 8%; left: -18%; animation: blobMove4 27s ease-in-out infinite alternate, blobMorphB 11s ease-in-out infinite alternate, blobHue 24s linear infinite reverse; }
+        @keyframes blobMove1 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(12%, 16%) scale(1.28); } 100% { transform: translate(-9%, 7%) scale(0.88); } }
+        @keyframes blobMove2 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-15%, -11%) scale(1.22); } 100% { transform: translate(7%, -15%) scale(0.86); } }
+        @keyframes blobMove3 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-17%, 11%) scale(0.84); } 100% { transform: translate(11%, -9%) scale(1.22); } }
+        @keyframes blobMove4 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(15%, -13%) scale(1.16); } 100% { transform: translate(-11%, 11%) scale(0.88); } }
+        @keyframes blobMorphA { 0% { border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; } 100% { border-radius: 63% 37% 41% 59% / 55% 62% 38% 45%; } }
+        @keyframes blobMorphB { 0% { border-radius: 55% 45% 35% 65% / 60% 40% 60% 40%; } 100% { border-radius: 35% 65% 60% 40% / 40% 55% 45% 60%; } }
+        @keyframes blobHue { 0% { filter: blur(80px) hue-rotate(0deg); } 100% { filter: blur(80px) hue-rotate(360deg); } }
+        body.no-glass #neon-bg-layer { display: none; }
         
         #tutorial-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(0,0,0,0.4); z-index: 5000; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; padding: 20px; padding-top: 160px; pointer-events: none; }
-        .tut-card { background: #111622; border: 2px solid var(--neon-blue); border-radius: 16px; padding: 18px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 0 25px rgba(0, 240, 255, 0.5); pointer-events: auto; }
+        .tut-card { background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 2px solid var(--neon-blue); border-radius: 20px; padding: 18px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), var(--glass-shadow-soft); pointer-events: auto; }
         
         .highlight-action { position: relative; z-index: 5500 !important; box-shadow: 0 0 20px var(--neon-blue) !important; border-color: var(--neon-blue) !important; background: rgba(0, 240, 255, 0.2) !important; animation: pulse 1.2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
@@ -34,18 +66,41 @@
         #death-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(15, 5, 8, 0.98); z-index: 7000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
         #gacha-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4, 6, 10, 0.95); z-index: 6000; display: none; flex-direction: column; justify-content: center; align-items: center; }
         
-        .cube { width: 120px; height: 120px; border-radius: 24px; margin-bottom: 30px; animation: cubeSpin 1.2s infinite alternate ease-in-out; }
-        @keyframes cubeSpin { from { transform: rotate(0deg) scale(0.8); } to { transform: rotate(360deg) scale(1.1); } }
-        .reward-card { text-align: center; display: none; }
+        .cube { width: 120px; height: 120px; border-radius: 24px; margin-bottom: 30px; animation: cubeShake 0.45s infinite ease-in-out; }
+        @keyframes cubeShake { 0%, 100% { transform: rotate(-8deg) scale(1); } 25% { transform: rotate(8deg) scale(1.06); } 50% { transform: rotate(-5deg) scale(0.95); } 75% { transform: rotate(5deg) scale(1.04); } }
+        .cube.cube-burst { animation: cubeBurst 0.3s ease-out forwards; }
+        @keyframes cubeBurst { 0% { transform: scale(1) rotate(0); opacity: 1; } 100% { transform: scale(1.8) rotate(15deg); opacity: 0; } }
 
+        .gacha-burst { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 6001; display: none; }
+        .gacha-burst.active { display: block; animation: burstRing 0.6s ease-out forwards; }
+        @keyframes burstRing { 0% { box-shadow: 0 0 0 0 var(--burst-color, #fff); opacity: 1; } 100% { box-shadow: 0 0 0 160px var(--burst-color, #fff); opacity: 0; } }
+
+        .reward-card { text-align: center; display: none; background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: var(--glass-shadow); animation: rewardPop 0.45s cubic-bezier(.34,1.56,.64,1); }
+        @keyframes rewardPop { 0% { opacity: 0; transform: scale(0.4) translateY(10px); } 60% { opacity: 1; } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+         @keyframes enemyAppear{
+
+0%{
+opacity:0;
+transform:scale(.8);
+}
+
+100%{
+opacity:1;
+transform:scale(1);
+}
+
+}
         .status-bar { 
             position: fixed; 
             top: 0; 
             left: 0; 
             width: 100vw; 
-            height: 140px; 
-            background: var(--panel-bg); 
-            border-bottom: 1px solid var(--border-neon); 
+            height: 150px; 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+            border-bottom: 1px solid var(--glass-border); 
+            box-shadow: var(--glass-shadow);
             padding: 12px; 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -56,7 +111,7 @@
         .stat-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; }
         .progress-bar-outer { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
         .progress-bar-inner { height: 100%; width: 100%; transition: width 0.3s ease; }
-        .meta-info { grid-column: span 2; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; border: 1px solid var(--border-neon); font-size: 11px; gap: 4px; }
+        .meta-info { grid-column: span 2; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); padding: 8px; border-radius: 12px; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); font-size: 11px; gap: 4px; }
 
         .game-log { 
             position: fixed;
@@ -66,14 +121,14 @@
             height: 100dvh;
             overflow-y: auto; 
             padding: 14px; 
-            padding-top: 155px; 
+            padding-top: 165px; 
             padding-bottom: 155px; 
             display: flex; 
             flex-direction: column; 
             gap: 10px; 
             z-index: 10;
         }
-        .log-entry { background: var(--panel-bg); border-left: 4px solid var(--text-muted); padding: 12px; border-radius: 6px; font-size: 13.5px; line-height: 1.5; border: 1px solid var(--border-neon); border-left-width: 4px; }
+        .log-entry { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border-left: 4px solid var(--text-muted); padding: 12px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); border-left-width: 4px; }
         .log-entry.system { border-left-color: var(--neon-blue); }
         .log-entry.combat-win { border-left-color: var(--neon-green); }
         .log-entry.combat-lose { border-left-color: var(--neon-red); }
@@ -85,35 +140,38 @@
             left: 0; 
             width: 100vw; 
             height: 100dvh; 
-            background: var(--bg-main); 
+            background: rgba(6, 8, 12, 0.55); 
+            backdrop-filter: blur(30px) saturate(160%);
+            -webkit-backdrop-filter: blur(30px) saturate(160%);
             z-index: 100; 
             display: none; 
             flex-direction: column; 
             padding: 16px; 
-            padding-top: 155px; 
+            padding-top: 165px; 
             padding-bottom: 155px; 
             overflow-y: auto; 
         }
+        body.no-glass .screen-overlay { background: var(--bg-main); backdrop-filter: none; }
         .screen-overlay.active { display: flex; }
         .screen-title { font-size: 13px; font-weight: 800; margin: 12px 0 6px 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; }
 
-        .list-item { background: var(--panel-bg); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-neon); }
-        .map-card { background: var(--panel-bg); border: 1px solid var(--border-neon); padding: 16px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .map-card.current { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0,240,255,0.15); }
+        .list-item { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); padding: 12px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); }
+        .map-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); padding: 16px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .map-card.current { border-color: var(--neon-blue); box-shadow: 0 0 14px rgba(0,240,255,0.35), var(--glass-shadow-soft); }
 
-        .bp-container { background: rgba(24, 18, 36, 0.75); border: 2px solid var(--neon-purple); border-radius: 14px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 15px rgba(191, 90, 242, 0.2); }
+        .bp-container { background: linear-gradient(160deg, rgba(191,90,242,0.14), var(--glass-bg)); backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 2px solid rgba(191, 90, 242, 0.45); border-radius: 20px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 20px rgba(191, 90, 242, 0.25), var(--glass-shadow-soft); }
         .bp-header-tabs { display: flex; gap: 6px; }
-        .bp-tab-sub { flex: 1; padding: 8px; font-size: 11px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-neon); color: var(--text-muted); border-radius: 6px; }
+        .bp-tab-sub { flex: 1; padding: 8px; font-size: 11px; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); color: var(--text-muted); border-radius: 10px; }
         .bp-tab-sub.active { background: var(--neon-purple); color: #fff; border: none; font-weight: bold; }
         
-        .pass-tier-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .pass-tier-box.unlocked { border-color: rgba(191, 90, 242, 0.4); background: rgba(191, 90, 242, 0.03); }
+        .pass-tier-box { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .pass-tier-box.unlocked { border-color: rgba(191, 90, 242, 0.5); background: rgba(191, 90, 242, 0.08); }
         
-        .track-card { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid transparent; }
-        .track-card.free { background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.15); }
-        .track-card.premium { background: rgba(255, 183, 3, 0.06); border-color: rgba(255, 183, 3, 0.25); }
+        .track-card { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-radius: 10px; font-size: 12px; border: 1px solid transparent; }
+        .track-card.free { background: rgba(0, 240, 255, 0.06); border-color: rgba(0, 240, 255, 0.2); }
+        .track-card.premium { background: rgba(255, 183, 3, 0.08); border-color: rgba(255, 183, 3, 0.3); }
         
-        .bp-claim-btn { padding: 4px 8px; font-size: 10px; border-radius: 4px; font-weight: bold; background: var(--neon-blue); border: none; color: #000; }
+        .bp-claim-btn { padding: 4px 8px; font-size: 10px; border-radius: 6px; font-weight: bold; background: var(--neon-blue); border: none; color: #000; }
         .bp-claim-btn:disabled { background: #2d3748; color: #718096; }
 
         .bottom-ui-container { 
@@ -121,33 +179,97 @@
             bottom: 0; 
             left: 0; 
             width: 100vw; 
-            background: var(--panel-bg); 
-            border-top: 1px solid var(--border-neon); 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+            border-top: 1px solid var(--glass-border); 
+            box-shadow: var(--glass-shadow);
             z-index: 400; 
         }
         .action-panel { padding: 12px 14px 8px 14px; }
         .buttons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         
-        button { background: rgba(255,255,255,0.04); border: 1px solid var(--border-neon); color: var(--text-main); padding: 14px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        button { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(160%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); color: var(--text-main); padding: 14px; border-radius: 16px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
         button:active { transform: scale(0.97); }
-        button.primary { background: var(--grad-accent); border: none; }
-        button.success { background: var(--grad-blue); border: none; }
-        button.gold { background: var(--grad-gold); border: none; color: #000; }
-        button.purple { background: var(--grad-purple); border: none; color: #fff; }
+        button.primary { background: linear-gradient(135deg, rgba(255,42,95,0.55), rgba(255,0,160,0.55)); border: 1px solid rgba(255,255,255,0.35); }
+        button.success { background: linear-gradient(135deg, rgba(0,240,255,0.5), rgba(0,114,255,0.5)); border: 1px solid rgba(255,255,255,0.35); }
+        button.gold { background: linear-gradient(135deg, rgba(255,183,3,0.6), rgba(255,102,0,0.6)); border: 1px solid rgba(255,255,255,0.35); color: #000; }
+        button.purple { background: linear-gradient(135deg, rgba(218,34,255,0.55), rgba(145,20,255,0.55)); border: 1px solid rgba(255,255,255,0.35); color: #fff; }
         button:disabled { opacity: 0.25; transform: none; cursor: not-allowed; z-index: 1 !important; }
 
-        .tabs { display: flex; background: #090c12; height: 60px; border-top: 1px solid var(--border-neon); }
+        .tabs { display: flex; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); height: 60px; border-top: 1px solid var(--glass-border); }
         .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; font-size: 11px; height: 100%; }
-        .tab-btn.active { color: var(--neon-blue); background: rgba(0, 240, 255, 0.02); border-top: 2px solid var(--neon-blue); }
+        .tab-btn.active { color: var(--neon-blue); background: rgba(0, 240, 255, 0.06); border-top: 2px solid var(--neon-blue); }
         .timer-badge { font-size: 10px; color: var(--neon-red); display: block; font-weight: normal; margin-top: 2px;}
+
+        .stat-full { grid-column: span 2; }
+
+        .loot-card { display: flex; align-items: center; gap: 12px; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); border-radius: 18px; padding: 12px; margin-bottom: 10px; position: relative; overflow: hidden; }
+        .loot-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--box-color); }
+        .loot-card-icon { width: 52px; height: 52px; border-radius: 12px; border: 2px solid var(--box-color); background: color-mix(in srgb, var(--box-color) 15%, transparent); box-shadow: 0 0 16px color-mix(in srgb, var(--box-color) 45%, transparent); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+        .loot-card-info { flex: 1; min-width: 0; }
+        .loot-card-title { font-weight: 900; font-size: 13px; }
+        .loot-card-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+        .loot-card-btn { padding: 9px 14px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+
+        #settings-btn { background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); border-radius: 16px; font-size: 13px; font-weight: 800; color: var(--text-main); }
+
+        #settings-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4,6,10,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        #settings-overlay.active { display: flex; }
+        .settings-card { width: 100%; max-width: 340px; background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); border-radius: 22px; padding: 22px; box-shadow: var(--glass-shadow); }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .settings-row:last-of-type { border-bottom: none; }
+        .settings-label { font-size: 13px; font-weight: 700; }
+        .settings-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+        .ios-switch { position: relative; width: 46px; height: 27px; flex-shrink: 0; }
+        .ios-switch input { opacity: 0; width: 0; height: 0; }
+        .ios-switch .track { position: absolute; inset: 0; background: rgba(255,255,255,0.15); border-radius: 20px; transition: background 0.2s; cursor: pointer; border: 1px solid var(--glass-border); }
+        .ios-switch .thumb { position: absolute; top: 2px; left: 2px; width: 21px; height: 21px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+        .ios-switch input:checked + .track { background: var(--neon-green); }
+        .ios-switch input:checked + .track .thumb { transform: translateX(19px); }
     </style>
 </head>
 <body>
 
+    <div id="settings-overlay">
+        <div class="settings-card">
+            <h3 style="margin-bottom: 16px; color: var(--neon-blue);">⚙️ Настройки</h3>
+            <div class="settings-row">
+                <div>
+                    <div class="settings-label">✨ Liquid Glass</div>
+                    <div class="settings-sub">Стеклянный эффект интерфейса</div>
+                </div>
+                <label class="ios-switch">
+                    <input type="checkbox" id="setting-glass" onchange="Core.toggleGlass(this.checked)">
+                    <span class="track"><span class="thumb"></span></span>
+                </label>
+            </div>
+            <div class="settings-row">
+                <div>
+                    <div class="settings-label">🔊 Звук</div>
+                    <div class="settings-sub">Звуковые эффекты</div>
+                </div>
+                <label class="ios-switch">
+                    <input type="checkbox" id="setting-sound" onchange="Core.toggleSound(this.checked)">
+                    <span class="track"><span class="thumb"></span></span>
+                </label>
+            </div>
+            <button class="primary" style="width:100%; margin-top:18px;" onclick="Core.closeSettings()">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="neon-bg-layer">
+        <div class="neon-blob blob1"></div>
+        <div class="neon-blob blob2"></div>
+        <div class="neon-blob blob3"></div>
+        <div class="neon-blob blob4"></div>
+    </div>
+
     <div id="death-overlay">
         <h1 style="color: var(--neon-red); font-size: 32px; margin-bottom: 10px; letter-spacing: 2px;">ВЫ ПОГИБЛИ</h1>
         <p style="color: var(--text-muted); max-width: 300px; margin-bottom: 30px; font-size: 14px;">Пустошь не прощает ошибок. Но за скромное пожертвование контрабандисты могут вытащить ваше тело...</p>
-        <div style="background: rgba(0,0,0,0.4); padding: 16px; border: 1px solid var(--neon-red); border-radius: 12px; margin-bottom: 30px; min-width: 260px;">
+        <div style="background: var(--glass-bg-strong); backdrop-filter: blur(26px) saturate(180%); -webkit-backdrop-filter: blur(26px) saturate(180%); padding: 16px; border: 1px solid var(--neon-red); border-radius: 18px; margin-bottom: 30px; min-width: 260px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);">
             <div style="font-size: 12px; color: var(--text-muted);">Будет списано крышек:</div>
             <div style="font-size: 24px; color: var(--neon-gold); font-weight: 800; margin: 4px 0;"><span id="death-cost-caps">0</span> 🪙</div>
             <div style="font-size: 12px; color: var(--neon-green);">Вы воскреснете с ОЗ: +<span id="death-heal-hp">0</span> ❤️</div>
@@ -155,7 +277,88 @@
         <button class="primary" style="padding: 16px 40px; font-size: 14px; box-shadow: 0 0 15px var(--neon-red);" onclick="Core.respawn()">Воскреснуть</button>
     </div>
 
-    <div id="gacha-overlay">
+    <!-- Enemy Intro -->
+<div id="enemy-intro-overlay" style="
+display:none;
+position:fixed;
+left:0;
+top:0;
+width:100vw;
+height:100vh;
+background:rgba(5,8,15,.94);
+z-index:6500;
+justify-content:center;
+align-items:center;
+padding:20px;
+">
+
+<div style="
+width:100%;
+max-width:360px;
+background:var(--glass-bg-strong);
+backdrop-filter:blur(26px) saturate(180%);
+-webkit-backdrop-filter:blur(26px) saturate(180%);
+border:2px solid #00f0ff;
+border-radius:22px;
+padding:22px;
+box-shadow:0 0 30px rgba(0,240,255,.35), inset 0 1px 0 rgba(255,255,255,0.2);
+animation:enemyAppear .35s ease;
+">
+
+<h2 id="enemy-title"
+style="text-align:center;color:#ff4040;margin-bottom:15px;">
+⚠ ПРОТИВНИК ОБНАРУЖЕН
+</h2>
+
+<h3 id="enemy-name"
+style="text-align:center;font-size:24px;margin-bottom:18px;">
+—
+</h3>
+
+<div style="display:flex;flex-direction:column;gap:8px;font-size:15px;">
+
+<div>❤️ Здоровье:
+<b id="enemy-hp"></b>
+</div>
+
+<div>⚔ Урон:
+<b id="enemy-dmg"></b>
+</div>
+
+<div>🛡 Броня:
+<b id="enemy-armor"></b>
+</div>
+
+<div>🏃 Класс:
+<b id="enemy-class"></b>
+</div>
+
+<div style="color:#39ff14;">
+⭐ Опыт:
+<b id="enemy-exp"></b>
+</div>
+
+</div>
+
+<button
+class="primary"
+style="margin-top:22px;width:100%;"
+onclick="Core.beginCombat()">
+НАЧАТЬ БОЙ
+</button>
+
+<button
+class="success"
+style="margin-top:10px;width:100%;"
+onclick="Core.declineEncounter()">
+🏃 Сбежать (55%)
+</button>
+
+</div>
+
+</div>
+<div id="gacha-overlay">
+        <div class="gacha-burst" id="gacha-burst"></div>
         <div class="cube" id="gacha-cube"></div>
         <div class="reward-card" id="gacha-reward">
             <h2 style="color: var(--neon-gold); margin-bottom: 8px;">НАХОДКА ИЗ ЯЩИКА</h2>
@@ -181,7 +384,11 @@
             <div class="stat-header"><span>⚡ ЭНЕРГИЯ</span><span id="en-val">100/100</span></div>
             <div class="progress-bar-outer"><div id="en-bar" class="progress-bar-inner" style="background: var(--grad-blue);"></div></div>
         </div>
-        <div class="stat-container" style="grid-column: span 2;">
+        <div class="stat-container" id="satiety-container">
+            <div class="stat-header" style="color: var(--neon-gold)"><span>🍖 СЫТОСТЬ</span><span id="satiety-val">100%</span></div>
+            <div class="progress-bar-outer"><div id="satiety-bar" class="progress-bar-inner" style="background: var(--grad-gold);"></div></div>
+        </div>
+        <div class="stat-container" id="rad-container" style="display:none;">
             <div class="stat-header" style="color: var(--neon-green)"><span>☢️ РАДИАЦИЯ</span><span id="rad-val">0%</span></div>
             <div class="progress-bar-outer"><div id="rad-bar" class="progress-bar-inner" style="background: var(--neon-green);"></div></div>
         </div>
@@ -247,6 +454,7 @@
         <div id="direct-shop-list"></div>
         <div class="screen-title" style="margin-top: 12px;">🏪 Контейнеры</div>
         <div id="shop-list"></div>
+        <button id="settings-btn" style="width:100%; margin-top:18px; padding:14px;" onclick="Core.openSettings()">⚙️ Настройки</button>
     </div>
 
     <div class="bottom-ui-container">
@@ -282,9 +490,9 @@
 
     <script>
         const Sound = {
-            ctx: null,
+            ctx: null, enabled: true,
             init() { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} },
-            play(type) { if (!this.ctx) this.init(); if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (!this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.connect(gain); gain.connect(this.ctx.destination); const now = this.ctx.currentTime; if (type === 'click') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); gain.gain.setValueAtTime(0.03, now); osc.start(now); osc.stop(now + 0.05); } else if (type === 'hit') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1, now); osc.start(now); osc.stop(now + 0.08); } else if (type === 'loot') { osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now + 0.1); gain.gain.setValueAtTime(0.08, now); osc.start(now); osc.stop(now + 0.2); } }
+            play(type) { if (!this.enabled) return; if (!this.ctx) this.init(); if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (!this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.connect(gain); gain.connect(this.ctx.destination); const now = this.ctx.currentTime; if (type === 'click') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); gain.gain.setValueAtTime(0.03, now); osc.start(now); osc.stop(now + 0.05); } else if (type === 'hit') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1, now); osc.start(now); osc.stop(now + 0.08); } else if (type === 'loot') { osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now + 0.1); gain.gain.setValueAtTime(0.08, now); osc.start(now); osc.stop(now + 0.2); } }
         };
 
         const Tut = {
@@ -386,14 +594,14 @@
 
         const DB = {
             biomes: [
-                { id: 0, name: "🪨 Неоновые Руины", minLvl: 1, bossDefeatedId: null, enemies: [{ name: "Рад-Таракан", hp: 40, dmg: 8, armor: 0, class: "Быстрый", exp: 15 }, { name: "Кибер-Крыса", hp: 67, dmg: 12, armor: 1, class: "Обычный", exp: 25 }], boss: { name: "👑 Взбешенный Минори", hp: 115, dmg: 7, armor: 3, class: "Босс", exp: 120, rewardCaps: 50 } },
-                { id: 1, name: "🏚️ Ржавый Посёлок", minLvl: 10, bossDefeatedId: 0, enemies: [{ name: "Слепой Гуль", hp: 65, dmg: 10, armor: 2, class: "Кровожадный", exp: 35 }, { name: "Сточный Клерк", hp: 80, dmg: 12, armor: 4, class: "Бронированный", exp: 45 }], boss: { name: "👑 Мясник Коллектора", hp: 280, dmg: 20, armor: 8, class: "Босс", exp: 300, rewardCaps: 120 } },
-                { id: 2, name: "🌆 Неоновый Сити-Центр", minLvl: 20, bossDefeatedId: 1, enemies: [{ name: "Дрон-Охотник", hp: 120, dmg: 18, armor: 6, class: "Быстрый", exp: 70 }, { name: "Штурмотрон v5", hp: 160, dmg: 24, armor: 10, class: "Бронированный", exp: 100 }], boss: { name: "👑 Главный Архитектор", hp: 550, dmg: 38, armor: 15, class: "Босс", exp: 600, rewardCaps: 250 } },
-                { id: 3, name: "☢️ Радиоактивный Лес", minLvl: 30, bossDefeatedId: 2, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 500 } },
-                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 1000 } },
-                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 2000 } },
-                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 5000 } },
-                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 15000 } }
+                { id: 0, name: "🪨 Неоновые Руины", minLvl: 1, bossDefeatedId: null, enemies: [{ name: "Рад-Таракан", hp: 40, dmg: 8, armor: 0, class: "Быстрый", exp: 15 }, { name: "Кибер-Крыса", hp: 67, dmg: 9, armor: 1, class: "Обычный", exp: 25 }], boss: { name: "👑 Взбешенный Минори", hp: 115, dmg: 7, armor: 3, class: "Босс", exp: 120, rewardCaps: 25 } },
+                { id: 1, name: "🏚️ Ржавый Посёлок", minLvl: 10, bossDefeatedId: 0, enemies: [{ name: "Слепой Гуль", hp: 65, dmg: 10, armor: 2, class: "Кровожадный", exp: 35 }, { name: "Сточный Клерк", hp: 80, dmg: 12, armor: 4, class: "Бронированный", exp: 45 }], boss: { name: "👑 Мясник Коллектора", hp: 280, dmg: 20, armor: 8, class: "Босс", exp: 300, rewardCaps: 60 } },
+                { id: 2, name: "🌆 Неоновый Сити-Центр", minLvl: 20, bossDefeatedId: 1, enemies: [{ name: "Дрон-Охотник", hp: 120, dmg: 18, armor: 6, class: "Быстрый", exp: 70 }, { name: "Штурмотрон v5", hp: 160, dmg: 24, armor: 10, class: "Бронированный", exp: 100 }], boss: { name: "👑 Главный Архитектор", hp: 550, dmg: 38, armor: 15, class: "Босс", exp: 600, rewardCaps: 125 } },
+                { id: 3, name: "☢️ Радиактивный Лес", minLvl: 30, bossDefeatedId: 2, radDanger: 6, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 250 } },
+                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 500 } },
+                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 1000 } },
+                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 2500 } },
+                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 7500 } }
             ],
             weapons: [
                 { id: "fists", name: "Кулаки", dmg: 5, crit: 5 },
@@ -408,20 +616,22 @@
                 { id: "craft_gauss", name: "Винтовка Гаусса", reqLvl: 45, cost: { "Запчасти": 150, "Тяжелый Хлам": 40, "Ядерная Батарея": 10 }, type: "weapon", targetId: "gauss" }
             ],
             cooking: [
-                { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 15 },
-                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 35 }
+                { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 10 },
+                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 22 }
             ],
             lootboxes: [
-                { name: "Скрап-Ящик", price: 15, color: "#00f0ff", maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.7 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.3 }] },
-                { name: "Продуктовый ящик", price: 20, color: "#39ff14", maxVouchers: 3, table: [{ item: "Сырое мясо x2", chance: 0.6 }, { item: "Жареное мясо крысы x1", chance: 0.4 }] },
-                { name: "Сейф Минори", price: 45, color: "#ffb703", maxVouchers: 5, table: [{ item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.4 }, { item: "🔋 Микро-батарея (+20 Энергии)", chance: 0.3 }, { item: "Сырое мясо x3", chance: 0.3 }] }
+                { name: "Скрап-Ящик", price: 15, color: "#00f0ff", maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.679 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.291 }, { item: "⛺ Привал x1", chance: 0.03 }] },
+                { name: "Продуктовый ящик", price: 20, color: "#39ff14", maxVouchers: 3, table: [{ item: "Сырое мясо x2", chance: 0.57 }, { item: "Жареное мясо крысы x1", chance: 0.38 }, { item: "⛺ Привал x1", chance: 0.05 }] },
+                { name: "Сейф Минори", price: 45, color: "#ffb703", maxVouchers: 5, table: [{ item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.36 }, { item: "🔋 Микро-батарея (+20 Энергии)", chance: 0.27 }, { item: "Сырое мясо x3", chance: 0.27 }, { item: "⛺ Привал x1", chance: 0.10 }] }
             ],
             bpRewards: generateBpRewards()
         };
 
         const Core = {
-            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 }, activeWeapon: "fists", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [] },
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 }, activeWeapon: "fists", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [] },
             combatState: null, dailyClaimed: false, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
+            hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: { fast: 0, heavy: 0, bleed: 0, block: 0 }, abilityCdSeconds: { fast: 2, heavy: 5, bleed: 4, block: 3 },
+            lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
             
             quests: [
                 { id: "q1", text: "Убить 5 мутантов-крыс", progress: 0, target: 5, points: 20, done: false, trigger: "kill_Кибер-Крыса" },
@@ -433,7 +643,21 @@
                 { id: "q8", text: "Приготовить еду на костре", progress: 0, target: 1, points: 25, done: false, trigger: "craft_food" }
             ],
 
-            init() { this.load(); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
+            init() { this.load(); this.loadSettings(); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
+
+            loadSettings() {
+                let raw = localStorage.getItem('w_settings_v1');
+                this.settings = raw ? JSON.parse(raw) : { glass: true, sound: true };
+                document.body.classList.toggle('no-glass', !this.settings.glass);
+                Sound.enabled = this.settings.sound;
+                document.getElementById('setting-glass').checked = this.settings.glass;
+                document.getElementById('setting-sound').checked = this.settings.sound;
+            },
+            saveSettings() { localStorage.setItem('w_settings_v1', JSON.stringify(this.settings)); },
+            openSettings() { document.getElementById('settings-overlay').classList.add('active'); },
+            closeSettings() { document.getElementById('settings-overlay').classList.remove('active'); this.saveSettings(); },
+            toggleGlass(val) { this.settings.glass = val; document.body.classList.toggle('no-glass', !val); this.saveSettings(); },
+            toggleSound(val) { this.settings.sound = val; Sound.enabled = val; this.saveSettings(); },
             save() { localStorage.setItem('w_save_v7', JSON.stringify({ p: this.p, daily: this.dailyClaimed, restUses: this.restUses, t: this.nextRestTick, q: this.quests })); },
             load() { 
                 let data = localStorage.getItem('w_save_v7'); 
@@ -445,17 +669,37 @@
                     if(!this.p.bossesDefeated) this.p.bossesDefeated = [];
                     if(this.p.armor === undefined) this.p.armor = 2;
                     if(this.p.dodgeChance === undefined) this.p.dodgeChance = 8;
+                    if(this.p.satiety === undefined) this.p.satiety = 100;
                 } 
             },
             
+            isRadForestUnlocked() {
+                let biome = DB.biomes[3];
+                return this.p.lvl >= biome.minLvl && (biome.bossDefeatedId === null || this.p.bossesDefeated.includes(biome.bossDefeatedId));
+            },
+
             updateUI() {
                 let allowedMax = Math.max(5, this.p.maxHp - this.p.rad); if (this.p.hp > allowedMax) this.p.hp = allowedMax;
                 document.getElementById('hp-val').innerText = `${this.p.hp}/${allowedMax}`;
                 document.getElementById('hp-bar').style.width = (this.p.hp / this.p.maxHp * 100) + '%';
                 document.getElementById('en-val').innerText = `${this.p.energy}/${this.p.maxEnergy}`;
                 document.getElementById('en-bar').style.width = (this.p.energy / this.p.maxEnergy * 100) + '%';
-                document.getElementById('rad-val').innerText = `${this.p.rad}%`;
-                document.getElementById('rad-bar').style.width = this.p.rad + '%';
+                document.getElementById('satiety-val').innerText = `${this.p.satiety}%`;
+                document.getElementById('satiety-bar').style.width = this.p.satiety + '%';
+
+                const radUnlocked = this.isRadForestUnlocked();
+                const radContainer = document.getElementById('rad-container');
+                const satietyContainer = document.getElementById('satiety-container');
+                if (radUnlocked) {
+                    radContainer.style.display = 'flex';
+                    satietyContainer.classList.remove('stat-full');
+                    document.getElementById('rad-val').innerText = `${this.p.rad}%`;
+                    document.getElementById('rad-bar').style.width = this.p.rad + '%';
+                } else {
+                    radContainer.style.display = 'none';
+                    satietyContainer.classList.add('stat-full');
+                }
+
                 document.getElementById('lvl-val').innerText = this.p.lvl;
                 document.getElementById('exp-val').innerText = this.p.exp;
                 document.getElementById('next-exp-val').innerText = this.p.nextExp;
@@ -474,10 +718,67 @@
                 this.renderInventory(); this.renderCrafting(); this.renderShop(); this.renderMap(); this.renderBp();
             },
             log(msg, type = '') { const box = document.getElementById('log'); const e = document.createElement('div'); e.className = `log-entry ${type}`; e.innerText = msg; box.appendChild(e); box.scrollTop = box.scrollHeight; },
-            getRestTime() { return Math.max(8, Math.round(180 * Math.pow(0.75, this.p.lvl - 1))); },
+            getRestTime() { return this.p.lvl >= 50 ? 30 : 60; },
+
+            // Скорость регенерации ОЗ зависит от сытости: 100% = 1 ОЗ/5с, 90% = 1 ОЗ/7с, и т.д. (+2с за каждые -10% сытости)
+            getHpRegenInterval() { return 5 + (100 - this.p.satiety) * 0.2; },
+
+            // Накопление радиации в опасных биомах (сейчас — только Радиактивный Лес)
+            exposeRadiation(source) {
+                let biome = DB.biomes[this.p.currentBiome];
+                if (!biome.radDanger || this.p.rad >= 90) return;
+                let gain = Math.floor(Math.random() * biome.radDanger) + 1;
+                this.p.rad = Math.min(90, this.p.rad + gain);
+                this.log(`☢️ ${source}: заражение +${gain}% (текущий уровень: ${this.p.rad}%).`, "combat-lose");
+            },
+
+            startCooldownTicker() {
+                if (this.combatCooldownInterval) clearInterval(this.combatCooldownInterval);
+                this.combatCooldownInterval = setInterval(() => this.renderAbilityCooldowns(), 200);
+                this.renderAbilityCooldowns();
+            },
+            stopCooldownTicker() {
+                if (this.combatCooldownInterval) { clearInterval(this.combatCooldownInterval); this.combatCooldownInterval = null; }
+            },
+            renderAbilityCooldowns() {
+                const map = { fast: 'btn-attack-fast', heavy: 'btn-attack-heavy', bleed: 'btn-attack-bleed', block: 'btn-block' };
+                const labels = { fast: '⚡ Быстрый выпад', heavy: '💥 Тяжёлый удар', bleed: '🩸 Рассечение', block: '🛡️ Занять Блок' };
+                let now = Date.now();
+                for (let key in map) {
+                    let btn = document.getElementById(map[key]);
+                    if (!btn) continue;
+                    let remain = Math.ceil(((this.abilityCooldowns[key] || 0) - now) / 1000);
+                    if (remain > 0) { btn.disabled = true; btn.innerText = `${labels[key]} (${remain}с)`; }
+                    else { btn.disabled = false; btn.innerText = labels[key]; }
+                }
+            },
 
             loop() {
                 if (this.p.hp <= 0) return;
+
+                // Сытость убывает со временем, в бою — быстрее
+                if (this.p.satiety > 0) {
+                    this.satietyDecayAccum = (this.satietyDecayAccum || 0) + 1;
+                    let decayInterval = this.combatState ? 4 : 12;
+                    if (this.satietyDecayAccum >= decayInterval) {
+                        this.satietyDecayAccum -= decayInterval;
+                        this.p.satiety = Math.max(0, this.p.satiety - 1);
+                        this.save(); this.updateUI();
+                    }
+                }
+
+                // Регенерация ОЗ за счёт сытости, в бою в 2 раза медленнее
+                let allowedMax = Math.max(5, this.p.maxHp - this.p.rad);
+                if (this.p.hp < allowedMax) {
+                    this.hpRegenAccum = (this.hpRegenAccum || 0) + 1;
+                    let interval = this.getHpRegenInterval() * (this.combatState ? 2 : 1);
+                    if (this.hpRegenAccum >= interval) {
+                        this.hpRegenAccum -= interval;
+                        this.p.hp = Math.min(allowedMax, this.p.hp + 1);
+                        this.updateUI();
+                    }
+                }
+
                 if (this.restUses < 5) {
                     let period = this.getRestTime() * 1000;
                     if (!this.nextRestTick) this.nextRestTick = Date.now() + period;
@@ -541,15 +842,16 @@
                 Sound.play('click'); if (this.combatState || this.p.energy < 3) return;
                 this.p.energy -= 3; Tut.actionTriggered('btn-explore');
                 this.triggerQuest("explore");
+                this.exposeRadiation("Разведка загрязнённой местности");
                 let roll = Math.random();
                 if (roll < 0.45) {
-                    let c = Math.floor(Math.random() * 6) + 2; this.p.caps += c;
+                    let c = Math.floor(Math.random() * 3) + 1; this.p.caps += c;
                     let lootRoll = Math.random();
                     if(lootRoll < 0.5) { this.p.inv["Запчасти"]++; this.log(`🎁 Найдено: Запчасти x1, Крышки (+${c} 🪙). +10 XP.`, "loot"); }
                     else if(lootRoll < 0.8) { this.p.inv["Сырое мясо"] = (this.p.inv["Сырое мясо"]||0)+1; this.log(`🥩 Найдено: Сырое мясо x1, Крышки (+${c} 🪙). +10 XP.`, "loot"); }
                     else { this.p.inv["Тяжелый Хлам"] = (this.p.inv["Тяжелый Хлам"]||0)+1; this.log(`⚙️ Найдено: Тяжелый Хлам x1, Крышки (+${c} 🪙). +15 XP.`, "loot"); }
                     this.p.exp += 10; this.checkLvl();
-                } else if (roll < 0.85) { this.startCombat(false); } else { this.log("Локация чиста. Ничего интересного."); }
+                } else if (roll < 0.65) { this.startCombat(false); } else { this.log("Локация чиста. Ничего интересного."); }
                 this.save(); this.updateUI();
             },
 
@@ -559,25 +861,135 @@
                 this.triggerQuest("rest");
                 this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20);
                 this.log(`⛺ Вы отдохнули на привале. Энергия восстановлена на +20 ед.`);
+                if (this.p.rad > 0) {
+                    let radHeal = Math.min(this.p.rad, 15 + Math.floor(Math.random() * 10));
+                    this.p.rad -= radHeal;
+                    this.log(`☢️ Привал очищает организм от радиации: -${radHeal}% (осталось ${this.p.rad}%).`, "loot");
+                }
                 this.save(); this.updateUI();
             },
+            
+            showEnemyIntro(enemy){
 
-            startCombat(isBossFight = false) {
-                let activeBiome = DB.biomes[this.p.currentBiome];
-                if(isBossFight) {
-                    this.combatState = { ...activeBiome.boss, isBoss: true, bleedTicks: 0, stunned: false, maxHp: activeBiome.boss.hp };
-                    this.log(`🚨 ВНИМАНИЕ! Пробужден страж биома: ${this.combatState.name} (ОЗ: ${this.combatState.hp}, Урон: ${this.combatState.dmg}, Броня: ${this.combatState.armor}, Класс: ${this.combatState.class})`, "combat-lose");
-                } else {
-                    let randomEnemy = activeBiome.enemies[Math.floor(Math.random() * activeBiome.enemies.length)];
-                    this.combatState = { ...randomEnemy, isBoss: false, bleedTicks: 0, stunned: false, maxHp: randomEnemy.hp };
-                    this.log(`🚨 Враг обнаружен: [${this.combatState.class}] ${this.combatState.name} (ОЗ: ${this.combatState.hp}, Урон: ${this.combatState.dmg}, Броня: ${this.combatState.armor})`, "combat-lose");
-                }
-                document.getElementById('default-actions').style.display = 'none';
-                document.getElementById('combat-actions').style.display = 'flex';
-            },
+this.pendingEnemy=enemy;
+
+document.getElementById("enemy-name").innerText=enemy.name;
+document.getElementById("enemy-hp").innerText=enemy.hp;
+document.getElementById("enemy-dmg").innerText=enemy.dmg;
+document.getElementById("enemy-armor").innerText=enemy.armor;
+document.getElementById("enemy-class").innerText=enemy.class;
+document.getElementById("enemy-exp").innerText=enemy.exp;
+
+document.getElementById("enemy-title").innerText=
+enemy.isBoss ?
+"🚨 ОБНАРУЖЕН БОСС":
+"⚠ ПРОТИВНИК ОБНАРУЖЕН";
+
+document.getElementById("enemy-intro-overlay").style.display="flex";
+
+},
+
+declineEncounter() {
+    document.getElementById('enemy-intro-overlay').style.display = 'none';
+    if (Math.random() < 0.55) {
+        Sound.play('click');
+        this.log(`🏃 Вы заметили противника [${this.pendingEnemy.name}] заранее и обошли его стороной.`, "system");
+        this.pendingEnemy = null;
+    } else {
+        Sound.play('hit');
+        this.log(`⚠️ Не удалось уйти незамеченным! [${this.pendingEnemy.name}] заметил вас и атакует.`, "combat-lose");
+        this.beginCombat();
+    }
+},
+
+beginCombat(){
+
+    document.getElementById("enemy-intro-overlay").style.display = "none";
+
+    this.combatState = this.pendingEnemy;
+    this.abilityCooldowns = { fast: 0, heavy: 0, bleed: 0, block: 0 };
+    this.lastAttackType = null; this.sameAttackStreak = 0;
+    this.startCooldownTicker();
+
+    if(this.combatState.isBoss){
+
+        this.log(
+            `🚨 ВНИМАНИЕ! Пробужден страж биома: ${this.combatState.name} (ОЗ: ${this.combatState.hp}, Урон: ${this.combatState.dmg}, Броня: ${this.combatState.armor}, Класс: ${this.combatState.class})`,
+            "combat-lose"
+        );
+
+    }else{
+
+        this.log(
+            `🚨 Враг обнаружен: [${this.combatState.class}] ${this.combatState.name} (ОЗ: ${this.combatState.hp}, Урон: ${this.combatState.dmg}, Броня: ${this.combatState.armor})`,
+            "combat-lose"
+        );
+
+    }
+
+    document.getElementById('default-actions').style.display = 'none';
+    document.getElementById('combat-actions').style.display = 'flex';
+
+    this.pendingEnemy = null;
+
+},
+
+startCombat(isBossFight = false) {
+
+    let activeBiome = DB.biomes[this.p.currentBiome];
+
+    let enemy;
+
+    if(isBossFight) {
+
+        enemy = {
+            ...activeBiome.boss,
+            isBoss: true,
+            bleedTicks: 0,
+            stunned: false,
+            maxHp: activeBiome.boss.hp
+        };
+
+    } else {
+
+        let randomEnemy = activeBiome.enemies[
+            Math.floor(Math.random() * activeBiome.enemies.length)
+        ];
+
+        enemy = {
+            ...randomEnemy,
+            isBoss: false,
+            bleedTicks: 0,
+            stunned: false,
+            maxHp: randomEnemy.hp
+        };
+
+    }
+
+    this.showEnemyIntro(enemy);
+
+},
 
             executeAttack(attackType) {
-                if(!this.combatState) return; Sound.play('hit');
+                if(!this.combatState) return;
+
+                let now = Date.now();
+                if (now < (this.abilityCooldowns[attackType] || 0)) {
+                    Sound.play('hit');
+                    this.log(`⏳ Способность ещё перезаряжается!`);
+                    return;
+                }
+                if (attackType === this.lastAttackType && this.sameAttackStreak >= 2) {
+                    Sound.play('hit');
+                    this.log(`🚫 Нельзя использовать одну способность больше двух раз подряд! Смени тактику.`, "combat-lose");
+                    return;
+                }
+
+                Sound.play('hit');
+                this.abilityCooldowns[attackType] = now + (this.abilityCdSeconds[attackType] || 3) * 1000;
+                if (attackType === this.lastAttackType) { this.sameAttackStreak++; } else { this.lastAttackType = attackType; this.sameAttackStreak = 1; }
+
+                this.exposeRadiation("Радиационный фон боя");
                 let currentWpn = DB.weapons.find(w => w.id === this.p.activeWeapon) || DB.weapons[0];
                 let upLvl = this.p.wpnUpgrades[this.p.activeWeapon] || 0;
                 
@@ -687,10 +1099,11 @@
                     this.save(); this.updateUI();
                 }
             },
-            endCombat() { this.combatState = null; document.getElementById('combat-actions').style.display = 'none'; document.getElementById('default-actions').style.display = 'grid'; this.save(); this.updateUI(); },
+            endCombat() { this.combatState = null; this.stopCooldownTicker(); document.getElementById('combat-actions').style.display = 'none'; document.getElementById('default-actions').style.display = 'grid'; this.save(); this.updateUI(); },
 
             triggerDeath() {
                 this.p.hp = 0;
+                this.stopCooldownTicker();
                 document.getElementById('death-cost-caps').innerText = this.p.caps;
                 document.getElementById('death-heal-hp').innerText = Math.max(1, this.p.caps);
                 document.getElementById('death-overlay').style.display = 'flex';
@@ -702,7 +1115,7 @@
             },
 
             checkLvl() {
-                if (this.p.exp >= this.p.nextExp) {
+                while (this.p.exp >= this.p.nextExp) {
                     this.p.lvl++; this.p.exp -= this.p.nextExp; this.p.nextExp = Math.floor(this.p.nextExp + 25); this.nextRestTick = null;
                     this.p.maxHp += 5; this.p.armor += 1; 
                     this.log(`🌟 Уровень повышен: ${this.p.lvl}! Макс ОЗ +5, Броня +1.`, "system");
@@ -721,9 +1134,10 @@
 
             eatFood(foodKey) {
                 if((this.p.food[foodKey] || 0) <= 0) return; Sound.play('loot');
-                let foodItem = DB.cooking.find(c => c.name === foodKey); let healVal = foodItem ? foodItem.heal : 10;
-                this.p.food[foodKey]--; let allowedMax = Math.max(5, this.p.maxHp - this.p.rad);
-                this.p.hp = Math.min(allowedMax, this.p.hp + healVal); this.log(`🍏 Употреблено ${foodKey}: +${healVal} ОЗ.`);
+                let foodItem = DB.cooking.find(c => c.name === foodKey); let satietyVal = foodItem ? foodItem.heal : 10;
+                this.p.food[foodKey]--;
+                this.p.satiety = Math.min(100, this.p.satiety + satietyVal);
+                this.log(`🍏 Употреблено ${foodKey}: Сытость +${satietyVal}% (сейчас ${this.p.satiety}%).`);
                 this.save(); this.updateUI();
             },
 
@@ -780,7 +1194,7 @@
                 if(!hasFood) fEl.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:4px;">Нет готовой еды.</div>`;
 
                 const rEl = document.getElementById('inv-list'); rEl.innerHTML = '';
-                for (let k in this.p.inv) { if (this.p.inv[k] >= 0) rEl.innerHTML += `<div class="list-item"><div>📦 ${k}</div><div>x${this.p.inv[k]}</div></div>`; }
+                for (let k in this.p.inv) { if (this.p.inv[k] > 0) rEl.innerHTML += `<div class="list-item"><div>📦 ${k}</div><div>x${this.p.inv[k]}</div></div>`; }
             },
 
             renderCrafting() {
@@ -788,7 +1202,7 @@
                 DB.cooking.forEach(recipe => {
                     let reqs = Object.entries(recipe.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ');
                     cEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <div style="display:flex; justify-content:space-between; width:100%;"><b>${recipe.name}</b> <span style="color:var(--neon-green)">+${recipe.heal} ОЗ</span></div>
+                        <div style="display:flex; justify-content:space-between; width:100%;"><b>${recipe.name}</b> <span style="color:var(--neon-gold)">+${recipe.heal}% Сытости</span></div>
                         <div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${reqs}</div>
                         <button class="success" style="width:100%; padding:6px; font-size:11px;" onclick="Core.craftFood('${recipe.id}')">Приготовить</button>
                     </div>`;
@@ -797,11 +1211,13 @@
                 const wEl = document.getElementById('craft-list'); wEl.innerHTML = '';
                 DB.blueprints.forEach(bp => {
                     let meetsLvl = this.p.lvl >= bp.reqLvl; let wpnData = DB.weapons.find(w => w.id === bp.targetId);
-                    let reqs = Object.entries(bp.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ');
-                    wEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; opacity: ${meetsLvl?1:0.4}">
+                    let subLine = meetsLvl
+                        ? `<div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${Object.entries(bp.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ')}</div>`
+                        : `<div style="font-size:11px; color:var(--text-muted)">🔒 Откроется на уровне ${bp.reqLvl}</div>`;
+                    wEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; opacity: ${meetsLvl?1:0.55}">
                         <div style="display:flex; justify-content:space-between; width:100%;"><b>${bp.name}</b> <span style="color:var(--neon-gold)">Урон: ${wpnData.dmg}</span></div>
-                        <div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${reqs}</div>
-                        <button class="primary" style="width:100%; padding:6px; font-size:11px;" ${meetsLvl?'':'disabled'} onclick="Core.craftWeapon('${bp.id}')">Собрать (Лвл ${bp.reqLvl})</button>
+                        ${subLine}
+                        <button class="primary" style="width:100%; padding:6px; font-size:11px;" ${meetsLvl?'':'disabled'} onclick="Core.craftWeapon('${bp.id}')">${meetsLvl ? 'Собрать' : `Требуется Лвл ${bp.reqLvl}`}</button>
                     </div>`;
                 });
             },
@@ -865,7 +1281,15 @@
 
                 const el = document.getElementById('shop-list'); el.innerHTML = '';
                 DB.lootboxes.forEach((box, idx) => {
-                    el.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; border-left: 4px solid ${box.color}"><div style="font-weight:bold; color:${box.color}">${box.name}</div><button class="gold" style="width:100%; margin-top:4px;" onclick="Core.buyBox(${idx})">📦 Вскрыть за ${box.price} 🪙</button></div>`;
+                    el.innerHTML += `
+                        <div class="loot-card" style="--box-color: ${box.color}">
+                            <div class="loot-card-icon">📦</div>
+                            <div class="loot-card-info">
+                                <div class="loot-card-title" style="color: ${box.color}">${box.name}</div>
+                                <div class="loot-card-sub">Ресурсы, расходники и небольшой шанс на бонусный привал</div>
+                            </div>
+                            <button class="gold loot-card-btn" onclick="Core.buyBox(${idx})">📦 ${box.price} 🪙</button>
+                        </div>`;
                 });
             },
 
@@ -874,7 +1298,11 @@
                 this.p.caps -= box.price; this.triggerQuest("spend_caps", box.price);
                 const overlay = document.getElementById('gacha-overlay'); const cube = document.getElementById('gacha-cube');
                 const rewardCard = document.getElementById('gacha-reward'); const rName = document.getElementById('reward-name');
-                cube.style.background = box.color; overlay.style.display = 'flex'; cube.style.display = 'block'; rewardCard.style.display = 'none';
+                const burst = document.getElementById('gacha-burst');
+
+                cube.style.background = box.color; cube.style.boxShadow = `0 0 40px ${box.color}`; cube.classList.remove('cube-burst');
+                overlay.style.display = 'flex'; cube.style.display = 'block'; rewardCard.style.display = 'none';
+                burst.style.setProperty('--burst-color', box.color); burst.classList.remove('active');
 
                 let chosen = "", itemsObtained = []; let rand = Math.random(), accum = 0;
                 for (let i = 0; i < box.table.length; i++) { accum += box.table[i].chance; if (rand <= accum) { chosen = box.table[i].item; break; } }
@@ -882,6 +1310,7 @@
                 if (chosen.includes("🧬")) { this.p.maxHp += 10; this.p.hp = Math.min(this.p.maxHp, this.p.hp + 10); itemsObtained.push(chosen); } 
                 else if (chosen.includes("🔋")) { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); itemsObtained.push(chosen); } 
                 else if (chosen.includes("Жареное")) { this.p.food["Жареное мясо крысы"] = (this.p.food["Жареное мясо крысы"]||0) + 1; itemsObtained.push(chosen); }
+                else if (chosen.includes("Привал")) { this.restUses = Math.min(5, this.restUses + 1); itemsObtained.push(chosen); }
                 else { let clean = chosen.split(" x")[0], qty = parseInt(chosen.split(" x")[1]) || 1; this.p.inv[clean] = (this.p.inv[clean] || 0) + qty; itemsObtained.push(chosen); }
 
                 if(Math.random() < 0.15) {
@@ -889,14 +1318,22 @@
                     this.p.vouchers += count; itemsObtained.push(`🏷️ Ваучеры x${count}`);
                 }
                 let finalRewardString = itemsObtained.join(" + ");
+
                 setTimeout(() => {
-                    Sound.play('loot'); cube.style.display = 'none'; rName.innerText = finalRewardString; rewardCard.style.display = 'block';
-                    this.log(`📦 Извлечено: ${finalRewardString}`, "loot"); this.save(); this.updateUI();
-                }, 1000);
+                    // Ящик "лопается", вспышка разлетается
+                    cube.classList.add('cube-burst');
+                    burst.classList.add('active');
+                    Sound.play('loot');
+                    setTimeout(() => {
+                        cube.style.display = 'none'; cube.classList.remove('cube-burst'); burst.classList.remove('active');
+                        rName.innerText = finalRewardString; rewardCard.style.display = 'block';
+                        this.log(`📦 Извлечено: ${finalRewardString}`, "loot"); this.save(); this.updateUI();
+                    }, 320);
+                }, 700);
             },
 
             closeGacha() { document.getElementById('gacha-overlay').style.display = 'none'; },
-            claimDaily() { if(this.dailyClaimed) return; this.dailyClaimed = true; this.p.caps += 15; this.save(); this.updateUI(); },
+            claimDaily() { if(this.dailyClaimed) return; this.dailyClaimed = true; this.p.caps += 8; this.save(); this.updateUI(); },
             
             setBpSubTab(tab) { this.bpSubTab = tab; document.getElementById('bp-sub-rewards').className = tab==='rewards'?'bp-tab-sub active':'bp-tab-sub'; document.getElementById('bp-sub-quests').className = tab==='quests'?'bp-tab-sub active':'bp-tab-sub'; this.renderBp(); },
             buyBpPremium() {
