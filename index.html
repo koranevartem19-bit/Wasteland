@@ -27,6 +27,16 @@
             --glass-blur: 36px;
             --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
             --glass-shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+
+            /* Динамическая палитра текущего биома (меняется через JS при разведке/переходе) */
+            --biome-c1: var(--neon-blue);
+            --biome-c2: var(--neon-purple);
+            --biome-c3: var(--neon-red);
+            --biome-c4: var(--neon-gold);
+            --biome-glow: #111827;
+            --biome-atmo: rgba(0, 240, 255, 0.05);
+            --biome-accent: var(--neon-blue);
+            --biome-accent-soft: rgba(0, 240, 255, 0.35);
         }
 
         body.no-glass {
@@ -39,15 +49,17 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, sans-serif; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55); }
-        body { background-color: var(--bg-main); background-image: radial-gradient(circle at 50% 10%, #111827 0%, var(--bg-main) 80%); color: var(--text-main); overflow: hidden; height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); position: relative; }
+        body { background-color: var(--bg-main); background-image: radial-gradient(circle at 50% 10%, var(--biome-glow, #111827) 0%, var(--bg-main) 80%); color: var(--text-main); overflow: hidden; height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); position: relative; transition: background-image 1.4s ease; }
         body.no-glass * { text-shadow: none; }
 
         #neon-bg-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-        .neon-blob { position: absolute; opacity: 0.7; mix-blend-mode: screen; will-change: transform, filter, border-radius; }
-        .blob1 { width: 60vw; height: 60vw; background: var(--neon-blue); top: -22%; left: -18%; animation: blobMove1 24s ease-in-out infinite alternate, blobMorphA 10s ease-in-out infinite alternate, blobHue 22s linear infinite; }
-        .blob2 { width: 55vw; height: 55vw; background: var(--neon-purple); bottom: -25%; right: -15%; animation: blobMove2 29s ease-in-out infinite alternate, blobMorphB 12s ease-in-out infinite alternate, blobHue 26s linear infinite reverse; }
-        .blob3 { width: 45vw; height: 45vw; background: var(--neon-red); top: 32%; right: -18%; animation: blobMove3 21s ease-in-out infinite alternate, blobMorphA 8s ease-in-out infinite alternate-reverse, blobHue 19s linear infinite; }
-        .blob4 { width: 42vw; height: 42vw; background: var(--neon-gold); bottom: 8%; left: -18%; animation: blobMove4 27s ease-in-out infinite alternate, blobMorphB 11s ease-in-out infinite alternate, blobHue 24s linear infinite reverse; }
+        .neon-blob { position: absolute; opacity: 0.7; mix-blend-mode: screen; will-change: transform, filter, border-radius; transition: background 1.4s ease; }
+        .blob1 { width: 60vw; height: 60vw; background: var(--biome-c1); top: -22%; left: -18%; animation: blobMove1 24s ease-in-out infinite alternate, blobMorphA 10s ease-in-out infinite alternate, blobHue 22s linear infinite; }
+        .blob2 { width: 55vw; height: 55vw; background: var(--biome-c2); bottom: -25%; right: -15%; animation: blobMove2 29s ease-in-out infinite alternate, blobMorphB 12s ease-in-out infinite alternate, blobHue 26s linear infinite reverse; }
+        .blob3 { width: 45vw; height: 45vw; background: var(--biome-c3); top: 32%; right: -18%; animation: blobMove3 21s ease-in-out infinite alternate, blobMorphA 8s ease-in-out infinite alternate-reverse, blobHue 19s linear infinite; }
+        .blob4 { width: 42vw; height: 42vw; background: var(--biome-c4); bottom: 8%; left: -18%; animation: blobMove4 27s ease-in-out infinite alternate, blobMorphB 11s ease-in-out infinite alternate, blobHue 24s linear infinite reverse; }
+        #biome-atmosphere { position: fixed; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: soft-light; opacity: 0.85; background: radial-gradient(ellipse at 50% 0%, var(--biome-atmo, transparent) 0%, transparent 65%); transition: background 1.4s ease; }
+        body.no-glass #biome-atmosphere { display: none; }
         @keyframes blobMove1 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(12%, 16%) scale(1.28); } 100% { transform: translate(-9%, 7%) scale(0.88); } }
         @keyframes blobMove2 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-15%, -11%) scale(1.22); } 100% { transform: translate(7%, -15%) scale(0.86); } }
         @keyframes blobMove3 { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-17%, 11%) scale(0.84); } 100% { transform: translate(11%, -9%) scale(1.22); } }
@@ -209,7 +221,7 @@ transform:scale(1);
 
         .list-item { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); padding: 12px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); }
         .map-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); padding: 16px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .map-card.current { border-color: var(--neon-blue); box-shadow: 0 0 14px rgba(0,240,255,0.35), var(--glass-shadow-soft); }
+        .map-card.current { border-color: var(--biome-accent); box-shadow: 0 0 14px var(--biome-accent-soft), var(--glass-shadow-soft); transition: border-color 1.4s ease, box-shadow 1.4s ease; }
 
         .bp-container { background: linear-gradient(160deg, rgba(191,90,242,0.14), var(--glass-bg)); backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 2px solid rgba(191, 90, 242, 0.45); border-radius: 20px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 20px rgba(191, 90, 242, 0.25), var(--glass-shadow-soft); }
         .bp-header-tabs { display: flex; gap: 6px; }
@@ -317,6 +329,7 @@ transform:scale(1);
         <div class="neon-blob blob3"></div>
         <div class="neon-blob blob4"></div>
     </div>
+    <div id="biome-atmosphere"></div>
 
     <div id="death-overlay">
         <h1 style="color: var(--neon-red); font-size: 32px; margin-bottom: 10px; letter-spacing: 2px;">ВЫ ПОГИБЛИ</h1>
@@ -446,6 +459,21 @@ onclick="Core.declineEncounter()">
         </div>
     </div>
 
+    <div id="fishing-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: radial-gradient(ellipse at center top, rgba(0,60,90,0.55) 0%, rgba(4, 6, 10, 0.95) 70%); z-index: 6200; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="tut-card" style="border-color: var(--neon-blue); max-width: 340px; padding: 22px;">
+            <h3 style="color: var(--neon-blue); margin-bottom: 8px;">🎣 Рыбалка на озере</h3>
+            <p id="fish-status-text" style="font-size: 13px; color: #fff; line-height: 1.5; margin-bottom: 16px;">Клюёт! Быстро жми на кнопку, чтобы заполнить шкалу до того как рыба сорвётся!</p>
+            <div class="progress-bar-outer" style="height: 16px; border-radius: 8px; margin-bottom: 6px;">
+                <div id="fish-bar" class="progress-bar-inner" style="background: var(--grad-blue); width: 0%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">
+                <span>Улов: <span id="fish-progress-val">0</span>%</span>
+                <span>⏳ <span id="fish-timer-val">6.0</span>с</span>
+            </div>
+            <button class="success" id="fish-pull-btn" style="width: 100%; padding: 18px; font-size: 14px;" onclick="Core.fishClick()">🎣 ТЯНУТЬ!</button>
+        </div>
+    </div>
+
     <div id="tutorial-overlay">
         <div class="tut-card">
             <h3 id="tut-title" style="color: var(--neon-blue); margin-bottom: 8px;">Обучение</h3>
@@ -475,7 +503,7 @@ onclick="Core.declineEncounter()">
             <div style="color: var(--neon-blue)">🎖️ Лвл: <span id="lvl-val">1</span> (<span id="exp-val">0</span>/<span id="next-exp-val">50</span>)</div>
             <div style="color: var(--neon-gold)">🪙 <span id="caps-val">30</span></div>
             <div style="color: var(--neon-purple); font-weight: bold;">🏷️ <span id="vouchers-val">0</span></div>
-            <div id="current-location-badge" style="color: var(--text-muted)">📍 Руины</div>
+            <div id="current-location-badge" style="color: var(--biome-accent); transition: color 1.4s ease;">📍 Руины</div>
         </div>
     </div>
 
@@ -673,14 +701,14 @@ onclick="Core.declineEncounter()">
 
         const DB = {
             biomes: [
-                { id: 0, name: "🪨 Неоновые Руины", minLvl: 1, bossDefeatedId: null, enemies: [{ name: "Рад-Таракан", hp: 40, dmg: 8, armor: 0, class: "Быстрый", exp: 15 }, { name: "Кибер-Крыса", hp: 67, dmg: 9, armor: 1, class: "Обычный", exp: 25 }], boss: { name: "👑 Взбешенный Минори", hp: 115, dmg: 7, armor: 3, class: "Босс", exp: 120, rewardCaps: 25 } },
-                { id: 1, name: "🏚️ Ржавый Посёлок", minLvl: 10, bossDefeatedId: 0, enemies: [{ name: "Слепой Гуль", hp: 65, dmg: 10, armor: 2, class: "Кровожадный", exp: 35 }, { name: "Сточный Клерк", hp: 80, dmg: 12, armor: 4, class: "Бронированный", exp: 45 }], boss: { name: "👑 Мясник Коллектора", hp: 280, dmg: 20, armor: 8, class: "Босс", exp: 300, rewardCaps: 60 } },
-                { id: 2, name: "🌆 Неоновый Сити-Центр", minLvl: 20, bossDefeatedId: 1, enemies: [{ name: "Дрон-Охотник", hp: 120, dmg: 18, armor: 6, class: "Быстрый", exp: 70 }, { name: "Штурмотрон v5", hp: 160, dmg: 24, armor: 10, class: "Бронированный", exp: 100 }], boss: { name: "👑 Главный Архитектор", hp: 550, dmg: 38, armor: 15, class: "Босс", exp: 600, rewardCaps: 125 } },
-                { id: 3, name: "☢️ Радиактивный Лес", minLvl: 30, bossDefeatedId: 2, radDanger: 6, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 250 } },
-                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 500 } },
-                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 1000 } },
-                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 2500 } },
-                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 7500 } }
+                { id: 0, name: "🪨 Неоновые Руины", minLvl: 1, bossDefeatedId: null, theme: { c1: "#00f0ff", c2: "#bf5af2", c3: "#ff2a5f", c4: "#ffb703", glow: "#111827", atmo: "rgba(0,240,255,0.10)", accent: "#00f0ff", accentSoft: "rgba(0,240,255,0.35)" }, enemies: [{ name: "Рад-Таракан", hp: 40, dmg: 8, armor: 0, class: "Быстрый", exp: 15 }, { name: "Кибер-Крыса", hp: 67, dmg: 9, armor: 1, class: "Обычный", exp: 25 }], boss: { name: "👑 Взбешенный Минори", hp: 115, dmg: 7, armor: 3, class: "Босс", exp: 120, rewardCaps: 25 } },
+                { id: 1, name: "🏚️ Ржавый Посёлок", minLvl: 10, bossDefeatedId: 0, theme: { c1: "#ff8a3d", c2: "#b5651d", c3: "#ffcf6b", c4: "#8c5a2b", glow: "#241a10", atmo: "rgba(255,140,50,0.12)", accent: "#ff9a3d", accentSoft: "rgba(255,154,61,0.35)" }, enemies: [{ name: "Слепой Гуль", hp: 65, dmg: 10, armor: 2, class: "Кровожадный", exp: 35 }, { name: "Сточный Клерк", hp: 80, dmg: 12, armor: 4, class: "Бронированный", exp: 45 }], boss: { name: "👑 Мясник Коллектора", hp: 280, dmg: 20, armor: 8, class: "Босс", exp: 300, rewardCaps: 60 } },
+                { id: 2, name: "🌆 Неоновый Сити-Центр", minLvl: 20, bossDefeatedId: 1, theme: { c1: "#ff00c8", c2: "#00fff2", c3: "#7d2aff", c4: "#0080ff", glow: "#1a0f26", atmo: "rgba(255,0,200,0.10)", accent: "#ff2adf", accentSoft: "rgba(255,42,223,0.35)" }, enemies: [{ name: "Дрон-Охотник", hp: 120, dmg: 18, armor: 6, class: "Быстрый", exp: 70 }, { name: "Штурмотрон v5", hp: 160, dmg: 24, armor: 10, class: "Бронированный", exp: 100 }], boss: { name: "👑 Главный Архитектор", hp: 550, dmg: 38, armor: 15, class: "Босс", exp: 600, rewardCaps: 125 } },
+                { id: 3, name: "☢️ Радиактивный Лес", minLvl: 30, bossDefeatedId: 2, radDanger: 6, theme: { c1: "#39ff14", c2: "#a4ff00", c3: "#0f9d58", c4: "#c8ff3d", glow: "#0e1a0a", atmo: "rgba(57,255,20,0.12)", accent: "#39ff14", accentSoft: "rgba(57,255,20,0.35)" }, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 250 } },
+                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, theme: { c1: "#7fdfff", c2: "#c9f3ff", c3: "#3a8fd6", c4: "#e8fbff", glow: "#0c1a22", atmo: "rgba(150,230,255,0.14)", accent: "#7fdfff", accentSoft: "rgba(127,223,255,0.35)" }, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 500 } },
+                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, theme: { c1: "#ff8800", c2: "#5a5f6b", c3: "#ffcc00", c4: "#802b00", glow: "#1c1a14", atmo: "rgba(255,136,0,0.10)", accent: "#ffb020", accentSoft: "rgba(255,176,32,0.35)" }, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 1000 } },
+                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, theme: { c1: "#ff3300", c2: "#ff8800", c3: "#990000", c4: "#ffcc00", glow: "#220a04", atmo: "rgba(255,51,0,0.14)", accent: "#ff5722", accentSoft: "rgba(255,87,34,0.4)" }, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 2500 } },
+                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, theme: { c1: "#bf5af2", c2: "#ffd700", c3: "#ff2a5f", c4: "#f8fafc", glow: "#180a20", atmo: "rgba(191,90,242,0.14)", accent: "#ffd700", accentSoft: "rgba(255,215,0,0.4)" }, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 7500 } }
             ],
             weapons: [
                 { id: "fists", name: "Кулаки", dmg: 5, crit: 5 },
@@ -696,7 +724,8 @@ onclick="Core.declineEncounter()">
             ],
             cooking: [
                 { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 10 },
-                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 22 }
+                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 22 },
+                { id: "cook_fish", name: "Жареная рыба", cost: { "Сырая рыба": 1 }, heal: 16 }
             ],
             lootboxes: [
                 { name: "Скрап-Ящик", price: 15, color: "#00f0ff", maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.679 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.291 }, { item: "⛺ Привал x1", chance: 0.03 }] },
@@ -722,7 +751,22 @@ onclick="Core.declineEncounter()">
                 { id: "q8", text: "Приготовить еду на костре", progress: 0, target: 1, points: 25, done: false, trigger: "craft_food" }
             ],
 
-            init() { this.load(); this.loadSettings(); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
+            init() { this.load(); this.loadSettings(); this.applyBiomeTheme(this.p.currentBiome); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
+
+            // Применяет уникальную цветовую атмосферу текущего биома (фон, блобы, акценты интерфейса)
+            applyBiomeTheme(biomeId) {
+                let biome = DB.biomes[biomeId] || DB.biomes[0];
+                let t = biome.theme || DB.biomes[0].theme;
+                let root = document.documentElement.style;
+                root.setProperty('--biome-c1', t.c1);
+                root.setProperty('--biome-c2', t.c2);
+                root.setProperty('--biome-c3', t.c3);
+                root.setProperty('--biome-c4', t.c4);
+                root.setProperty('--biome-glow', t.glow);
+                root.setProperty('--biome-atmo', t.atmo);
+                root.setProperty('--biome-accent', t.accent);
+                root.setProperty('--biome-accent-soft', t.accentSoft);
+            },
 
             loadSettings() {
                 let raw = localStorage.getItem('w_settings_v1');
@@ -930,8 +974,69 @@ onclick="Core.declineEncounter()">
                     else if(lootRoll < 0.8) { this.p.inv["Сырое мясо"] = (this.p.inv["Сырое мясо"]||0)+1; this.log(`🥩 Найдено: Сырое мясо x1, Крышки (+${c} 🪙). +10 XP.`, "loot"); }
                     else { this.p.inv["Тяжелый Хлам"] = (this.p.inv["Тяжелый Хлам"]||0)+1; this.log(`⚙️ Найдено: Тяжелый Хлам x1, Крышки (+${c} 🪙). +15 XP.`, "loot"); }
                     this.p.exp += 10; this.checkLvl();
-                } else if (roll < 0.65) { this.startCombat(false); } else { this.log("Локация чиста. Ничего интересного."); }
+                } else if (roll < 0.58) { this.log("🌊 Вы наткнулись на заброшенное озеро посреди Пустоши..."); this.startFishing(); }
+                else if (roll < 0.78) { this.startCombat(false); } else { this.log("Локация чиста. Ничего интересного."); }
                 this.save(); this.updateUI();
+            },
+
+            startFishing() {
+                Sound.play('click');
+                this.fishing = { progress: 0, timeLeft: 6.0, decayTimer: null, countdownTimer: null, active: true };
+                document.getElementById('fish-status-text').innerText = "Клюёт! Быстро жми на кнопку, чтобы заполнить шкалу до того как рыба сорвётся!";
+                document.getElementById('fish-bar').style.width = '0%';
+                document.getElementById('fish-progress-val').innerText = '0';
+                document.getElementById('fish-timer-val').innerText = '6.0';
+                document.getElementById('fish-pull-btn').disabled = false;
+                document.getElementById('fishing-overlay').style.display = 'flex';
+
+                this.fishing.decayTimer = setInterval(() => {
+                    if (!this.fishing || !this.fishing.active) return;
+                    this.fishing.progress = Math.max(0, this.fishing.progress - (2 + Math.random() * 1.5));
+                    this.updateFishBar();
+                }, 150);
+
+                this.fishing.countdownTimer = setInterval(() => {
+                    if (!this.fishing || !this.fishing.active) return;
+                    this.fishing.timeLeft -= 0.1;
+                    document.getElementById('fish-timer-val').innerText = Math.max(0, this.fishing.timeLeft).toFixed(1);
+                    if (this.fishing.timeLeft <= 0) this.endFishing(this.fishing.progress >= 100);
+                }, 100);
+            },
+
+            fishClick() {
+                if (!this.fishing || !this.fishing.active) return;
+                Sound.play('hit');
+                this.fishing.progress = Math.min(100, this.fishing.progress + 9 + Math.random() * 6);
+                this.updateFishBar();
+                if (this.fishing.progress >= 100) this.endFishing(true);
+            },
+
+            updateFishBar() {
+                document.getElementById('fish-bar').style.width = this.fishing.progress + '%';
+                document.getElementById('fish-progress-val').innerText = Math.floor(this.fishing.progress);
+            },
+
+            endFishing(success) {
+                if (!this.fishing || !this.fishing.active) return;
+                this.fishing.active = false;
+                clearInterval(this.fishing.decayTimer);
+                clearInterval(this.fishing.countdownTimer);
+                document.getElementById('fish-pull-btn').disabled = true;
+
+                if (success) {
+                    Sound.play('loot');
+                    let qty = Math.random() < 0.25 ? 2 : 1;
+                    this.p.inv["Сырая рыба"] = (this.p.inv["Сырая рыба"] || 0) + qty;
+                    this.p.exp += 12; this.checkLvl();
+                    document.getElementById('fish-status-text').innerHTML = `🐟 Улов! Добыто: Сырая рыба x${qty}. +12 XP.`;
+                    this.log(`🎣 Успешная рыбалка на озере! Добыча: Сырая рыба x${qty}. +12 XP.`, "loot");
+                } else {
+                    Sound.play('hit');
+                    document.getElementById('fish-status-text').innerText = "💦 Рыба сорвалась с крючка... В следующий раз повезёт больше.";
+                    this.log("🎣 Рыба сорвалась с крючка и уплыла.", "combat-lose");
+                }
+                this.save(); this.updateUI();
+                setTimeout(() => { document.getElementById('fishing-overlay').style.display = 'none'; }, 1400);
             },
 
             rest() {
@@ -1208,7 +1313,7 @@ startCombat(isBossFight = false) {
                 if (target.bossDefeatedId !== null && !this.p.bossesDefeated.includes(target.bossDefeatedId)) {
                     return alert(`Переход заблокирован! Сначала победите Босса локации: ${DB.biomes[target.bossDefeatedId].name}`);
                 }
-                this.p.currentBiome = biomeId; this.save(); this.updateUI();
+                this.p.currentBiome = biomeId; this.applyBiomeTheme(biomeId); this.save(); this.updateUI();
             },
 
             eatFood(foodKey) {
