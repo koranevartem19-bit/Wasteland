@@ -163,7 +163,6 @@ transform:scale(1);
             background: var(--glass-bg); 
             backdrop-filter: blur(var(--glass-blur)) saturate(180%);
             -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-            border-bottom: 1px solid var(--glass-border); 
             box-shadow: var(--glass-shadow);
             padding: 12px; 
             display: grid; 
@@ -246,24 +245,25 @@ transform:scale(1);
             background: var(--glass-bg); 
             backdrop-filter: blur(var(--glass-blur)) saturate(180%);
             -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-            border-top: 1px solid var(--glass-border); 
             box-shadow: var(--glass-shadow);
             z-index: 400; 
         }
         .action-panel { padding: 12px 14px 8px 14px; }
         .buttons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         
-        button { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(160%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); color: var(--text-main); padding: 14px; border-radius: 16px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        button { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(160%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%); border: 1px solid rgba(255,255,255,0.14); box-shadow: var(--glass-shadow-soft); color: var(--text-main); padding: 14px; border-radius: 16px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
         button:active { transform: scale(0.97); }
-        button.primary { background: linear-gradient(135deg, rgba(255,42,95,0.55), rgba(255,0,160,0.55)); border: 1px solid rgba(255,255,255,0.35); }
-        button.success { background: linear-gradient(135deg, rgba(0,240,255,0.5), rgba(0,114,255,0.5)); border: 1px solid rgba(255,255,255,0.35); }
-        button.gold { background: linear-gradient(135deg, rgba(255,183,3,0.6), rgba(255,102,0,0.6)); border: 1px solid rgba(255,255,255,0.35); color: #000; }
-        button.purple { background: linear-gradient(135deg, rgba(218,34,255,0.55), rgba(145,20,255,0.55)); border: 1px solid rgba(255,255,255,0.35); color: #fff; }
+        button.primary { background: linear-gradient(135deg, rgba(255,42,95,0.55), rgba(255,0,160,0.55)); border: 1px solid rgba(255,255,255,0.16); }
+        button.success { background: linear-gradient(135deg, rgba(0,240,255,0.5), rgba(0,114,255,0.5)); border: 1px solid rgba(255,255,255,0.16); }
+        button.gold { background: linear-gradient(135deg, rgba(255,183,3,0.6), rgba(255,102,0,0.6)); border: 1px solid rgba(255,255,255,0.16); color: #000; }
+        button.purple { background: linear-gradient(135deg, rgba(218,34,255,0.55), rgba(145,20,255,0.55)); border: 1px solid rgba(255,255,255,0.16); color: #fff; }
         button:disabled { opacity: 0.25; transform: none; cursor: not-allowed; z-index: 1 !important; }
 
-        .tabs { display: flex; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); height: 60px; border-top: 1px solid var(--glass-border); }
-        .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; font-size: 11px; height: 100%; }
-        .tab-btn.active { color: var(--neon-blue); background: rgba(0, 240, 255, 0.06); border-top: 2px solid var(--neon-blue); }
+        .tabs { display: flex; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); height: 60px; padding: 6px 8px; gap: 6px; width: 100vw; box-sizing: border-box; }
+        .tab-btn { flex: 1 1 0; min-width: 0; max-width: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: var(--text-muted); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3px; height: 100%; padding: 4px 2px; overflow: hidden; transition: all 0.2s; }
+        .tab-btn.active { color: var(--neon-blue); background: rgba(0, 240, 255, 0.08); border: 1px solid var(--neon-blue); }
+        .tab-icon { font-size: 16px; line-height: 1; }
+        .tab-label { font-size: clamp(8px, 2.4vw, 10.5px); line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
         .timer-badge { font-size: 10px; color: var(--neon-red); display: block; font-weight: normal; margin-top: 2px;}
 
         .stat-full { grid-column: span 2; }
@@ -279,6 +279,43 @@ transform:scale(1);
         #settings-btn { background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); border-radius: 16px; font-size: 13px; font-weight: 800; color: var(--text-main); }
 
         #settings-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4,6,10,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9000; display: none; justify-content: center; align-items: center; padding: 20px; }
+
+        /* === Книга Рецептов === */
+        #recipebook-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(10,6,4,0.75); z-index: 5800; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 16px; backdrop-filter: blur(6px); }
+        .book-container { width: 100%; max-width: 380px; max-height: 78vh; background: linear-gradient(160deg, #ecd9ae 0%, #d9bd85 100%); border-radius: 14px; border: 6px solid #5a3a20; box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 0 30px rgba(90,58,32,0.35); padding: 16px; display: flex; flex-direction: column; overflow: hidden; }
+        .book-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px dashed #5a3a20; padding-bottom: 8px; }
+        .book-title { font-family: Georgia, 'Times New Roman', serif; font-size: 17px; font-weight: 900; color: #3a2410; letter-spacing: 0.5px; }
+        .book-close-btn { background: #5a3a20; color: #ecd9ae; border: none; border-radius: 8px; padding: 7px 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
+        .book-pages { overflow-y: auto; flex: 1; padding-right: 2px; }
+        .recipe-entry { background: rgba(255,255,255,0.4); border: 1px solid rgba(90,58,32,0.35); border-radius: 10px; padding: 10px; margin-bottom: 10px; font-family: Georgia, serif; color: #2a1a0c; }
+        .recipe-entry-header { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 14px; margin-bottom: 5px; }
+        .recipe-ing { font-size: 12px; margin-bottom: 2px; font-weight: 600; }
+        .recipe-ing.ok { color: #2f6b2f; }
+        .recipe-ing.bad { color: #8b1a1a; }
+        .recipe-craft-btn { width: 100%; margin-top: 8px; padding: 9px; border-radius: 8px; border: none; background: linear-gradient(135deg,#7a4a20,#5a3a20); color: #ecd9ae; font-weight: 800; font-size: 12px; cursor: pointer; }
+        .recipe-craft-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* === Тех-Схемы (крафт снаряжения) === */
+        #schematics-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(2,10,14,0.85); z-index: 5900; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 16px; backdrop-filter: blur(6px); }
+        .schem-container { width: 100%; max-width: 380px; max-height: 78vh; background: linear-gradient(160deg, rgba(0,22,32,0.92), rgba(0,8,14,0.96)); border: 2px solid var(--neon-blue); border-radius: 14px; box-shadow: 0 0 30px rgba(0,240,255,0.25), inset 0 0 20px rgba(0,240,255,0.06); padding: 16px; display: flex; flex-direction: column; overflow: hidden; font-family: 'Consolas', monospace; }
+        .schem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px dashed rgba(0,240,255,0.35); padding-bottom: 8px; }
+        .schem-title { font-size: 14px; font-weight: 900; color: var(--neon-blue); letter-spacing: 1px; text-transform: uppercase; }
+        .schem-close-btn { background: rgba(0,240,255,0.15); border: 1px solid var(--neon-blue); color: var(--neon-blue); border-radius: 6px; padding: 7px 10px; font-size: 11px; font-weight: 800; cursor: pointer; }
+        .schem-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+        .schem-tab { flex: 1; padding: 8px; font-size: 11px; background: rgba(0,240,255,0.05); border: 1px solid rgba(0,240,255,0.25); color: var(--text-muted); border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+        .schem-tab.active { background: var(--neon-blue); color: #00161a; font-weight: 900; border-color: var(--neon-blue); }
+        .schem-body { overflow-y: auto; flex: 1; padding-right: 2px; }
+        .schem-entry { border: 1px solid rgba(0,240,255,0.25); border-radius: 10px; padding: 10px; margin-bottom: 10px; background: rgba(0,240,255,0.04); }
+        .schem-entry-header { display: flex; justify-content: space-between; font-weight: 800; font-size: 13px; color: #fff; margin-bottom: 5px; }
+        .schem-res { font-size: 11px; margin-bottom: 2px; color: var(--text-muted); font-weight: 600; }
+        .schem-res.ok { color: var(--neon-green); }
+        .schem-res.bad { color: var(--neon-red); }
+        .schem-craft-btn { width: 100%; margin-top: 8px; padding: 9px; border-radius: 8px; border: 1px solid var(--neon-blue); background: rgba(0,240,255,0.15); color: #fff; font-weight: 800; font-size: 11px; cursor: pointer; }
+        .schem-craft-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .book-container, .book-container * , .schem-container, .schem-container * { text-shadow: none !important; }
+
+        /* === Карточка результата крафта (по аналогии с лутбоксом) === */
+        #craft-result-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4,6,10,0.85); z-index: 6600; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); }
         #settings-overlay.active { display: flex; }
         .settings-card { width: 100%; max-width: 340px; background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); border-radius: 22px; padding: 22px; box-shadow: var(--glass-shadow); }
         .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -302,12 +339,22 @@ transform:scale(1);
             <div class="settings-row">
                 <div>
                     <div class="settings-label">✨ Liquid Glass</div>
-                    <div class="settings-sub">Стеклянный эффект интерфейса</div>
+                    <div class="settings-sub">Стеклянный эффект интерфейса (по умолчанию выключен)</div>
                 </div>
                 <label class="ios-switch">
                     <input type="checkbox" id="setting-glass" onchange="Core.toggleGlass(this.checked)">
                     <span class="track"><span class="thumb"></span></span>
                 </label>
+            </div>
+            <div class="settings-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                <div>
+                    <div class="settings-label">🎚️ Мощность эффекта</div>
+                    <div class="settings-sub">Настройте силу размытия и прозрачности стекла</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="range" id="setting-glass-intensity" min="0" max="100" value="70" oninput="Core.setGlassIntensity(this.value)" style="flex: 1; accent-color: var(--neon-blue);">
+                    <span id="glass-intensity-val" style="font-size: 12px; color: var(--text-muted); min-width: 36px; text-align: right; font-weight: 700;">70%</span>
+                </div>
             </div>
             <div class="settings-row">
                 <div>
@@ -462,6 +509,7 @@ onclick="Core.declineEncounter()">
     <div id="fishing-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: radial-gradient(ellipse at center top, rgba(0,60,90,0.55) 0%, rgba(4, 6, 10, 0.95) 70%); z-index: 6200; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
         <div class="tut-card" style="border-color: var(--neon-blue); max-width: 340px; padding: 22px;">
             <h3 style="color: var(--neon-blue); margin-bottom: 8px;">🎣 Рыбалка на озере</h3>
+            <div id="fish-rod-label" style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;"></div>
             <p id="fish-status-text" style="font-size: 13px; color: #fff; line-height: 1.5; margin-bottom: 16px;">Клюёт! Быстро жми на кнопку, чтобы заполнить шкалу до того как рыба сорвётся!</p>
             <div class="progress-bar-outer" style="height: 16px; border-radius: 8px; margin-bottom: 6px;">
                 <div id="fish-bar" class="progress-bar-inner" style="background: var(--grad-blue); width: 0%;"></div>
@@ -471,6 +519,40 @@ onclick="Core.declineEncounter()">
                 <span>⏳ <span id="fish-timer-val">6.0</span>с</span>
             </div>
             <button class="success" id="fish-pull-btn" style="width: 100%; padding: 18px; font-size: 14px;" onclick="Core.fishClick()">🎣 ТЯНУТЬ!</button>
+        </div>
+    </div>
+
+    <div id="recipebook-overlay">
+        <div class="book-container">
+            <div class="book-header">
+                <div class="book-title">📖 Книга Рецептов</div>
+                <button class="book-close-btn" onclick="Core.closeRecipeBook()">✖ Закрыть</button>
+            </div>
+            <div class="book-pages" id="recipebook-list"></div>
+        </div>
+    </div>
+
+    <div id="schematics-overlay">
+        <div class="schem-container">
+            <div class="schem-header">
+                <div class="schem-title">🛠️ Тех-Схемы</div>
+                <button class="schem-close-btn" onclick="Core.closeSchematics()">✖ Закрыть</button>
+            </div>
+            <div class="schem-tabs">
+                <button class="schem-tab active" id="schem-tab-weapon" onclick="Core.switchSchemTab('weapon')">⚔️ Оружие</button>
+                <button class="schem-tab" id="schem-tab-rod" onclick="Core.switchSchemTab('rod')">🎣 Удочки</button>
+            </div>
+            <div class="schem-body" id="schem-body"></div>
+        </div>
+    </div>
+
+    <div id="craft-result-overlay">
+        <div class="reward-card" id="craft-result-card" style="display: block;">
+            <div class="reward-icon" id="craft-result-icon"></div>
+            <div class="reward-title" id="craft-result-title">Крафт успешен!</div>
+            <div class="reward-name" id="craft-result-name"></div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;" id="craft-result-stat"></div>
+            <button class="primary reward-button" onclick="Core.closeCraftResult()">Отлично!</button>
         </div>
     </div>
 
@@ -512,6 +594,8 @@ onclick="Core.declineEncounter()">
     <div id="screen-inv" class="screen-overlay">
         <div class="screen-title">⚔️ Доступный Арсенал & Модернизация</div>
         <div id="weapon-list"></div>
+        <div class="screen-title">🎣 Рыболовные Снасти</div>
+        <div id="rod-list"></div>
         <div class="screen-title">🍏 Припасы и Еда</div>
         <div id="food-list"></div>
         <div class="screen-title">📦 Ресурсы</div>
@@ -519,10 +603,15 @@ onclick="Core.declineEncounter()">
     </div>
 
     <div id="screen-craft" class="screen-overlay">
-        <div class="screen-title">👨‍🍳 Приготовление пищи</div>
-        <div id="cook-list"></div>
-        <div class="screen-title">🛠️ Верстак Снаряжения</div>
-        <div id="craft-list"></div>
+        <div class="screen-title">🛠️ Мастерская Выжившего</div>
+        <div class="list-item" style="cursor: pointer;" onclick="Core.openRecipeBook()">
+            <div>📖 <b>Книга Рецептов</b><br><span style="font-size: 11px; color: var(--text-muted);">Блюда и требуемые ингредиенты</span></div>
+            <button class="gold" style="padding: 8px 14px;">Открыть</button>
+        </div>
+        <div class="list-item" style="cursor: pointer;" onclick="Core.openSchematics()">
+            <div>🛠️ <b>Тех-Схемы</b><br><span style="font-size: 11px; color: var(--text-muted);">Чертежи оружия и рыболовных снастей</span></div>
+            <button class="success" style="padding: 8px 14px;">Открыть</button>
+        </div>
     </div>
 
     <div id="screen-map" class="screen-overlay">
@@ -587,11 +676,11 @@ onclick="Core.declineEncounter()">
         </div>
 
         <div class="tabs">
-            <button id="tab-main" class="tab-btn active" onclick="Core.switchTab('main', this)">🌍 Биом</button>
-            <button id="tab-inv" class="tab-btn" onclick="Core.switchTab('inv', this)">🎒 Инвентарь</button>
-            <button id="tab-craft" class="tab-btn" onclick="Core.switchTab('craft', this)">🛠️ Крафт</button>
-            <button id="tab-map" class="tab-btn" onclick="Core.switchTab('map', this)">🗺️ Карта</button>
-            <button id="tab-shop" class="tab-btn" onclick="Core.switchTab('shop', this)">🏪 Магазин</button>
+            <button id="tab-main" class="tab-btn active" onclick="Core.switchTab('main', this)"><span class="tab-icon">🌍</span><span class="tab-label">Биом</span></button>
+            <button id="tab-inv" class="tab-btn" onclick="Core.switchTab('inv', this)"><span class="tab-icon">🎒</span><span class="tab-label">Арсенал</span></button>
+            <button id="tab-craft" class="tab-btn" onclick="Core.switchTab('craft', this)"><span class="tab-icon">🛠️</span><span class="tab-label">Крафт</span></button>
+            <button id="tab-map" class="tab-btn" onclick="Core.switchTab('map', this)"><span class="tab-icon">🗺️</span><span class="tab-label">Карта</span></button>
+            <button id="tab-shop" class="tab-btn" onclick="Core.switchTab('shop', this)"><span class="tab-icon">🏪</span><span class="tab-label">Магазин</span></button>
         </div>
     </div>
 
@@ -606,7 +695,7 @@ onclick="Core.declineEncounter()">
             active: false, step: 0,
             slides: [
                 { type: "click", trigger: "btn-explore", text: "Добро пожаловать в Пустошь! Нажми кнопку «🚶 Разведка», чтобы исследовать местность." },
-                { type: "click", trigger: "tab-inv", text: "Супер! Давай проверим твои припасы. Нажми снизу на вкладку «🎒 Рюкзак»." },
+                { type: "click", trigger: "tab-inv", text: "Супер! Давай проверим твои припасы. Нажми снизу на вкладку «🎒 Арсенал»." },
                 { type: "manual", text: "Здесь хранится твоё оружие, ресурсы и еда. Кнопка «Съесть» восстановит ОЗ, когда ты добудешь или скрафтишь припасы." },
                 { type: "click", trigger: "tab-craft", text: "А еда берется из готовки! Перейди во вкладку «🛠️ Крафт»." },
                 { type: "manual", text: "На верстаке крафта можно жарить мясо крыс для лечения или собирать мощное оружие по чертежам." },
@@ -723,9 +812,26 @@ onclick="Core.declineEncounter()">
                 { id: "craft_gauss", name: "Винтовка Гаусса", reqLvl: 45, cost: { "Запчасти": 150, "Тяжелый Хлам": 40, "Ядерная Батарея": 10 }, type: "weapon", targetId: "gauss" }
             ],
             cooking: [
-                { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 10 },
-                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 22 },
-                { id: "cook_fish", name: "Жареная рыба", cost: { "Сырая рыба": 1 }, heal: 16 }
+                { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 10, icon: "🍗" },
+                { id: "cook_soup", name: "Питательный Рад-Суп", cost: { "Сырое мясо": 2, "Запчасти": 1 }, heal: 22, icon: "🍲" }
+            ],
+            fish: [
+                { id: "perch", name: "Речной Окунь", rawName: "Сырой Окунь", cookedName: "Жареный Окунь", icon: "🐟", rarity: "Обычная", weight: 45, minRodTier: 1, heal: 14 },
+                { id: "catfish", name: "Сом-Мутант", rawName: "Сырой Сом-Мутант", cookedName: "Копчёный Сом-Мутант", icon: "🐠", rarity: "Необычная", weight: 28, minRodTier: 1, heal: 20 },
+                { id: "carp", name: "Радужный Карп", rawName: "Сырой Радужный Карп", cookedName: "Запечённый Карп", icon: "🐡", rarity: "Редкая", weight: 16, minRodTier: 2, heal: 30 },
+                { id: "shark", name: "Акула Пустоши", rawName: "Сырая Акула Пустоши", cookedName: "Стейк из Акулы Пустоши", icon: "🦈", rarity: "Эпическая", weight: 8, minRodTier: 3, heal: 45 },
+                { id: "abyss", name: "Глубоководный Кошмар", rawName: "Мясо Глубоководного Кошмара", cookedName: "Деликатес Кошмара", icon: "🐙", rarity: "Легендарная", weight: 3, minRodTier: 4, heal: 70 }
+            ],
+            rods: [
+                { id: "rusty", name: "Ржавая Удочка", icon: "🎣", tier: 1, clickMin: 9, clickMax: 15, decayMin: 2, decayMax: 3.5, duration: 6, desc: "Стартовое снаряжение рыбака. Ловит только мелкую рыбу." },
+                { id: "sturdy", name: "Крепкая Удочка", icon: "🎣", tier: 2, clickMin: 11, clickMax: 17, decayMin: 1.6, decayMax: 3, duration: 7, desc: "Усиленное удилище — позволяет тягаться с редкой рыбой." },
+                { id: "carbon", name: "Карбоновый Спиннинг", icon: "🎣", tier: 3, clickMin: 13, clickMax: 19, decayMin: 1.3, decayMax: 2.6, duration: 8, desc: "Лёгкий и прочный спиннинг для серьёзной рыбалки." },
+                { id: "plasma", name: "Плазменная Удочка", icon: "🎣", tier: 4, clickMin: 16, clickMax: 23, decayMin: 1, decayMax: 2, duration: 9, desc: "Экспериментальная разработка, приманивает даже глубоководных монстров." }
+            ],
+            rodBlueprints: [
+                { id: "bp_sturdy", targetId: "sturdy", reqLvl: 8, cost: { "Запчасти": 6, "Тяжелый Хлам": 2 } },
+                { id: "bp_carbon", targetId: "carbon", reqLvl: 22, cost: { "Запчасти": 14, "Тяжелый Хлам": 6, "Ядерная Батарея": 1 } },
+                { id: "bp_plasma", targetId: "plasma", reqLvl: 45, cost: { "Запчасти": 30, "Тяжелый Хлам": 14, "Ядерная Батарея": 3 } }
             ],
             lootboxes: [
                 { name: "Скрап-Ящик", price: 15, color: "#00f0ff", maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.679 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.291 }, { item: "⛺ Привал x1", chance: 0.03 }] },
@@ -735,8 +841,13 @@ onclick="Core.declineEncounter()">
             bpRewards: generateBpRewards()
         };
 
+        // Автогенерация рецептов готовки для каждого вида рыбы (Сырая рыба -> Приготовленное блюдо)
+        DB.fish.forEach(f => {
+            DB.cooking.push({ id: "cook_" + f.id, name: f.cookedName, cost: { [f.rawName]: 1 }, heal: f.heal, icon: f.icon, rarity: f.rarity });
+        });
+
         const Core = {
-            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 }, activeWeapon: "fists", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [] },
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [] },
             combatState: null, dailyClaimed: false, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
             hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: { fast: 0, heavy: 0, bleed: 0, block: 0 }, abilityCdSeconds: { fast: 2, heavy: 5, bleed: 4, block: 3 },
             lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
@@ -770,17 +881,55 @@ onclick="Core.declineEncounter()">
 
             loadSettings() {
                 let raw = localStorage.getItem('w_settings_v1');
-                this.settings = raw ? JSON.parse(raw) : { glass: true, sound: true };
+                this.settings = raw ? JSON.parse(raw) : { glass: false, sound: true, glassIntensity: 70 };
+                if (this.settings.glassIntensity === undefined) this.settings.glassIntensity = 70;
                 document.body.classList.toggle('no-glass', !this.settings.glass);
                 Sound.enabled = this.settings.sound;
+                this.applyGlassIntensity(this.settings.glassIntensity);
                 document.getElementById('setting-glass').checked = this.settings.glass;
                 document.getElementById('setting-sound').checked = this.settings.sound;
+                document.getElementById('setting-glass-intensity').value = this.settings.glassIntensity;
+                document.getElementById('glass-intensity-val').innerText = this.settings.glassIntensity + '%';
             },
             saveSettings() { localStorage.setItem('w_settings_v1', JSON.stringify(this.settings)); },
             openSettings() { document.getElementById('settings-overlay').classList.add('active'); },
             closeSettings() { document.getElementById('settings-overlay').classList.remove('active'); this.saveSettings(); },
             toggleGlass(val) { this.settings.glass = val; document.body.classList.toggle('no-glass', !val); this.saveSettings(); },
             toggleSound(val) { this.settings.sound = val; Sound.enabled = val; this.saveSettings(); },
+
+            setGlassIntensity(val) {
+                val = parseInt(val);
+                this.settings.glassIntensity = val;
+                document.getElementById('glass-intensity-val').innerText = val + '%';
+                this.applyGlassIntensity(val);
+                this.saveSettings();
+            },
+
+            // Пересчитывает переменные стеклянного эффекта по значению 0-100 (0 = почти прозрачно и без размытия, 100 = максимальный Liquid Glass)
+            applyGlassIntensity(intensity) {
+                let t = Math.max(0, Math.min(100, intensity)) / 100;
+                let root = document.documentElement.style;
+                let blur = Math.round(36 * t);
+                let bgTop = (0.03 + 0.13 * t).toFixed(3);
+                let bgBottom = (0.01 + 0.03 * t).toFixed(3);
+                let bgBase = (0.25 + 0.25 * t).toFixed(3);
+                let sTop = (0.05 + 0.17 * t).toFixed(3);
+                let sBottom = (0.02 + 0.04 * t).toFixed(3);
+                let sBase = (0.3 + 0.3 * t).toFixed(3);
+                let borderA = (0.10 + 0.28 * t).toFixed(3);
+                let shOuter = (0.2 + 0.3 * t).toFixed(3);
+                let shInTop = (0.08 + 0.22 * t).toFixed(3);
+                let shInBot = (0.06 + 0.19 * t).toFixed(3);
+                let softTop = (0.05 + 0.17 * t).toFixed(3);
+                let softBot = (0.04 + 0.16 * t).toFixed(3);
+
+                root.setProperty('--glass-blur', blur + 'px');
+                root.setProperty('--glass-bg', `linear-gradient(145deg, rgba(255,255,255,${bgTop}) 0%, rgba(255,255,255,${bgBottom}) 100%), rgba(8, 10, 16, ${bgBase})`);
+                root.setProperty('--glass-bg-strong', `linear-gradient(145deg, rgba(255,255,255,${sTop}) 0%, rgba(255,255,255,${sBottom}) 100%), rgba(10, 12, 18, ${sBase})`);
+                root.setProperty('--glass-border', `rgba(255, 255, 255, ${borderA})`);
+                root.setProperty('--glass-shadow', `0 10px 40px rgba(0, 0, 0, ${shOuter}), inset 0 1px 0 rgba(255, 255, 255, ${shInTop}), inset 0 -1px 0 rgba(0, 0, 0, ${shInBot})`);
+                root.setProperty('--glass-shadow-soft', `inset 0 1px 0 rgba(255, 255, 255, ${softTop}), inset 0 -1px 0 rgba(0, 0, 0, ${softBot})`);
+            },
             save() { localStorage.setItem('w_save_v7', JSON.stringify({ p: this.p, daily: this.dailyClaimed, restUses: this.restUses, t: this.nextRestTick, q: this.quests })); },
             load() { 
                 let data = localStorage.getItem('w_save_v7'); 
@@ -793,6 +942,8 @@ onclick="Core.declineEncounter()">
                     if(this.p.armor === undefined) this.p.armor = 2;
                     if(this.p.dodgeChance === undefined) this.p.dodgeChance = 8;
                     if(this.p.satiety === undefined) this.p.satiety = 100;
+                    if(!this.p.rodsOwned) this.p.rodsOwned = ["rusty"];
+                    if(!this.p.activeRod) this.p.activeRod = "rusty";
                 } 
             },
             
@@ -838,7 +989,7 @@ onclick="Core.declineEncounter()">
                     buyLvlBtn.disabled = this.p.bpLvl >= 50 || this.p.caps < 50;
                 }
 
-                this.renderInventory(); this.renderCrafting(); this.renderShop(); this.renderMap(); this.renderBp();
+                this.renderInventory(); this.renderShop(); this.renderMap(); this.renderBp();
             },
             log(msg, type = '') { const box = document.getElementById('log'); const e = document.createElement('div'); e.className = `log-entry ${type}`; e.innerText = msg; box.appendChild(e); box.scrollTop = box.scrollHeight; },
             getRestTime() { return this.p.lvl >= 50 ? 30 : 60; },
@@ -981,17 +1132,20 @@ onclick="Core.declineEncounter()">
 
             startFishing() {
                 Sound.play('click');
-                this.fishing = { progress: 0, timeLeft: 6.0, decayTimer: null, countdownTimer: null, active: true };
+                let rod = DB.rods.find(r => r.id === this.p.activeRod) || DB.rods[0];
+                this.fishing = { progress: 0, timeLeft: rod.duration, decayTimer: null, countdownTimer: null, active: true, rod };
+                document.getElementById('fish-rod-label').innerText = `${rod.icon} Экипировано: ${rod.name}`;
                 document.getElementById('fish-status-text').innerText = "Клюёт! Быстро жми на кнопку, чтобы заполнить шкалу до того как рыба сорвётся!";
                 document.getElementById('fish-bar').style.width = '0%';
                 document.getElementById('fish-progress-val').innerText = '0';
-                document.getElementById('fish-timer-val').innerText = '6.0';
+                document.getElementById('fish-timer-val').innerText = rod.duration.toFixed(1);
                 document.getElementById('fish-pull-btn').disabled = false;
                 document.getElementById('fishing-overlay').style.display = 'flex';
 
                 this.fishing.decayTimer = setInterval(() => {
                     if (!this.fishing || !this.fishing.active) return;
-                    this.fishing.progress = Math.max(0, this.fishing.progress - (2 + Math.random() * 1.5));
+                    let dec = rod.decayMin + Math.random() * (rod.decayMax - rod.decayMin);
+                    this.fishing.progress = Math.max(0, this.fishing.progress - dec);
                     this.updateFishBar();
                 }, 150);
 
@@ -1006,7 +1160,8 @@ onclick="Core.declineEncounter()">
             fishClick() {
                 if (!this.fishing || !this.fishing.active) return;
                 Sound.play('hit');
-                this.fishing.progress = Math.min(100, this.fishing.progress + 9 + Math.random() * 6);
+                let rod = this.fishing.rod;
+                this.fishing.progress = Math.min(100, this.fishing.progress + rod.clickMin + Math.random() * (rod.clickMax - rod.clickMin));
                 this.updateFishBar();
                 if (this.fishing.progress >= 100) this.endFishing(true);
             },
@@ -1014,6 +1169,16 @@ onclick="Core.declineEncounter()">
             updateFishBar() {
                 document.getElementById('fish-bar').style.width = this.fishing.progress + '%';
                 document.getElementById('fish-progress-val').innerText = Math.floor(this.fishing.progress);
+            },
+
+            // Выбираем случайный вид рыбы, доступный для текущей удочки (взвешенный шанс по редкости)
+            pickCatch() {
+                let rodTier = this.fishing.rod.tier;
+                let pool = DB.fish.filter(f => f.minRodTier <= rodTier);
+                let totalWeight = pool.reduce((s, f) => s + f.weight, 0);
+                let rand = Math.random() * totalWeight, accum = 0;
+                for (let f of pool) { accum += f.weight; if (rand <= accum) return f; }
+                return pool[0];
             },
 
             endFishing(success) {
@@ -1025,11 +1190,12 @@ onclick="Core.declineEncounter()">
 
                 if (success) {
                     Sound.play('loot');
+                    let fish = this.pickCatch();
                     let qty = Math.random() < 0.25 ? 2 : 1;
-                    this.p.inv["Сырая рыба"] = (this.p.inv["Сырая рыба"] || 0) + qty;
+                    this.p.inv[fish.rawName] = (this.p.inv[fish.rawName] || 0) + qty;
                     this.p.exp += 12; this.checkLvl();
-                    document.getElementById('fish-status-text').innerHTML = `🐟 Улов! Добыто: Сырая рыба x${qty}. +12 XP.`;
-                    this.log(`🎣 Успешная рыбалка на озере! Добыча: Сырая рыба x${qty}. +12 XP.`, "loot");
+                    document.getElementById('fish-status-text').innerHTML = `${fish.icon} Улов! Добыто: ${fish.rawName} x${qty} (${fish.rarity}). +12 XP.`;
+                    this.log(`🎣 Успешная рыбалка на озере! Добыча: ${fish.rawName} x${qty}. +12 XP.`, "loot");
                 } else {
                     Sound.play('hit');
                     document.getElementById('fish-status-text').innerText = "💦 Рыба сорвалась с крючка... В следующий раз повезёт больше.";
@@ -1037,6 +1203,20 @@ onclick="Core.declineEncounter()">
                 }
                 this.save(); this.updateUI();
                 setTimeout(() => { document.getElementById('fishing-overlay').style.display = 'none'; }, 1400);
+            },
+
+            equipRod(rodId) { Sound.play('click'); this.p.activeRod = rodId; this.log(`🎣 Экипирована удочка: ${DB.rods.find(r => r.id === rodId).name}`); this.save(); this.updateUI(); },
+
+            craftRod(id) {
+                let bp = DB.rodBlueprints.find(b => b.id === id);
+                if (this.p.lvl < bp.reqLvl) return alert(`Требуется уровень ${bp.reqLvl}!`);
+                if (this.p.rodsOwned.includes(bp.targetId)) return alert("Эта удочка уже собрана!");
+                for (let [res, count] of Object.entries(bp.cost)) { if ((this.p.inv[res] || 0) < count) return alert("Недостаточно материалов для этой удочки!"); }
+                for (let [res, count] of Object.entries(bp.cost)) { this.p.inv[res] -= count; }
+                this.p.rodsOwned.push(bp.targetId);
+                let rod = DB.rods.find(r => r.id === bp.targetId);
+                this.save(); this.updateUI(); this.renderSchematics();
+                this.showCraftResult(rod.icon, "🛠️ Крафт успешен!", rod.name, "Новая рыболовная снасть готова к использованию!");
             },
 
             rest() {
@@ -1373,6 +1553,23 @@ startCombat(isBossFight = false) {
                         </div>`;
                 });
 
+                const rdEl = document.getElementById('rod-list'); rdEl.innerHTML = '';
+                this.p.rodsOwned.forEach(rId => {
+                    let rod = DB.rods.find(r => r.id === rId);
+                    let isActive = this.p.activeRod === rId;
+                    rdEl.innerHTML += `
+                        <div class="list-item" style="flex-direction: column; align-items: stretch; gap: 6px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>${rod.icon} <b>${rod.name}</b></div>
+                                <div style="color: var(--neon-gold); font-size: 11px;">⏱ ${rod.duration}с | ⚡${rod.clickMin}-${rod.clickMax}</div>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted);">${rod.desc}</div>
+                            <button class="${isActive?'success':'primary'}" style="padding: 6px;" ${isActive?'disabled':''} onclick="Core.equipRod('${rId}')">
+                                ${isActive?'⚡ Активна':'Экипировать'}
+                            </button>
+                        </div>`;
+                });
+
                 const fEl = document.getElementById('food-list'); fEl.innerHTML = ''; let hasFood = false;
                 for(let key in this.p.food) { if(this.p.food[key] > 0) { hasFood = true; fEl.innerHTML += `<div class="list-item"><div>🍏 ${key} (x${this.p.food[key]})</div><button class="success" style="padding:6px 12px;" onclick="Core.eatFood('${key}')">Съесть</button></div>`; } }
                 if(!hasFood) fEl.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:4px;">Нет готовой еды.</div>`;
@@ -1381,30 +1578,73 @@ startCombat(isBossFight = false) {
                 for (let k in this.p.inv) { if (this.p.inv[k] > 0) rEl.innerHTML += `<div class="list-item"><div>📦 ${k}</div><div>x${this.p.inv[k]}</div></div>`; }
             },
 
-            renderCrafting() {
-                const cEl = document.getElementById('cook-list'); cEl.innerHTML = '';
-                DB.cooking.forEach(recipe => {
-                    let reqs = Object.entries(recipe.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ');
-                    cEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <div style="display:flex; justify-content:space-between; width:100%;"><b>${recipe.name}</b> <span style="color:var(--neon-gold)">+${recipe.heal}% Сытости</span></div>
-                        <div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${reqs}</div>
-                        <button class="success" style="width:100%; padding:6px; font-size:11px;" onclick="Core.craftFood('${recipe.id}')">Приготовить</button>
-                    </div>`;
-                });
+            // === Книга Рецептов ===
+            openRecipeBook() { Sound.play('click'); this.renderRecipeBook(); document.getElementById('recipebook-overlay').style.display = 'flex'; },
+            closeRecipeBook() { document.getElementById('recipebook-overlay').style.display = 'none'; },
 
-                const wEl = document.getElementById('craft-list'); wEl.innerHTML = '';
-                DB.blueprints.forEach(bp => {
-                    let meetsLvl = this.p.lvl >= bp.reqLvl; let wpnData = DB.weapons.find(w => w.id === bp.targetId);
-                    let subLine = meetsLvl
-                        ? `<div style="font-size:11px; color:var(--text-muted)">Ресурсы: ${Object.entries(bp.cost).map(([res, count]) => `${res}: ${(this.p.inv[res]||0)}/${count}`).join(', ')}</div>`
-                        : `<div style="font-size:11px; color:var(--text-muted)">🔒 Откроется на уровне ${bp.reqLvl}</div>`;
-                    wEl.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; opacity: ${meetsLvl?1:0.55}">
-                        <div style="display:flex; justify-content:space-between; width:100%;"><b>${bp.name}</b> <span style="color:var(--neon-gold)">Урон: ${wpnData.dmg}</span></div>
-                        ${subLine}
-                        <button class="primary" style="width:100%; padding:6px; font-size:11px;" ${meetsLvl?'':'disabled'} onclick="Core.craftWeapon('${bp.id}')">${meetsLvl ? 'Собрать' : `Требуется Лвл ${bp.reqLvl}`}</button>
+            renderRecipeBook() {
+                const el = document.getElementById('recipebook-list'); el.innerHTML = '';
+                DB.cooking.forEach(recipe => {
+                    let canCraft = true;
+                    let ingHtml = Object.entries(recipe.cost).map(([res, count]) => {
+                        let have = this.p.inv[res] || 0; let ok = have >= count; if (!ok) canCraft = false;
+                        return `<div class="recipe-ing ${ok?'ok':'bad'}">${ok?'✔':'✘'} ${res}: ${have}/${count}</div>`;
+                    }).join('');
+                    el.innerHTML += `<div class="recipe-entry">
+                        <div class="recipe-entry-header"><span>${recipe.icon || '🍽️'} ${recipe.name}</span><span>+${recipe.heal}%</span></div>
+                        ${ingHtml}
+                        <button class="recipe-craft-btn" ${canCraft?'':'disabled'} onclick="Core.craftFood('${recipe.id}')">Приготовить</button>
                     </div>`;
                 });
             },
+
+            // === Тех-Схемы (крафт оружия и удочек) ===
+            openSchematics() { Sound.play('click'); this.schemTab = this.schemTab || 'weapon'; this.renderSchematics(); document.getElementById('schematics-overlay').style.display = 'flex'; },
+            closeSchematics() { document.getElementById('schematics-overlay').style.display = 'none'; },
+            switchSchemTab(tab) { this.schemTab = tab; this.renderSchematics(); },
+
+            renderSchematics() {
+                document.getElementById('schem-tab-weapon').classList.toggle('active', this.schemTab !== 'rod');
+                document.getElementById('schem-tab-rod').classList.toggle('active', this.schemTab === 'rod');
+                const el = document.getElementById('schem-body'); el.innerHTML = '';
+
+                if (this.schemTab === 'rod') {
+                    DB.rodBlueprints.forEach(bp => {
+                        let rod = DB.rods.find(r => r.id === bp.targetId);
+                        let owned = this.p.rodsOwned.includes(bp.targetId);
+                        let meetsLvl = this.p.lvl >= bp.reqLvl;
+                        let resHtml = Object.entries(bp.cost).map(([res, count]) => { let have = this.p.inv[res] || 0; let ok = have >= count; return `<div class="schem-res ${ok?'ok':'bad'}">${res}: ${have}/${count}</div>`; }).join('');
+                        el.innerHTML += `<div class="schem-entry" style="opacity: ${meetsLvl?1:0.55}">
+                            <div class="schem-entry-header"><span>${rod.icon} ${rod.name}</span></div>
+                            <div class="schem-res">${rod.desc}</div>
+                            ${meetsLvl ? resHtml : `<div class="schem-res bad">🔒 Требуется уровень ${bp.reqLvl}</div>`}
+                            <button class="schem-craft-btn" ${(owned||!meetsLvl)?'disabled':''} onclick="Core.craftRod('${bp.id}')">${owned?'✔ Собрано':'Собрать'}</button>
+                        </div>`;
+                    });
+                } else {
+                    DB.blueprints.forEach(bp => {
+                        let wpnData = DB.weapons.find(w => w.id === bp.targetId);
+                        let meetsLvl = this.p.lvl >= bp.reqLvl;
+                        let owned = this.p.weaponsOwned.includes(bp.targetId);
+                        let resHtml = Object.entries(bp.cost).map(([res, count]) => { let have = this.p.inv[res] || 0; let ok = have >= count; return `<div class="schem-res ${ok?'ok':'bad'}">${res}: ${have}/${count}</div>`; }).join('');
+                        el.innerHTML += `<div class="schem-entry" style="opacity: ${meetsLvl?1:0.55}">
+                            <div class="schem-entry-header"><span>🔫 ${bp.name}</span><span>Урон: ${wpnData.dmg}</span></div>
+                            ${meetsLvl ? resHtml : `<div class="schem-res bad">🔒 Требуется уровень ${bp.reqLvl}</div>`}
+                            <button class="schem-craft-btn" ${(owned||!meetsLvl)?'disabled':''} onclick="Core.craftWeapon('${bp.id}')">${owned?'✔ Собрано':'Собрать'}</button>
+                        </div>`;
+                    });
+                }
+            },
+
+            // === Карточка результата крафта (по аналогии с наградой лутбокса) ===
+            showCraftResult(icon, title, name, statLine) {
+                document.getElementById('craft-result-icon').textContent = icon;
+                document.getElementById('craft-result-title').innerText = title;
+                document.getElementById('craft-result-name').innerText = name;
+                document.getElementById('craft-result-stat').innerText = statLine || '';
+                document.getElementById('craft-result-overlay').style.display = 'flex';
+            },
+            closeCraftResult() { document.getElementById('craft-result-overlay').style.display = 'none'; },
 
             craftFood(id) {
                 let recipe = DB.cooking.find(c => c.id === id);
@@ -1412,7 +1652,8 @@ startCombat(isBossFight = false) {
                 for(let [res, count] of Object.entries(recipe.cost)) { this.p.inv[res] -= count; }
                 this.p.food[recipe.name] = (this.p.food[recipe.name]||0) + 1;
                 this.triggerQuest("craft_food");
-                this.save(); this.updateUI();
+                this.save(); this.updateUI(); this.renderRecipeBook();
+                this.showCraftResult(recipe.icon || "🍽️", "✅ Крафт успешен!", recipe.name, `+${recipe.heal}% к сытости при употреблении`);
             },
 
             craftWeapon(id) {
@@ -1420,7 +1661,9 @@ startCombat(isBossFight = false) {
                 for(let [res, count] of Object.entries(bp.cost)) { if((this.p.inv[res]||0) < count) return alert("Мало компонентов!"); }
                 if(this.p.weaponsOwned.includes(bp.targetId)) return alert("Уже создано!");
                 for(let [res, count] of Object.entries(bp.cost)) { this.p.inv[res] -= count; }
-                this.p.weaponsOwned.push(bp.targetId); this.save(); this.updateUI();
+                this.p.weaponsOwned.push(bp.targetId); this.save(); this.updateUI(); this.renderSchematics();
+                let wpnData = DB.weapons.find(w => w.id === bp.targetId);
+                this.showCraftResult("🔫", "✅ Крафт успешен!", wpnData.name, `Урон: ${wpnData.dmg} | Крит: ${wpnData.crit}%`);
             },
 
             renderMap() {
