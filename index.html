@@ -222,20 +222,332 @@ transform:scale(1);
         .map-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); padding: 16px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .map-card.current { border-color: var(--biome-accent); box-shadow: 0 0 14px var(--biome-accent-soft), var(--glass-shadow-soft); transition: border-color 1.4s ease, box-shadow 1.4s ease; }
 
-        .bp-container { background: linear-gradient(160deg, rgba(191,90,242,0.14), var(--glass-bg)); backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 2px solid rgba(191, 90, 242, 0.45); border-radius: 20px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 20px rgba(191, 90, 242, 0.25), var(--glass-shadow-soft); }
-        .bp-header-tabs { display: flex; gap: 6px; }
-        .bp-tab-sub { flex: 1; padding: 8px; font-size: 11px; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); color: var(--text-muted); border-radius: 10px; }
-        .bp-tab-sub.active { background: var(--neon-purple); color: #fff; border: none; font-weight: bold; }
+        .bp-container { 
+            background: linear-gradient(135deg, rgba(191,90,242,0.25) 0%, rgba(191,90,242,0.10) 100%), var(--glass-bg-strong); 
+            backdrop-filter: blur(var(--glass-blur)) saturate(200%); 
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
+            border: 2.5px solid rgba(191, 90, 242, 0.60); 
+            border-radius: 28px; 
+            padding: 24px; 
+            margin-bottom: 16px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            box-shadow: 0 0 50px rgba(191, 90, 242, 0.40), 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.12);
+            position: relative;
+        }
+        .bp-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(191,90,242,0.15), transparent 60%);
+            pointer-events: none;
+            border-radius: 26px;
+        }
         
-        .pass-tier-box { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .pass-tier-box.unlocked { border-color: rgba(191, 90, 242, 0.5); background: rgba(191, 90, 242, 0.08); }
+        .bp-header-tabs { display: flex; gap: 10px; }
+        .bp-tab-sub { 
+            flex: 1; 
+            padding: 14px 18px; 
+            font-size: 13px; 
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255,255,255,0.15); 
+            color: var(--text-muted); 
+            border-radius: 16px; 
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .bp-tab-sub:hover { 
+            border-color: rgba(191, 90, 242, 0.4);
+            background: rgba(255,255,255,0.08);
+        }
+        .bp-tab-sub.active { 
+            background: linear-gradient(135deg, #bf5af2 0%, #da22ff 100%); 
+            color: #fff; 
+            border: 1.5px solid rgba(191, 90, 242, 0.8); 
+            font-weight: 800;
+            box-shadow: 0 0 25px rgba(191, 90, 242, 0.6), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
         
-        .track-card { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-radius: 10px; font-size: 12px; border: 1px solid transparent; }
-        .track-card.free { background: rgba(0, 240, 255, 0.06); border-color: rgba(0, 240, 255, 0.2); }
-        .track-card.premium { background: rgba(255, 183, 3, 0.08); border-color: rgba(255, 183, 3, 0.3); }
+        .pass-tier-box { 
+            background: linear-gradient(145deg, rgba(191,90,242,0.15) 0%, rgba(191,90,242,0.05) 100%), rgba(20, 15, 35, 0.8); 
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1.5px solid rgba(191, 90, 242, 0.35); 
+            border-radius: 14px; 
+            padding: 10px 12px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 6px 20px rgba(0,0,0,0.35);
+            pointer-events: auto;
+        }
+        .pass-tier-box:hover {
+            border-color: rgba(191, 90, 242, 0.6);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 10px 28px rgba(191,90,242,0.25);
+        }
+        .pass-tier-box.unlocked { 
+            border-color: rgba(191, 90, 242, 0.55); 
+            background: linear-gradient(145deg, rgba(191,90,242,0.22) 0%, rgba(191,90,242,0.10) 100%), rgba(20, 15, 35, 0.9);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.13), 0 8px 25px rgba(191,90,242,0.28);
+        }
         
-        .bp-claim-btn { padding: 4px 8px; font-size: 10px; border-radius: 6px; font-weight: bold; background: var(--neon-blue); border: none; color: #000; }
+        .bp-tracks-row {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+        }
+        .bp-divider {
+            width: 2px;
+            flex-shrink: 0;
+            align-self: stretch;
+            margin: 2px 10px;
+            border-radius: 2px;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.4) 15%, rgba(255,255,255,0.4) 85%, transparent 100%);
+        }
+        .track-card { 
+            display: flex; 
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: stretch; 
+            gap: 3px;
+            flex: 1;
+            min-width: 0;
+            padding: 7px 8px; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            border: 1.5px solid transparent;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            font-weight: 600;
+            pointer-events: auto;
+        }
+        .track-label {
+            font-size: 8.5px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+        }
+        .track-reward {
+            font-size: 9.8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.25;
+        }
+        .track-status {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            margin-top: 1px;
+        }
+        .track-status.claimed { color: var(--neon-green); }
+        .track-status.locked { color: var(--text-muted); opacity: 0.7; }
+        .track-card .bp-claim-btn {
+            margin-top: 1px;
+            padding: 5px 8px;
+            font-size: 9.5px;
+            border-radius: 8px;
+            align-self: stretch;
+            text-align: center;
+        }
+        .track-card.free { 
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.18) 0%, rgba(0, 240, 255, 0.06) 100%); 
+            border-color: rgba(0, 240, 255, 0.40);
+            box-shadow: inset 0 1px 0 rgba(0,240,255,0.25), 0 3px 10px rgba(0,240,255,0.15);
+        }
+        .track-card.free:hover {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.28) 0%, rgba(0, 240, 255, 0.12) 100%);
+            border-color: rgba(0, 240, 255, 0.55);
+            box-shadow: inset 0 1px 0 rgba(0,240,255,0.35), 0 6px 16px rgba(0,240,255,0.28);
+        }
+        .track-card.premium { 
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.20) 0%, rgba(255, 183, 3, 0.08) 100%); 
+            border-color: rgba(255, 183, 3, 0.50);
+            box-shadow: inset 0 1px 0 rgba(255,183,3,0.28), 0 3px 10px rgba(255,183,3,0.18);
+        }
+        .track-card.premium:hover {
+            background: linear-gradient(135deg, rgba(255, 183, 3, 0.30) 0%, rgba(255, 183, 3, 0.14) 100%);
+            border-color: rgba(255, 183, 3, 0.65);
+            box-shadow: inset 0 1px 0 rgba(255,183,3,0.38), 0 6px 16px rgba(255,183,3,0.32);
+        }
+        
+        .bp-claim-btn { 
+            padding: 10px 16px; 
+            font-size: 12px; 
+            border-radius: 12px; 
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #00f0ff 0%, #0080ff 100%);
+            border: none; 
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,240,255,0.35);
+            pointer-events: auto;
+        }
+        .bp-claim-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(0,240,255,0.45);
+        }
+        .bp-claim-btn:active {
+            transform: translateY(-1px);
+        }
+        .bp-claim-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
         .bp-claim-btn:disabled { background: #2d3748; color: #718096; }
+
+        /* ===== Карточки оружия (Арсенал) ===== */
+        .weapon-card {
+            --wpn-glow: rgba(255,255,255,0.15);
+            position: relative;
+            background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%), rgba(16, 18, 28, 0.85);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1.5px solid rgba(255,255,255,0.14);
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 6px 18px rgba(0,0,0,0.35);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+        .weapon-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 100% 0%, var(--wpn-color, transparent) 0%, transparent 60%);
+            opacity: 0.16;
+            pointer-events: none;
+        }
+        .weapon-card.active {
+            border-color: var(--wpn-color, var(--neon-blue));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 22px var(--wpn-glow);
+        }
+        .weapon-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .weapon-icon-badge {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid var(--wpn-color, rgba(255,255,255,0.2));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .weapon-info { flex: 1; min-width: 0; }
+        .weapon-name-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+        .weapon-name { font-size: 14px; font-weight: 800; color: #fff; }
+        .weapon-tier-badge {
+            font-size: 8.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 2px 7px;
+            border-radius: 20px;
+            border: 1px solid var(--wpn-color, rgba(255,255,255,0.3));
+            color: var(--wpn-color, #fff);
+            background: rgba(255,255,255,0.05);
+        }
+        .weapon-lvl-badge { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+        .weapon-active-flag {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.4px;
+            color: var(--wpn-color, var(--neon-blue));
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--wpn-color, var(--neon-blue));
+            padding: 5px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .weapon-stats-row {
+            display: flex;
+            gap: 18px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+        }
+        .weapon-stat { display: flex; align-items: center; gap: 5px; }
+        .weapon-stat .stat-value { color: #fff; font-weight: 800; }
+        .weapon-pips {
+            display: flex;
+            gap: 3px;
+            position: relative;
+            z-index: 1;
+        }
+        .weapon-pip {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.10);
+        }
+        .weapon-pip.filled {
+            background: var(--wpn-color, var(--neon-blue));
+            box-shadow: 0 0 6px var(--wpn-color, var(--neon-blue));
+        }
+        .weapon-actions {
+            display: flex;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .weapon-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            border: 1.5px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .weapon-btn.equip.active {
+            background: var(--wpn-color, var(--neon-blue));
+            border-color: var(--wpn-color, var(--neon-blue));
+            color: #08131c;
+            box-shadow: 0 0 16px var(--wpn-glow);
+        }
+        .weapon-btn.equip:not(.active):hover {
+            border-color: var(--wpn-color, rgba(255,255,255,0.4));
+            background: rgba(255,255,255,0.09);
+        }
+        .weapon-btn.upgrade {
+            background: linear-gradient(135deg, rgba(255,183,3,0.55), rgba(255,102,0,0.5));
+            border-color: rgba(255,255,255,0.16);
+            color: #1a0f00;
+        }
+        .weapon-btn.upgrade:hover { transform: translateY(-2px); }
+        .weapon-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
         .bottom-ui-container { 
             position: fixed; 
@@ -800,11 +1112,11 @@ onclick="Core.declineEncounter()">
                 { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, theme: { c1: "#bf5af2", c2: "#ffd700", c3: "#ff2a5f", c4: "#f8fafc", glow: "#180a20", atmo: "rgba(191,90,242,0.14)", accent: "#ffd700", accentSoft: "rgba(255,215,0,0.4)" }, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 7500 } }
             ],
             weapons: [
-                { id: "fists", name: "Кулаки", dmg: 5, crit: 5 },
-                { id: "pipe", name: "Ржавая Труба", dmg: 9, crit: 8 },
-                { id: "pistol", name: "Самопал", dmg: 16, crit: 12 },
-                { id: "plasma", name: "Плазменный Резак", dmg: 35, crit: 15 },
-                { id: "gauss", name: "Винтовка Гаусса", dmg: 80, crit: 25 }
+                { id: "fists", name: "Кулаки", dmg: 5, crit: 5, icon: "👊", color: "#9aa4b2", tier: "Стартовое" },
+                { id: "pipe", name: "Ржавая Труба", dmg: 9, crit: 8, icon: "🔧", color: "#b5651d", tier: "Обычное" },
+                { id: "pistol", name: "Самопал", dmg: 16, crit: 12, icon: "🔫", color: "#00f0ff", tier: "Надёжное" },
+                { id: "plasma", name: "Плазменный Резак", dmg: 35, crit: 15, icon: "🔥", color: "#bf5af2", tier: "Редкое" },
+                { id: "gauss", name: "Винтовка Гаусса", dmg: 80, crit: 25, icon: "⚡", color: "#ffb703", tier: "Легендарное" }
             ],
             blueprints: [
                 { id: "craft_pipe", name: "Ржавая Труба", reqLvl: 1, cost: { "Запчасти": 4 }, type: "weapon", targetId: "pipe" },
@@ -853,13 +1165,20 @@ onclick="Core.declineEncounter()">
             lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
             
             quests: [
-                { id: "q1", text: "Убить 5 мутантов-крыс", progress: 0, target: 5, points: 20, done: false, trigger: "kill_Кибер-Крыса" },
-                { id: "q2", text: "Убить 3 рад-тараканов", progress: 0, target: 3, points: 20, done: false, trigger: "kill_Рад-Таракан" },
-                { id: "q3", text: "Успешно сбежать из боя", progress: 0, target: 1, points: 15, done: false, trigger: "flee" },
-                { id: "q4", text: "Провести 12 разведок местности", progress: 0, target: 12, points: 25, done: false, trigger: "explore" },
-                { id: "q5", text: "Перекусить на привале 4 раза", progress: 0, target: 4, points: 20, done: false, trigger: "rest" },
-                { id: "q7", text: "Потратить 60 крышек в магазине", progress: 0, target: 60, points: 30, done: false, trigger: "spend_caps" },
-                { id: "q8", text: "Приготовить еду на костре", progress: 0, target: 1, points: 25, done: false, trigger: "craft_food" }
+                { id: "q1", text: "Убить 5 мутантов-крыс", progress: 0, target: 5, points: 60, done: false, trigger: "kill_Кибер-Крыса" },
+                { id: "q2", text: "Убить 3 рад-тараканов", progress: 0, target: 3, points: 55, done: false, trigger: "kill_Рад-Таракан" },
+                { id: "q3", text: "Успешно сбежать из боя", progress: 0, target: 1, points: 45, done: false, trigger: "flee" },
+                { id: "q4", text: "Провести 12 разведок местности", progress: 0, target: 12, points: 75, done: false, trigger: "explore" },
+                { id: "q5", text: "Перекусить на привале 4 раза", progress: 0, target: 4, points: 60, done: false, trigger: "rest" },
+                { id: "q7", text: "Потратить 60 крышек в магазине", progress: 0, target: 60, points: 90, done: false, trigger: "spend_caps" },
+                { id: "q8", text: "Приготовить еду на костре", progress: 0, target: 1, points: 70, done: false, trigger: "craft_food" },
+                { id: "q9", text: "Убить 8 слепых гулей", progress: 0, target: 8, points: 100, done: false, trigger: "kill_Слепой Гуль" },
+                { id: "q10", text: "Убить 6 дронов-охотников", progress: 0, target: 6, points: 120, done: false, trigger: "kill_Дрон-Охотник" },
+                { id: "q11", text: "Провести 25 разведок местности", progress: 0, target: 25, points: 150, done: false, trigger: "explore" },
+                { id: "q12", text: "Успешно сбежать из боя 5 раз", progress: 0, target: 5, points: 110, done: false, trigger: "flee" },
+                { id: "q13", text: "Потратить 150 крышек в магазине", progress: 0, target: 150, points: 160, done: false, trigger: "spend_caps" },
+                { id: "q14", text: "Приготовить еду на костре 5 раз", progress: 0, target: 5, points: 130, done: false, trigger: "craft_food" },
+                { id: "q15", text: "Убить 20 мутантов-крыс", progress: 0, target: 20, points: 180, done: false, trigger: "kill_Кибер-Крыса" }
             ],
 
             init() { this.load(); this.loadSettings(); this.applyBiomeTheme(this.p.currentBiome); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
@@ -936,7 +1255,12 @@ onclick="Core.declineEncounter()">
                 if(data) { 
                     let parsed = JSON.parse(data); 
                     this.p = parsed.p; this.dailyClaimed = parsed.daily; this.restUses = parsed.restUses; this.nextRestTick = parsed.t; 
-                    if(parsed.q) this.quests = parsed.q;
+                    if(parsed.q) {
+                        let defaultQuests = this.quests;
+                        let savedById = {};
+                        parsed.q.forEach(sq => savedById[sq.id] = sq);
+                        this.quests = defaultQuests.map(dq => savedById[dq.id] ? savedById[dq.id] : dq);
+                    }
                     if(!this.p.wpnUpgrades) this.p.wpnUpgrades = { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 };
                     if(!this.p.bossesDefeated) this.p.bossesDefeated = [];
                     if(this.p.armor === undefined) this.p.armor = 2;
@@ -1527,6 +1851,12 @@ startCombat(isBossFight = false) {
                 Sound.play('loot'); this.save(); this.updateUI();
             },
 
+            hexToRgba(hex, alpha) {
+                let h = hex.replace('#','');
+                let r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+                return `rgba(${r},${g},${b},${alpha})`;
+            },
+
             renderInventory() {
                 const wEl = document.getElementById('weapon-list'); wEl.innerHTML = '';
                 this.p.weaponsOwned.forEach(wId => {
@@ -1535,19 +1865,35 @@ startCombat(isBossFight = false) {
                     let totalDmg = Math.round(wpn.dmg * (1 + upLvl * 0.25));
                     let isActive = this.p.activeWeapon === wId;
                     let upgradeCost = (upLvl + 1) * 5; 
-                    
+                    let pipTotal = 10;
+                    let pipFilled = Math.min(upLvl, pipTotal);
+                    let pipsHtml = Array.from({length: pipTotal}, (_, i) => `<div class="weapon-pip ${i < pipFilled ? 'filled' : ''}"></div>`).join('');
+                    let overflowLvl = upLvl > pipTotal ? ` (+${upLvl - pipTotal})` : '';
+
                     wEl.innerHTML += `
-                        <div class="list-item" style="flex-direction: column; align-items: stretch; gap: 6px;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <div>🔫 <b>${wpn.name}</b> [Ур. ${upLvl}]</div>
-                                <div style="color: var(--neon-gold)">⚔️ Урон: ${totalDmg} (Крит: ${wpn.crit + upLvl}%)</div>
+                        <div class="weapon-card ${isActive?'active':''}" style="--wpn-color:${wpn.color}; --wpn-glow:${this.hexToRgba(wpn.color, 0.45)}">
+                            <div class="weapon-card-header">
+                                <div class="weapon-icon-badge">${wpn.icon}</div>
+                                <div class="weapon-info">
+                                    <div class="weapon-name-row">
+                                        <span class="weapon-name">${wpn.name}</span>
+                                        <span class="weapon-tier-badge">${wpn.tier}</span>
+                                    </div>
+                                    <div class="weapon-lvl-badge">Модернизация: Ур. ${upLvl}${overflowLvl}</div>
+                                </div>
+                                ${isActive ? '<div class="weapon-active-flag">⚡ ЭКИПИРОВАНО</div>' : ''}
                             </div>
-                            <div style="display: flex; gap: 6px;">
-                                <button class="${isActive?'success':'primary'}" style="flex: 1; padding: 6px;" ${isActive?'disabled':''} onclick="Core.equipWeapon('${wId}')">
+                            <div class="weapon-stats-row">
+                                <div class="weapon-stat">⚔️ Урон <span class="stat-value">${totalDmg}</span></div>
+                                <div class="weapon-stat">💥 Крит <span class="stat-value">${wpn.crit + upLvl}%</span></div>
+                            </div>
+                            <div class="weapon-pips">${pipsHtml}</div>
+                            <div class="weapon-actions">
+                                <button class="weapon-btn equip ${isActive?'active':''}" ${isActive?'disabled':''} onclick="Core.equipWeapon('${wId}')">
                                     ${isActive?'⚡ Активно':'Экипировать'}
                                 </button>
-                                <button class="gold" style="flex: 1; padding: 6px; font-size: 11px; color:#000;" onclick="Core.upgradeWeapon('${wId}', ${upgradeCost})">
-                                    🔺 Апгрейд (🔧 ${upgradeCost})
+                                <button class="weapon-btn upgrade" onclick="Core.upgradeWeapon('${wId}', ${upgradeCost})">
+                                    🔺 Апгрейд · ${this.itemIcons["Запчасти"]} ${upgradeCost}
                                 </button>
                             </div>
                         </div>`;
@@ -1575,7 +1921,7 @@ startCombat(isBossFight = false) {
                 if(!hasFood) fEl.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:4px;">Нет готовой еды.</div>`;
 
                 const rEl = document.getElementById('inv-list'); rEl.innerHTML = '';
-                for (let k in this.p.inv) { if (this.p.inv[k] > 0) rEl.innerHTML += `<div class="list-item"><div>📦 ${k}</div><div>x${this.p.inv[k]}</div></div>`; }
+                for (let k in this.p.inv) { if (this.p.inv[k] > 0) rEl.innerHTML += `<div class="list-item"><div>${this.itemIcons[k] || '📦'} ${k}</div><div>x${this.p.inv[k]}</div></div>`; }
             },
 
             // === Книга Рецептов ===
@@ -1825,6 +2171,29 @@ startCombat(isBossFight = false) {
                 else if(r.type === 'maxhp') { this.p.maxHp += 20; this.log("🎁 Награда БП: Лимит здоровья увеличен на +20 ОЗ"); }
             },
 
+            itemIcons: { "Запчасти": "⚙️", "Тяжелый Хлам": "🔩", "Ядерная Батарея": "☢️", "Сырое мясо": "🥩" },
+            rewardIcon(r) {
+                if(!r) return '➖';
+                if(r.type === 'item') return this.itemIcons[r.item] || '📦';
+                switch(r.type) {
+                    case 'caps': return '🪙';
+                    case 'voucher': return '🏷️';
+                    case 'wpn': return '🔫';
+                    case 'food': return '🍗';
+                    case 'energy_pack': return '🔋';
+                    case 'hp_pack': return '💉';
+                    case 'maxhp': return '🧬';
+                    default: return '🎁';
+                }
+            },
+            formatRewardName(r) {
+                if(!r) return 'Пусто';
+                let name = r.name.replace(/\s*x(\d+)/gi, '\u00A0×$1');
+                // Убираем ведущий смайлик из названия, чтобы не дублировать значок типа награды
+                name = name.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\uFE0F\u200D\s]+/u, '');
+                return name;
+            },
+
             renderBp() {
                 let reqPoints = this.p.bpLvl * 10;
                 document.getElementById('bp-level-badge').innerText = this.p.bpLvl >= 50 ? "МАКС УРОВЕНЬ" : `Лвл ${this.p.bpLvl} (${this.p.bpPoints}/${reqPoints})`;
@@ -1839,19 +2208,24 @@ startCombat(isBossFight = false) {
                         let freeClaimed = this.p.bpClaimedFree.includes(r.lvl);
                         let premClaimed = this.p.bpClaimedPrem.includes(r.lvl);
 
-                        let freeBtn = freeClaimed ? "✅" : (isLvlUnlocked ? `<button class="bp-claim-btn" onclick="Core.claimBpReward(${r.lvl}, 'free')">Взять</button>` : "🔒");
-                        let premBtn = premClaimed ? "✅" : ((isLvlUnlocked && this.p.bpPremium) ? `<button class="bp-claim-btn" style="background:var(--neon-gold)" onclick="Core.claimBpReward(${r.lvl}, 'prem')">Взять</button>` : "🔒");
+                        let freeBtn = freeClaimed ? `<div class="track-status claimed">✅ ПОЛУЧЕНО</div>` : (isLvlUnlocked ? `<button class="bp-claim-btn" onclick="Core.claimBpReward(${r.lvl}, 'free')">Взять</button>` : `<div class="track-status locked">🔒 ЗАКРЫТО</div>`);
+                        let premBtn = premClaimed ? `<div class="track-status claimed">✅ ПОЛУЧЕНО</div>` : ((isLvlUnlocked && this.p.bpPremium) ? `<button class="bp-claim-btn" style="background:var(--neon-gold)" onclick="Core.claimBpReward(${r.lvl}, 'prem')">Взять</button>` : `<div class="track-status locked">🔒 ЗАКРЫТО</div>`);
 
                         container.innerHTML += `
                         <div class="pass-tier-box ${isLvlUnlocked?'unlocked':''}">
-                            <div style="font-size:11px; font-weight:900; color:var(--neon-purple)">ЭТАП №${r.lvl} ${isLvlUnlocked?'🔓':'🔒'}</div>
-                            <div class="track-card free">
-                                <div>⚪ Бесплатно: <span style="color:#fff">${r.free ? r.free.name : 'Пусто'}</span></div>
-                                <div>${freeBtn}</div>
-                            </div>
-                            <div class="track-card premium">
-                                <div>🟡 Премиум: <span style="color:var(--neon-gold)">${r.prem ? r.prem.name : 'Пусто'}</span></div>
-                                <div>${premBtn}</div>
+                            <div style="font-size:10.5px; font-weight:900; color:var(--neon-purple)">ЭТАП №${r.lvl} ${isLvlUnlocked?'🔓':'🔒'}</div>
+                            <div class="bp-tracks-row">
+                                <div class="track-card free">
+                                    <div class="track-label">🆓 Бесплатно</div>
+                                    <div class="track-reward">${this.rewardIcon(r.free)} <span style="color:#fff">${this.formatRewardName(r.free)}</span></div>
+                                    ${freeBtn}
+                                </div>
+                                <div class="bp-divider"></div>
+                                <div class="track-card premium">
+                                    <div class="track-label">💎 Премиум</div>
+                                    <div class="track-reward">${this.rewardIcon(r.prem)} <span style="color:var(--neon-gold)">${this.formatRewardName(r.prem)}</span></div>
+                                    ${premBtn}
+                                </div>
                             </div>
                         </div>`;
                     });
