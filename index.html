@@ -219,6 +219,55 @@ transform:scale(1);
         .screen-title { font-size: 13px; font-weight: 800; margin: 12px 0 6px 0; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; }
 
         .list-item { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); padding: 12px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); }
+
+        /* ===== Карточки "Прямые поставки медсредств" ===== */
+        .direct-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%), rgba(12, 14, 20, 0.8);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 18px;
+            padding: 13px 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        .direct-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 0% 0%, var(--dc-color, var(--neon-blue)) 0%, transparent 60%);
+            opacity: 0.14;
+            pointer-events: none;
+        }
+        .direct-card-left { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; min-width: 0; }
+        .direct-icon-badge {
+            width: 42px; height: 42px; min-width: 42px;
+            border-radius: 13px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 100%), rgba(8,10,16,0.5);
+            border: 1.5px solid var(--dc-color, rgba(255,255,255,0.25));
+        }
+        .direct-card-title { font-size: 14px; font-weight: 800; color: #fff; }
+        .direct-card-sub { font-size: 10.5px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+        .direct-buy-btn {
+            position: relative; z-index: 1;
+            flex-shrink: 0;
+            background: var(--grad-accent);
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 900;
+            font-size: 14px;
+            color: #fff;
+            display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 6px 16px rgba(255,0,160,0.4), inset 0 1px 0 rgba(255,255,255,0.35);
+        }
+        .direct-buy-btn:active { transform: scale(0.96); }
         .map-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); padding: 16px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .map-card.current { border-color: var(--biome-accent); box-shadow: 0 0 14px var(--biome-accent-soft), var(--glass-shadow-soft); transition: border-color 1.4s ease, box-shadow 1.4s ease; }
 
@@ -471,6 +520,12 @@ transform:scale(1);
             color: var(--wpn-color, #fff);
             background: rgba(255,255,255,0.05);
         }
+        .weapon-class-inline {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: none;
+        }
         .weapon-lvl-badge { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
         .weapon-active-flag {
             margin-left: auto;
@@ -577,6 +632,7 @@ transform:scale(1);
         .tab-icon { font-size: 16px; line-height: 1; }
         .tab-label { font-size: clamp(8px, 2.4vw, 10.5px); line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
         .timer-badge { font-size: 10px; color: var(--neon-red); display: block; font-weight: normal; margin-top: 2px;}
+        #daily-timer { color: var(--text-muted); opacity: 0.65; margin-top: 8px; }
 
         .stat-full { grid-column: span 2; }
 
@@ -587,6 +643,90 @@ transform:scale(1);
         .loot-card-title { font-weight: 900; font-size: 13px; }
         .loot-card-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
         .loot-card-btn { padding: 9px 14px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+
+        /* ===== Премиальный ящик (солидный вид) ===== */
+        .loot-card.premium-box {
+            background: linear-gradient(155deg, rgba(255,215,0,0.14) 0%, rgba(191,90,242,0.12) 55%, rgba(10,8,16,0.9) 100%), var(--glass-bg);
+            border: 1.5px solid rgba(255,215,0,0.5);
+            box-shadow: 0 0 0 1px rgba(191,90,242,0.25), 0 8px 26px rgba(191,90,242,0.35), 0 0 30px rgba(255,215,0,0.18), var(--glass-shadow-soft);
+            padding: 16px 14px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            transform: scale(1.02);
+        }
+        .loot-card.premium-box::before { width: 5px; background: linear-gradient(180deg, #ffd700, #bf5af2); box-shadow: 0 0 12px rgba(255,215,0,0.7); }
+        .loot-card.premium-box::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 18px;
+            background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.22) 48%, transparent 66%);
+            background-size: 220% 100%; background-position: 120% 0;
+            animation: premiumShimmer 3.2s ease-in-out infinite;
+        }
+        @keyframes premiumShimmer { 0%, 60% { background-position: 130% 0; } 100% { background-position: -30% 0; } }
+        .loot-card.premium-box .loot-card-icon { width: 60px; height: 60px; font-size: 30px; border-width: 2.5px; box-shadow: 0 0 22px rgba(255,215,0,0.55), inset 0 0 10px rgba(255,255,255,0.15); animation: premiumIconPulse 2.4s ease-in-out infinite; }
+        @keyframes premiumIconPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        .loot-card.premium-box .loot-card-title { font-size: 14.5px; background: linear-gradient(90deg, #ffd700, #ffe9a8, #bf5af2); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.2px; }
+        .premium-ribbon {
+            position: absolute; top: 22px; right: -34px; width: 130px; text-align: center;
+            transform: rotate(40deg);
+            background: linear-gradient(90deg, #ffd700, #ff9500); color: #1a1200; font-size: 9px; font-weight: 900;
+            letter-spacing: 0.5px; padding: 3px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2;
+        }
+
+        /* ===== Карточка ежедневного пайка ===== */
+        .daily-card {
+            position: relative;
+            background: linear-gradient(155deg, rgba(0,240,255,0.12) 0%, rgba(191,90,242,0.10) 55%, rgba(10,8,16,0.92) 100%), var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1.5px solid rgba(0,240,255,0.35);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 8px 26px rgba(0,240,255,0.15), 0 0 26px rgba(191,90,242,0.14), var(--glass-shadow-soft);
+        }
+        .daily-card-glow {
+            content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 20px;
+            background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.16) 48%, transparent 66%);
+            background-size: 220% 100%; background-position: 120% 0;
+            animation: premiumShimmer 3.6s ease-in-out infinite;
+        }
+        .daily-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; z-index: 1; }
+        .daily-streak-badge { display: flex; align-items: center; gap: 9px; }
+        .daily-flame { font-size: 27px; filter: drop-shadow(0 0 8px rgba(255,140,0,0.65)); animation: flameFlicker 1.6s ease-in-out infinite; }
+        @keyframes flameFlicker { 0%, 100% { transform: scale(1) rotate(-3deg); } 50% { transform: scale(1.12) rotate(3deg); } }
+        .daily-streak-num { font-size: 23px; font-weight: 900; line-height: 1; background: linear-gradient(90deg, #00f0ff, #bf5af2); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .daily-streak-label { font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
+        .daily-mystery-icon { font-size: 34px; filter: drop-shadow(0 0 12px rgba(0,240,255,0.45)); animation: mysteryFloat 2.3s ease-in-out infinite; }
+        @keyframes mysteryFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(-5deg); } }
+        .daily-hint { font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-align: center; margin: 10px 0 12px; position: relative; z-index: 1; }
+        .daily-claim-btn {
+            position: relative; z-index: 1; width: 100%; padding: 13px; border-radius: 14px; border: none;
+            font-weight: 900; font-size: 13px; letter-spacing: 0.3px; color: #00161c;
+            background: linear-gradient(135deg, #00f0ff, #0072ff);
+            box-shadow: 0 4px 16px rgba(0,240,255,0.4), inset 0 1px 0 rgba(255,255,255,0.35);
+            transition: transform 0.15s ease;
+        }
+        .daily-claim-btn:active { transform: scale(0.97); }
+        .daily-claim-btn:disabled { background: #2d3748; color: #718096; box-shadow: none; }
+
+        /* ===== Трекер ежедневных наград ===== */
+        .daily-tracker { display: flex; gap: 5px; margin-bottom: 4px; position: relative; z-index: 1; }
+        .daily-day {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+            padding: 9px 2px; border-radius: 12px; background: rgba(255,255,255,0.045);
+            border: 1px solid rgba(255,255,255,0.1); position: relative; transition: all 0.25s ease; min-width: 0;
+        }
+        .daily-day .dd-icon { font-size: 16px; line-height: 1; }
+        .daily-day .dd-num { font-size: 8.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+        .daily-day.locked { opacity: 0.42; }
+        .daily-day.claimed { background: rgba(57,255,20,0.12); border-color: rgba(57,255,20,0.4); }
+        .daily-day.claimed .dd-icon { opacity: 0.85; }
+        .daily-day.current { border-color: var(--neon-blue); background: rgba(0,240,255,0.1); box-shadow: 0 0 14px rgba(0,240,255,0.4); animation: dailyPulse 1.4s ease-in-out infinite; }
+        .daily-day.day7 { border-color: rgba(255,183,3,0.6); }
+        .daily-day.day7 .dd-num { color: var(--neon-gold); }
+        .daily-day.day7.current { border-color: var(--neon-gold); background: rgba(255,183,3,0.12); box-shadow: 0 0 16px rgba(255,183,3,0.5); }
+        @keyframes dailyPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
 
         #settings-btn { background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); border-radius: 16px; font-size: 13px; font-weight: 800; color: var(--text-main); }
 
@@ -890,7 +1030,7 @@ onclick="Core.declineEncounter()">
             <div class="progress-bar-outer"><div id="satiety-bar" class="progress-bar-inner" style="background: var(--grad-gold);"></div></div>
         </div>
         <div class="stat-container" id="rad-container" style="display:none;">
-            <div class="stat-header" style="color: var(--neon-green)"><span>☢️ РАДИАЦИЯ</span><span id="rad-val">0%</span></div>
+            <div class="stat-header" style="color: var(--neon-green)"><span id="rad-label">☢️ РАДИАЦИЯ</span><span id="rad-val">0%</span></div>
             <div class="progress-bar-outer"><div id="rad-bar" class="progress-bar-inner" style="background: var(--neon-green);"></div></div>
         </div>
         <div class="meta-info">
@@ -935,10 +1075,14 @@ onclick="Core.declineEncounter()">
         <div class="bp-container">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <span style="color: var(--neon-purple); font-weight: 900; font-size: 14px;">🌵 ПУСТЫННЫЙ ПРОПУСК</span>
-                    <div style="font-size: 9px; color: var(--neon-gold); font-weight: bold; text-transform: uppercase;">🔥 Самая выгодная акция в игре!</div>
+                    <span style="color: var(--neon-purple); font-weight: 900; font-size: 14px;">ПРОПУСК ПУСТОШИ</span>
+                    <div style="font-size: 9px; color: var(--neon-gold); font-weight: bold; text-transform: uppercase;">Самая выгодная акция в игре!</div>
                 </div>
-                <div id="bp-level-badge" style="background: var(--neon-purple); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold;">Лвл 1 (0/20)</div>
+                <div id="bp-level-badge" style="position: relative; display:flex; align-items:center; gap:8px; background: var(--neon-purple); padding: 5px 10px 5px 6px; border-radius: 8px; font-size: 11px; font-weight: bold;">
+                    <div id="bp-level-circle" onclick="Core.toggleBpTooltip()" style="width:28px; height:28px; border-radius:50%; background: conic-gradient(rgba(255,255,255,0.2) 0% 100%); flex-shrink:0; cursor: pointer; box-shadow: inset 0 2px 4px rgba(0,0,0,0.45), inset 0 -2px 3px rgba(255,255,255,0.35), 0 2px 4px rgba(0,0,0,0.5);"></div>
+                    <span id="bp-level-text">ЭТАП 1</span>
+                    <div id="bp-level-tooltip" style="display:none; position:absolute; top: 100%; right: 0; margin-top: 8px; background: rgba(0,0,0,0.9); color:#fff; font-size:10px; font-weight: 600; padding:5px 9px; border-radius:6px; white-space:nowrap; z-index:20; box-shadow: 0 4px 12px rgba(0,0,0,0.5);"></div>
+                </div>
             </div>
             
             <div style="display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.2); padding: 6px; border-radius: 6px; border: 1px dashed rgba(255,255,255,0.1);">
@@ -954,9 +1098,22 @@ onclick="Core.declineEncounter()">
             <div id="bp-content-render" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
         </div>
         <div class="screen-title">📅 Пост Снабжения</div>
-        <div class="list-item" style="border-color: var(--neon-green);">
-            <div>Ежедневный паёк</div>
-            <button id="daily-btn" class="success" style="padding: 8px 16px;" onclick="Core.claimDaily()">Взять</button>
+        <div class="daily-card" id="daily-card">
+            <div class="daily-card-glow"></div>
+            <div class="daily-card-top">
+                <div class="daily-streak-badge">
+                    <span class="daily-flame">🔥</span>
+                    <div>
+                        <div class="daily-streak-num" id="daily-streak-num">0</div>
+                        <div class="daily-streak-label">дней подряд</div>
+                    </div>
+                </div>
+                <div class="daily-mystery-icon" id="daily-mystery-icon">🎁</div>
+            </div>
+            <div class="daily-tracker" id="daily-tracker"></div>
+            <div id="daily-reward-label" class="daily-hint"></div>
+            <button id="daily-btn" class="daily-claim-btn" onclick="Core.claimDaily()">Открыть паёк</button>
+            <div id="daily-timer" class="timer-badge" style="display:none; text-align:center;"></div>
         </div>
         <div class="screen-title" style="margin-top: 12px;">🏪 Прямые Поставки Медсредств</div>
         <div id="direct-shop-list"></div>
@@ -975,14 +1132,7 @@ onclick="Core.declineEncounter()">
                 </button>
             </div>
             <div id="combat-actions" style="display: none; flex-direction: column; gap: 8px;">
-                <div class="buttons-grid">
-                    <button id="btn-attack-fast" class="primary" onclick="Core.executeAttack('fast')">⚡ Быстрый выпад</button>
-                    <button id="btn-attack-heavy" class="primary" style="background: var(--grad-gold); color:#000;" onclick="Core.executeAttack('heavy')">💥 Тяжёлый удар</button>
-                </div>
-                <div class="buttons-grid">
-                    <button id="btn-attack-bleed" class="primary" style="background: var(--grad-accent);" onclick="Core.executeAttack('bleed')">🩸 Рассечение</button>
-                    <button id="btn-block" class="success" onclick="Core.executeAttack('block')">🛡️ Занять Блок</button>
-                </div>
+                <div id="combat-ability-grid" style="display: flex; flex-direction: column; gap: 8px;"></div>
                 <button id="btn-flee" style="width:100%;" onclick="Core.executeFlee()">🏃 Сбежать (50%)</button>
             </div>
         </div>
@@ -1105,23 +1255,88 @@ onclick="Core.declineEncounter()">
                 { id: 0, name: "🪨 Неоновые Руины", minLvl: 1, bossDefeatedId: null, theme: { c1: "#00f0ff", c2: "#bf5af2", c3: "#ff2a5f", c4: "#ffb703", glow: "#111827", atmo: "rgba(0,240,255,0.10)", accent: "#00f0ff", accentSoft: "rgba(0,240,255,0.35)" }, enemies: [{ name: "Рад-Таракан", hp: 40, dmg: 8, armor: 0, class: "Быстрый", exp: 15 }, { name: "Кибер-Крыса", hp: 67, dmg: 9, armor: 1, class: "Обычный", exp: 25 }], boss: { name: "👑 Взбешенный Минори", hp: 115, dmg: 7, armor: 3, class: "Босс", exp: 120, rewardCaps: 25 } },
                 { id: 1, name: "🏚️ Ржавый Посёлок", minLvl: 10, bossDefeatedId: 0, theme: { c1: "#ff8a3d", c2: "#b5651d", c3: "#ffcf6b", c4: "#8c5a2b", glow: "#241a10", atmo: "rgba(255,140,50,0.12)", accent: "#ff9a3d", accentSoft: "rgba(255,154,61,0.35)" }, enemies: [{ name: "Слепой Гуль", hp: 65, dmg: 10, armor: 2, class: "Кровожадный", exp: 35 }, { name: "Сточный Клерк", hp: 80, dmg: 12, armor: 4, class: "Бронированный", exp: 45 }], boss: { name: "👑 Мясник Коллектора", hp: 280, dmg: 20, armor: 8, class: "Босс", exp: 300, rewardCaps: 60 } },
                 { id: 2, name: "🌆 Неоновый Сити-Центр", minLvl: 20, bossDefeatedId: 1, theme: { c1: "#ff00c8", c2: "#00fff2", c3: "#7d2aff", c4: "#0080ff", glow: "#1a0f26", atmo: "rgba(255,0,200,0.10)", accent: "#ff2adf", accentSoft: "rgba(255,42,223,0.35)" }, enemies: [{ name: "Дрон-Охотник", hp: 120, dmg: 18, armor: 6, class: "Быстрый", exp: 70 }, { name: "Штурмотрон v5", hp: 160, dmg: 24, armor: 10, class: "Бронированный", exp: 100 }], boss: { name: "👑 Главный Архитектор", hp: 550, dmg: 38, armor: 15, class: "Босс", exp: 600, rewardCaps: 125 } },
-                { id: 3, name: "☢️ Радиактивный Лес", minLvl: 30, bossDefeatedId: 2, radDanger: 6, theme: { c1: "#39ff14", c2: "#a4ff00", c3: "#0f9d58", c4: "#c8ff3d", glow: "#0e1a0a", atmo: "rgba(57,255,20,0.12)", accent: "#39ff14", accentSoft: "rgba(57,255,20,0.35)" }, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 250 } },
-                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, theme: { c1: "#7fdfff", c2: "#c9f3ff", c3: "#3a8fd6", c4: "#e8fbff", glow: "#0c1a22", atmo: "rgba(150,230,255,0.14)", accent: "#7fdfff", accentSoft: "rgba(127,223,255,0.35)" }, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 500 } },
-                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, theme: { c1: "#ff8800", c2: "#5a5f6b", c3: "#ffcc00", c4: "#802b00", glow: "#1c1a14", atmo: "rgba(255,136,0,0.10)", accent: "#ffb020", accentSoft: "rgba(255,176,32,0.35)" }, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 1000 } },
-                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, theme: { c1: "#ff3300", c2: "#ff8800", c3: "#990000", c4: "#ffcc00", glow: "#220a04", atmo: "rgba(255,51,0,0.14)", accent: "#ff5722", accentSoft: "rgba(255,87,34,0.4)" }, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 2500 } },
-                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, theme: { c1: "#bf5af2", c2: "#ffd700", c3: "#ff2a5f", c4: "#f8fafc", glow: "#180a20", atmo: "rgba(191,90,242,0.14)", accent: "#ffd700", accentSoft: "rgba(255,215,0,0.4)" }, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 7500 } }
+                { id: 3, name: "☢️ Радиоактивный Лес", minLvl: 30, bossDefeatedId: 2, hazard: { key: "rad", label: "Радиация", icon: "☢️", color: "#39ff14", rate: 6, tiers: [ { min: 25, dmgTakenMult: 1.10 }, { min: 50, dmgTakenMult: 1.20, dodgeDelta: -5 }, { min: 75, dmgTakenMult: 1.35, dodgeDelta: -10, regenMult: 2 } ] }, theme: { c1: "#39ff14", c2: "#a4ff00", c3: "#0f9d58", c4: "#c8ff3d", glow: "#0e1a0a", atmo: "rgba(57,255,20,0.12)", accent: "#39ff14", accentSoft: "rgba(57,255,20,0.35)" }, enemies: [{ name: "Зараженный Олень", hp: 240, dmg: 30, armor: 10, class: "Кровожадный", exp: 150 }, { name: "Лесной Леший", hp: 300, dmg: 35, armor: 14, class: "Тяжеловес", exp: 200 }], boss: { name: "👑 Древесный Кошмар", hp: 950, dmg: 58, armor: 25, class: "Босс", exp: 1200, rewardCaps: 250 } },
+                { id: 4, name: "❄️ Ледяная Пустошь", minLvl: 40, bossDefeatedId: 3, hazard: { key: "cold", label: "Обморожение", icon: "🥶", color: "#7fdfff", rate: 5, tiers: [ { min: 25, dmgDealtMult: 0.95 }, { min: 50, dmgDealtMult: 0.85 }, { min: 75, dmgDealtMult: 0.70, dodgeDelta: -8 } ] }, theme: { c1: "#7fdfff", c2: "#c9f3ff", c3: "#3a8fd6", c4: "#e8fbff", glow: "#0c1a22", atmo: "rgba(150,230,255,0.14)", accent: "#7fdfff", accentSoft: "rgba(127,223,255,0.35)" }, enemies: [{ name: "Замёрзший Беглец", hp: 420, dmg: 48, armor: 16, class: "Быстрый", exp: 300 }, { name: "Ледяной Сталкер", hp: 500, dmg: 56, armor: 22, class: "Кровожадный", exp: 400 }], boss: { name: "👑 Снежный Тиран", hp: 1700, dmg: 90, armor: 45, class: "Босс", exp: 2500, rewardCaps: 500 } },
+                { id: 5, name: "🏭 Заброшенный Завод", minLvl: 50, bossDefeatedId: 4, hazard: { key: "toxic", label: "Токсины", icon: "☣️", color: "#ffcc00", rate: 6, tiers: [ { min: 25, regenMult: 1.5 }, { min: 50, regenMult: 2, satietyMult: 1.5 }, { min: 75, regenBlocked: true, satietyMult: 2 } ] }, theme: { c1: "#ff8800", c2: "#5a5f6b", c3: "#ffcc00", c4: "#802b00", glow: "#1c1a14", atmo: "rgba(255,136,0,0.10)", accent: "#ffb020", accentSoft: "rgba(255,176,32,0.35)" }, enemies: [{ name: "Авто-Турель x4", hp: 680, dmg: 72, armor: 35, class: "Бронированный", exp: 650 }, { name: "Робот-Погрузчик", hp: 850, dmg: 84, armor: 52, class: "Тяжеловес", exp: 800 }], boss: { name: "👑 ИИ 'Центурион'", hp: 3200, dmg: 140, armor: 85, class: "Босс", exp: 5000, rewardCaps: 1000 } },
+                { id: 6, name: "🌋 Огненный Кратер", minLvl: 60, bossDefeatedId: 5, hazard: { key: "heat", label: "Перегрев", icon: "🔥", color: "#ff5722", rate: 7, tiers: [ { min: 25, dmgTakenMult: 1.10 }, { min: 50, dmgTakenMult: 1.25, armorDelta: -3 }, { min: 75, dmgTakenMult: 1.40, armorDelta: -6, dodgeDelta: -5 } ] }, theme: { c1: "#ff3300", c2: "#ff8800", c3: "#990000", c4: "#ffcc00", glow: "#220a04", atmo: "rgba(255,51,0,0.14)", accent: "#ff5722", accentSoft: "rgba(255,87,34,0.4)" }, enemies: [{ name: "Магматический Слизень", hp: 1300, dmg: 115, armor: 65, class: "Кровожадный", exp: 1300 }, { name: "Пепельный Скиталец", hp: 1600, dmg: 135, armor: 80, class: "Тяжеловес", exp: 1600 }], boss: { name: "👑 Владыка Пепла", hp: 6500, dmg: 230, armor: 130, class: "Босс", exp: 9000, rewardCaps: 2500 } },
+                { id: 7, name: "👑 Цитадель Омега", minLvl: 70, bossDefeatedId: 6, hazard: { key: "psi", label: "Пси-Давление", icon: "🧠", color: "#bf5af2", rate: 8, tiers: [ { min: 25, dodgeDelta: -5 }, { min: 50, dodgeDelta: -10, dmgDealtMult: 0.9 }, { min: 75, dodgeDelta: -15, dmgDealtMult: 0.75, dmgTakenMult: 1.15 } ] }, theme: { c1: "#bf5af2", c2: "#ffd700", c3: "#ff2a5f", c4: "#f8fafc", glow: "#180a20", atmo: "rgba(191,90,242,0.14)", accent: "#ffd700", accentSoft: "rgba(255,215,0,0.4)" }, enemies: [{ name: "Страж Цитадели", hp: 2600, dmg: 220, armor: 115, class: "Бронированный", exp: 3200 }, { name: "Гвардеец Омега", hp: 3400, dmg: 260, armor: 135, class: "Тяжеловес", exp: 4200 }], boss: { name: "👑 ИМПЕРАТОР ОМЕГА", hp: 16000, dmg: 480, armor: 220, class: "Босс", exp: 25000, rewardCaps: 7500 } }
             ],
             weapons: [
-                { id: "fists", name: "Кулаки", dmg: 5, crit: 5, icon: "👊", color: "#9aa4b2", tier: "Стартовое" },
-                { id: "pipe", name: "Ржавая Труба", dmg: 9, crit: 8, icon: "🔧", color: "#b5651d", tier: "Обычное" },
-                { id: "pistol", name: "Самопал", dmg: 16, crit: 12, icon: "🔫", color: "#00f0ff", tier: "Надёжное" },
-                { id: "plasma", name: "Плазменный Резак", dmg: 35, crit: 15, icon: "🔥", color: "#bf5af2", tier: "Редкое" },
-                { id: "gauss", name: "Винтовка Гаусса", dmg: 80, crit: 25, icon: "⚡", color: "#ffb703", tier: "Легендарное" }
+                { id: "fists", name: "Кулаки", dmg: 5, crit: 5, icon: "👊", color: "#9aa4b2", tier: "Стартовое", class: "Ближний бой" },
+                { id: "pipe", name: "Ржавая Труба", dmg: 9, crit: 8, icon: "🔧", color: "#39ff14", tier: "Обычное", class: "Ближний бой" },
+                { id: "machete", name: "Мачете Скитальца", dmg: 13, crit: 10, icon: "🔪", color: "#39ff14", tier: "Обычное", class: "Ближний бой" },
+                { id: "pistol", name: "Самопал", dmg: 16, crit: 12, icon: "🔫", color: "#00f0ff", tier: "Редкое", class: "Пистолеты" },
+                { id: "revolver", name: "Тяжёлый Револьвер", dmg: 22, crit: 16, icon: "🔫", color: "#00f0ff", tier: "Редкое", class: "Пистолеты" },
+                { id: "shotgun", name: "Дробовик «Костолом»", dmg: 42, crit: 8, icon: "💥", color: "#ff2a5f", tier: "Эпическое", class: "Дробовики" },
+                { id: "assault", name: "Штурмовая АК-74Рад", dmg: 38, crit: 18, icon: "🎯", color: "#ff2a5f", tier: "Эпическое", class: "Штурмовые винтовки" },
+                { id: "plasma", name: "Плазменный Резак", dmg: 35, crit: 15, icon: "🔥", color: "#ff2a5f", tier: "Эпическое", class: "Энергетическое" },
+                { id: "minigun", name: "Миниган «Молотилка»", dmg: 95, crit: 12, icon: "🌀", color: "#ffb703", tier: "Легендарное", class: "Тяжёлое оружие" },
+                { id: "gauss", name: "Винтовка Гаусса", dmg: 80, crit: 25, icon: "⚡", color: "#ffb703", tier: "Легендарное", class: "Энергетическое" }
             ],
+            // Индивидуальный набор боевых способностей для каждого оружия (не более 4 на оружие)
+            weaponAbilities: {
+                fists: [
+                    { key: "punch_fast", label: "⚡ Быстрый джеб", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "punch_heavy", label: "💥 Мощный хук", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.35, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "punch_guard", label: "🛡️ Глухая стойка", cd: 3, dmgMult: 0, block: true, cls: "success" }
+                ],
+                pipe: [
+                    { key: "pipe_fast", label: "⚡ Быстрый замах", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "pipe_heavy", label: "💥 Дробящий удар", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.35, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "pipe_guard", label: "🛡️ Подставить трубу", cd: 3, dmgMult: 0, block: true, cls: "success" }
+                ],
+                machete: [
+                    { key: "fast", label: "⚡ Быстрый выпад", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "heavy", label: "💥 Тяжёлый удар", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.35, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "bleed", label: "🩸 Рассечение", cd: 4, dmgMult: 0.9, bleedTicks: 3, bleedLog: "🩸 Нанесена глубокая рана! Враг истекает кровью.", cls: "primary", sty: "background: var(--grad-accent);" },
+                    { key: "block", label: "🛡️ Занять Блок", cd: 3, dmgMult: 0, block: true, blockLog: "🛡️ Вы ушли в глухую оборону, готовясь поглотить урон.", cls: "success" }
+                ],
+                pistol: [
+                    { key: "pistol_fast", label: "⚡ Быстрый выстрел", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "pistol_aimed", label: "🎯 Прицельный выстрел", cd: 4, dmgMult: 1.1, critBonus: 25, cls: "primary", sty: "background: var(--grad-blue);" },
+                    { key: "pistol_heavy", label: "💥 Двойной выстрел", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.3, cls: "primary", sty: "background: var(--grad-gold); color:#000;" }
+                ],
+                revolver: [
+                    { key: "revolver_fast", label: "⚡ Быстрый взвод", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "revolver_aimed", label: "🎯 Точный выстрел", cd: 4, dmgMult: 1.05, critBonus: 30, cls: "primary", sty: "background: var(--grad-blue);" },
+                    { key: "revolver_heavy", label: "💥 Убойный выстрел", cd: 5, dmgMult: 1.35, critBonus: 15, stunChance: 0.35, cls: "primary", sty: "background: var(--grad-gold); color:#000;" }
+                ],
+                shotgun: [
+                    { key: "shotgun_fast", label: "⚡ Быстрый залп", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "shotgun_heavy", label: "💥 Залп в упор", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.4, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "shotgun_guard", label: "🛡️ Дробовиком наперевес", cd: 3, dmgMult: 0, block: true, cls: "success" }
+                ],
+                assault: [
+                    { key: "assault_fast", label: "⚡ Короткая очередь", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "assault_burst", label: "🎯 Прицельная очередь", cd: 4, dmgMult: 1.1, critBonus: 25, cls: "primary", sty: "background: var(--grad-blue);" },
+                    { key: "assault_heavy", label: "💥 Шквальный огонь", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.3, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "assault_guard", label: "🛡️ Прикрытие", cd: 3, dmgMult: 0, block: true, cls: "success" }
+                ],
+                plasma: [
+                    { key: "plasma_fast", label: "⚡ Быстрый разряд", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "plasma_burn", label: "🔥 Поджиг", cd: 4, dmgMult: 0.9, bleedTicks: 3, bleedLog: "🔥 Плазменный ожог! Враг горит.", cls: "primary", sty: "background: var(--grad-accent);" },
+                    { key: "plasma_heavy", label: "💥 Перегрузка", cd: 5, dmgMult: 1.3, critBonus: 15, stunChance: 0.35, cls: "primary", sty: "background: var(--grad-gold); color:#000;" }
+                ],
+                minigun: [
+                    { key: "minigun_spinup", label: "⚡ Разгон стволов", cd: 2, dmgMult: 0.85, critZero: true, cls: "primary" },
+                    { key: "minigun_unload", label: "💥 Шквал свинца", cd: 6, dmgMult: 1.4, critBonus: 15, stunChance: 0.35, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "minigun_suppress", label: "🎯 Подавляющий огонь", cd: 4, dmgMult: 1.1, critBonus: 20, cls: "primary", sty: "background: var(--grad-blue);" }
+                ],
+                gauss: [
+                    { key: "gauss_fast", label: "⚡ Заряженный выстрел", cd: 3, dmgMult: 0.9, critZero: true, cls: "primary" },
+                    { key: "gauss_rail", label: "💥 Рельсовый залп", cd: 6, dmgMult: 1.4, critBonus: 20, stunChance: 0.4, cls: "primary", sty: "background: var(--grad-gold); color:#000;" },
+                    { key: "gauss_pierce", label: "🎯 Пробивающий выстрел", cd: 4, dmgMult: 1.15, critBonus: 30, cls: "primary", sty: "background: var(--grad-blue);" }
+                ]
+            },
             blueprints: [
                 { id: "craft_pipe", name: "Ржавая Труба", reqLvl: 1, cost: { "Запчасти": 4 }, type: "weapon", targetId: "pipe" },
+                { id: "craft_machete", name: "Мачете Скитальца", reqLvl: 3, cost: { "Запчасти": 7 }, type: "weapon", targetId: "machete" },
                 { id: "craft_pistol", name: "Самопал", reqLvl: 6, cost: { "Запчасти": 12, "Тяжелый Хлам": 2 }, type: "weapon", targetId: "pistol" },
-                { id: "craft_gauss", name: "Винтовка Гаусса", reqLvl: 45, cost: { "Запчасти": 150, "Тяжелый Хлам": 40, "Ядерная Батарея": 10 }, type: "weapon", targetId: "gauss" }
+                { id: "craft_revolver", name: "Тяжёлый Револьвер", reqLvl: 9, cost: { "Запчасти": 16, "Тяжелый Хлам": 3 }, type: "weapon", targetId: "revolver" },
+                { id: "craft_shotgun", name: "Дробовик «Костолом»", reqLvl: 26, cost: { "Запчасти": 45, "Тяжелый Хлам": 12, "Ядерная Батарея": 2 }, type: "weapon", targetId: "shotgun" },
+                { id: "craft_assault", name: "Штурмовая АК-74Рад", reqLvl: 30, cost: { "Запчасти": 60, "Тяжелый Хлам": 18, "Ядерная Батарея": 4 }, type: "weapon", targetId: "assault" },
+                { id: "craft_minigun", name: "Миниган «Молотилка»", reqLvl: 50, cost: { "Запчасти": 140, "Тяжелый Хлам": 35, "Ядерная Батарея": 8 }, type: "weapon", targetId: "minigun" },
+                { id: "craft_gauss", name: "Винтовка Гаусса", reqLvl: 65, cost: { "Запчасти": 150, "Тяжелый Хлам": 40, "Ядерная Батарея": 10 }, type: "weapon", targetId: "gauss" }
             ],
             cooking: [
                 { id: "cook_rat", name: "Жареное мясо крысы", cost: { "Сырое мясо": 1 }, heal: 10, icon: "🍗" },
@@ -1138,17 +1353,34 @@ onclick="Core.declineEncounter()">
                 { id: "rusty", name: "Ржавая Удочка", icon: "🎣", tier: 1, clickMin: 9, clickMax: 15, decayMin: 2, decayMax: 3.5, duration: 6, desc: "Стартовое снаряжение рыбака. Ловит только мелкую рыбу." },
                 { id: "sturdy", name: "Крепкая Удочка", icon: "🎣", tier: 2, clickMin: 11, clickMax: 17, decayMin: 1.6, decayMax: 3, duration: 7, desc: "Усиленное удилище — позволяет тягаться с редкой рыбой." },
                 { id: "carbon", name: "Карбоновый Спиннинг", icon: "🎣", tier: 3, clickMin: 13, clickMax: 19, decayMin: 1.3, decayMax: 2.6, duration: 8, desc: "Лёгкий и прочный спиннинг для серьёзной рыбалки." },
-                { id: "plasma", name: "Плазменная Удочка", icon: "🎣", tier: 4, clickMin: 16, clickMax: 23, decayMin: 1, decayMax: 2, duration: 9, desc: "Экспериментальная разработка, приманивает даже глубоководных монстров." }
+                { id: "plasma", name: "Плазменная Удочка", icon: "🎣", tier: 4, clickMin: 16, clickMax: 23, decayMin: 1, decayMax: 2, duration: 9, desc: "Экспериментальная разработка, приманивает даже глубоководных монстров." },
+                { id: "titanium", name: "Титановый Спиннинг", icon: "🎣", tier: 5, clickMin: 18, clickMax: 26, decayMin: 0.8, decayMax: 1.7, duration: 10, desc: "Почти неубиваемый каркас позволяет тянуть даже самую тяжёлую добычу без риска сорваться." },
+                { id: "quantum", name: "Квантовая Удочка", icon: "🎣", tier: 6, clickMin: 21, clickMax: 30, decayMin: 0.6, decayMax: 1.4, duration: 11, desc: "Стабилизирует леску на молекулярном уровне — вершина рыболовной инженерии Пустошей." }
             ],
             rodBlueprints: [
                 { id: "bp_sturdy", targetId: "sturdy", reqLvl: 8, cost: { "Запчасти": 6, "Тяжелый Хлам": 2 } },
                 { id: "bp_carbon", targetId: "carbon", reqLvl: 22, cost: { "Запчасти": 14, "Тяжелый Хлам": 6, "Ядерная Батарея": 1 } },
-                { id: "bp_plasma", targetId: "plasma", reqLvl: 45, cost: { "Запчасти": 30, "Тяжелый Хлам": 14, "Ядерная Батарея": 3 } }
+                { id: "bp_plasma", targetId: "plasma", reqLvl: 45, cost: { "Запчасти": 30, "Тяжелый Хлам": 14, "Ядерная Батарея": 3 } },
+                { id: "bp_titanium", targetId: "titanium", reqLvl: 60, cost: { "Запчасти": 45, "Тяжелый Хлам": 20, "Ядерная Батарея": 5 } },
+                { id: "bp_quantum", targetId: "quantum", reqLvl: 75, cost: { "Запчасти": 80, "Тяжелый Хлам": 35, "Ядерная Батарея": 12 } }
             ],
             lootboxes: [
                 { name: "Скрап-Ящик", price: 15, color: "#00f0ff", maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.679 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.291 }, { item: "⛺ Привал x1", chance: 0.03 }] },
                 { name: "Продуктовый ящик", price: 20, color: "#39ff14", maxVouchers: 3, table: [{ item: "Сырое мясо x2", chance: 0.57 }, { item: "Жареное мясо крысы x1", chance: 0.38 }, { item: "⛺ Привал x1", chance: 0.05 }] },
-                { name: "Сейф Минори", price: 45, color: "#ffb703", maxVouchers: 5, table: [{ item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.36 }, { item: "🔋 Микро-батарея (+20 Энергии)", chance: 0.27 }, { item: "Сырое мясо x3", chance: 0.27 }, { item: "⛺ Привал x1", chance: 0.10 }] }
+                { name: "Сейф Минори", price: 45, color: "#ffb703", maxVouchers: 5, table: [{ item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.36 }, { item: "🔋 Микро-батарея (+20 Энергии)", chance: 0.27 }, { item: "Сырое мясо x3", chance: 0.27 }, { item: "⛺ Привал x1", chance: 0.10 }] },
+                { name: "Реликварий Пустоши", price: 5, color: "#ffd700", currency: "vouchers", premium: true, maxVouchers: 3, table: [{ item: "🎫 Пустынный Премиум-пропуск", chance: 0.01 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.32 }, { item: "🔋 Микро-батарея (+20 Энергии)", chance: 0.30 }, { item: "Запчасти x15", chance: 0.22 }, { item: "⛺ Привал x1", chance: 0.15 }] }
+            ],
+            dailyRewardPool: [
+                { name: "Крышки x8", type: "caps", qty: 8, weight: 22 },
+                { name: "Крышки x16", type: "caps", qty: 16, weight: 12 },
+                { name: "Запчасти x6", type: "item", item: "Запчасти", qty: 6, weight: 16 },
+                { name: "Тяжелый Хлам x2", type: "item", item: "Тяжелый Хлам", qty: 2, weight: 8 },
+                { name: "🔋 Восстановление Энергии", type: "energy_pack", weight: 12 },
+                { name: "💉 Мед-Пакет", type: "hp_pack", weight: 12 },
+                { name: "🎁 Скрап-Ящик (бесплатно)", type: "lootbox", boxIdx: 0, weight: 7 },
+                { name: "🎁 Продуктовый ящик (бесплатно)", type: "lootbox", boxIdx: 1, weight: 5 },
+                { name: "🏷️ Ваучер x1", type: "voucher", qty: 1, weight: 4 },
+                { name: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", type: "maxhp", weight: 2 }
             ],
             bpRewards: generateBpRewards()
         };
@@ -1159,9 +1391,9 @@ onclick="Core.declineEncounter()">
         });
 
         const Core = {
-            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [] },
-            combatState: null, dailyClaimed: false, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
-            hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: { fast: 0, heavy: 0, bleed: 0, block: 0 }, abilityCdSeconds: { fast: 2, heavy: 5, bleed: 4, block: 3 },
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null },
+            combatState: null, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
+            hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: {},
             lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
             
             quests: [
@@ -1181,7 +1413,21 @@ onclick="Core.declineEncounter()">
                 { id: "q15", text: "Убить 20 мутантов-крыс", progress: 0, target: 20, points: 180, done: false, trigger: "kill_Кибер-Крыса" }
             ],
 
-            init() { this.load(); this.loadSettings(); this.applyBiomeTheme(this.p.currentBiome); Tut.init(); this.updateUI(); setInterval(() => this.loop(), 1000); this.log("☢️ Мега-обновление систем выживания запущено.", "system"); },
+            init() {
+                this.load();
+                this.loadSettings(); this.applyBiomeTheme(this.p.currentBiome); Tut.init(); this.updateUI();
+                setInterval(() => this.loop(), 1000);
+                // Оффлайн-прогресс: досчитываем время, пока вкладка была свёрнута/неактивна
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        this.lastTick = Date.now(); this.save();
+                    } else {
+                        this.applyOfflineProgress(); this.updateUI(); this.save();
+                    }
+                });
+                window.addEventListener('pagehide', () => { this.lastTick = Date.now(); this.save(); });
+                this.log("☢️ Мега-обновление систем выживания запущено.", "system");
+            },
 
             // Применяет уникальную цветовую атмосферу текущего биома (фон, блобы, акценты интерфейса)
             applyBiomeTheme(biomeId) {
@@ -1249,35 +1495,127 @@ onclick="Core.declineEncounter()">
                 root.setProperty('--glass-shadow', `0 10px 40px rgba(0, 0, 0, ${shOuter}), inset 0 1px 0 rgba(255, 255, 255, ${shInTop}), inset 0 -1px 0 rgba(0, 0, 0, ${shInBot})`);
                 root.setProperty('--glass-shadow-soft', `inset 0 1px 0 rgba(255, 255, 255, ${softTop}), inset 0 -1px 0 rgba(0, 0, 0, ${softBot})`);
             },
-            save() { localStorage.setItem('w_save_v7', JSON.stringify({ p: this.p, daily: this.dailyClaimed, restUses: this.restUses, t: this.nextRestTick, q: this.quests })); },
+            save() { localStorage.setItem('w_save_v7', JSON.stringify({ p: this.p, restUses: this.restUses, t: this.nextRestTick, q: this.quests, lt: this.lastTick, sda: this.satietyDecayAccum || 0, hra: this.hpRegenAccum || 0 })); },
             load() { 
                 let data = localStorage.getItem('w_save_v7'); 
                 if(data) { 
                     let parsed = JSON.parse(data); 
-                    this.p = parsed.p; this.dailyClaimed = parsed.daily; this.restUses = parsed.restUses; this.nextRestTick = parsed.t; 
+                    this.p = parsed.p; this.restUses = parsed.restUses; this.nextRestTick = parsed.t; 
+                    this.satietyDecayAccum = parsed.sda || 0;
+                    this.hpRegenAccum = parsed.hra || 0;
+                    this.lastTick = parsed.lt || Date.now();
                     if(parsed.q) {
                         let defaultQuests = this.quests;
                         let savedById = {};
                         parsed.q.forEach(sq => savedById[sq.id] = sq);
                         this.quests = defaultQuests.map(dq => savedById[dq.id] ? savedById[dq.id] : dq);
                     }
-                    if(!this.p.wpnUpgrades) this.p.wpnUpgrades = { "fists": 0, "pipe": 0, "pistol": 0, "plasma": 0, "gauss": 0 };
+                    if(!this.p.wpnUpgrades) this.p.wpnUpgrades = { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 };
+                    DB.weapons.forEach(w => { if(this.p.wpnUpgrades[w.id] === undefined) this.p.wpnUpgrades[w.id] = 0; });
                     if(!this.p.bossesDefeated) this.p.bossesDefeated = [];
                     if(this.p.armor === undefined) this.p.armor = 2;
                     if(this.p.dodgeChance === undefined) this.p.dodgeChance = 8;
                     if(this.p.satiety === undefined) this.p.satiety = 100;
                     if(!this.p.rodsOwned) this.p.rodsOwned = ["rusty"];
                     if(!this.p.activeRod) this.p.activeRod = "rusty";
-                } 
+                    if(this.p.dailyStreak === undefined) this.p.dailyStreak = 0;
+                    if(this.p.lastDailyClaim === undefined) this.p.lastDailyClaim = null;
+                    if(!this.p.hazards) {
+                        this.p.hazards = {};
+                        // Миграция старого сохранения: единая "радиация" считалась только в Радиоактивном Лесу (id 3)
+                        if (this.p.rad) this.p.hazards[3] = this.p.rad;
+                    }
+                    this.applyOfflineProgress();
+                } else {
+                    this.lastTick = Date.now();
+                }
+            },
+
+            // Досчитывает здоровье/сытость/привалы за время, пока игра была закрыта или свёрнута.
+            // Все процессы идут в оффлайне, но вдвое медленнее, чем при активной игре.
+            applyOfflineProgress() {
+                if (!this.lastTick) { this.lastTick = Date.now(); return; }
+                let now = Date.now();
+                let elapsedSec = Math.floor((now - this.lastTick) / 1000);
+                if (elapsedSec < 1) return;
+                if (this.p.hp <= 0) { this.lastTick = now; return; } // погибший игрок не восстанавливается в оффлайне
+
+                let gainedHp = 0, lostSatiety = 0, gainedRest = 0;
+                let hazardMods = this.getHazardMods();
+
+                // --- Сытость: убывает, но вдвое медленнее, чем онлайн (24с вместо 12с за -1%), плюс модификатор биома ---
+                if (this.p.satiety > 0) {
+                    const offlineDecayInterval = (12 * 2) / hazardMods.satietyMult;
+                    this.satietyDecayAccum = (this.satietyDecayAccum || 0) + elapsedSec;
+                    let ticks = Math.floor(this.satietyDecayAccum / offlineDecayInterval);
+                    if (ticks > 0) {
+                        lostSatiety = Math.min(this.p.satiety, ticks);
+                        this.p.satiety -= lostSatiety;
+                        this.satietyDecayAccum -= ticks * offlineDecayInterval;
+                    }
+                }
+
+                // --- Восстановление ОЗ: зависит от текущей сытости, вдвое медленнее, чем онлайн; учитывает дебаффы биома ---
+                let allowedMax = Math.max(5, this.p.maxHp - this.getHazard());
+                if (this.p.hp < allowedMax && !hazardMods.regenBlocked) {
+                    this.hpRegenAccum = (this.hpRegenAccum || 0) + elapsedSec;
+                    // симулируем шагами, т.к. интервал регена меняется вместе с падающей сытостью
+                    while (this.p.hp < allowedMax) {
+                        let interval = this.getHpRegenInterval() * 2 * hazardMods.regenMult; // вдвое медленнее в оффлайне
+                        if (this.hpRegenAccum < interval) break;
+                        this.hpRegenAccum -= interval;
+                        this.p.hp++;
+                        gainedHp++;
+                    }
+                }
+
+                // --- Привалы: восстанавливаются вдвое медленнее, чем онлайн ---
+                if (this.restUses < 5) {
+                    let onlinePeriod = this.getRestTime() * 1000;
+                    let offlinePeriod = onlinePeriod * 2;
+                    if (!this.nextRestTick) this.nextRestTick = this.lastTick + onlinePeriod;
+                    // время, остававшееся по онлайн-таймеру на момент ухода в оффлайн, тоже замедляем вдвое
+                    let remainingOnline = Math.max(0, this.nextRestTick - this.lastTick);
+                    let slowedTarget = this.lastTick + remainingOnline * 2;
+                    while (this.restUses < 5 && slowedTarget <= now) {
+                        this.restUses++; gainedRest++;
+                        slowedTarget += offlinePeriod;
+                    }
+                    this.nextRestTick = this.restUses < 5 ? slowedTarget : null;
+                }
+
+                this.lastTick = now;
+
+                if (gainedHp || lostSatiety || gainedRest) {
+                    let parts = [];
+                    if (gainedHp) parts.push(`❤️ +${gainedHp} ОЗ`);
+                    if (gainedRest) parts.push(`⛺ +${gainedRest} привал(ов)`);
+                    if (lostSatiety) parts.push(`🍗 -${lostSatiety}% сытости`);
+                    this.log(`💤 Пока вас не было: ${parts.join(', ')}.`, "system");
+                }
             },
             
-            isRadForestUnlocked() {
-                let biome = DB.biomes[3];
-                return this.p.lvl >= biome.minLvl && (biome.bossDefeatedId === null || this.p.bossesDefeated.includes(biome.bossDefeatedId));
+            // Текущий уровень опасности (0-100%) для указанного биома (по умолчанию — текущий)
+            getHazard(biomeId = this.p.currentBiome) {
+                return (this.p.hazards && this.p.hazards[biomeId]) || 0;
+            },
+            setHazard(val, biomeId = this.p.currentBiome) {
+                if (!this.p.hazards) this.p.hazards = {};
+                this.p.hazards[biomeId] = Math.max(0, Math.min(100, Math.round(val)));
+            },
+            // Собирает актуальные дебаффы текущего биома исходя из накопленного уровня опасности
+            getHazardMods() {
+                let mods = { dmgDealtMult: 1, dmgTakenMult: 1, dodgeDelta: 0, armorDelta: 0, regenMult: 1, regenBlocked: false, satietyMult: 1 };
+                let biome = DB.biomes[this.p.currentBiome];
+                if (!biome || !biome.hazard) return mods;
+                let level = this.getHazard();
+                biome.hazard.tiers.forEach(t => { if (level >= t.min) Object.assign(mods, t); });
+                return mods;
             },
 
             updateUI() {
-                let allowedMax = Math.max(5, this.p.maxHp - this.p.rad); if (this.p.hp > allowedMax) this.p.hp = allowedMax;
+                let currentHazard = this.getHazard();
+                let allowedMax = Math.max(5, this.p.maxHp - currentHazard); if (this.p.hp > allowedMax) this.p.hp = allowedMax;
                 document.getElementById('hp-val').innerText = `${this.p.hp}/${allowedMax}`;
                 document.getElementById('hp-bar').style.width = (this.p.hp / this.p.maxHp * 100) + '%';
                 document.getElementById('en-val').innerText = `${this.p.energy}/${this.p.maxEnergy}`;
@@ -1285,14 +1623,17 @@ onclick="Core.declineEncounter()">
                 document.getElementById('satiety-val').innerText = `${this.p.satiety}%`;
                 document.getElementById('satiety-bar').style.width = this.p.satiety + '%';
 
-                const radUnlocked = this.isRadForestUnlocked();
+                const biomeHazard = DB.biomes[this.p.currentBiome].hazard;
                 const radContainer = document.getElementById('rad-container');
                 const satietyContainer = document.getElementById('satiety-container');
-                if (radUnlocked) {
+                if (biomeHazard) {
                     radContainer.style.display = 'flex';
                     satietyContainer.classList.remove('stat-full');
-                    document.getElementById('rad-val').innerText = `${this.p.rad}%`;
-                    document.getElementById('rad-bar').style.width = this.p.rad + '%';
+                    document.getElementById('rad-label').innerText = `${biomeHazard.icon} ${biomeHazard.label.toUpperCase()}`;
+                    document.getElementById('rad-label').style.color = biomeHazard.color;
+                    document.getElementById('rad-val').innerText = `${currentHazard}%`;
+                    document.getElementById('rad-bar').style.width = currentHazard + '%';
+                    document.getElementById('rad-bar').style.background = biomeHazard.color;
                 } else {
                     radContainer.style.display = 'none';
                     satietyContainer.classList.add('stat-full');
@@ -1305,7 +1646,6 @@ onclick="Core.declineEncounter()">
                 document.getElementById('vouchers-val').innerText = this.p.vouchers;
                 document.getElementById('rest-count').innerText = this.restUses;
                 document.getElementById('current-location-badge').innerText = `📍 ${DB.biomes[this.p.currentBiome].name}`;
-                document.getElementById('daily-btn').disabled = this.dailyClaimed;
                 
                 // Кнопка покупки уровней БП блокируется на капе
                 const buyLvlBtn = document.getElementById('bp-buy-level-btn');
@@ -1313,7 +1653,7 @@ onclick="Core.declineEncounter()">
                     buyLvlBtn.disabled = this.p.bpLvl >= 50 || this.p.caps < 50;
                 }
 
-                this.renderInventory(); this.renderShop(); this.renderMap(); this.renderBp();
+                this.renderInventory(); this.renderShop(); this.renderMap(); this.renderBp(); this.renderDaily();
             },
             log(msg, type = '') { const box = document.getElementById('log'); const e = document.createElement('div'); e.className = `log-entry ${type}`; e.innerText = msg; box.appendChild(e); box.scrollTop = box.scrollHeight; },
             getRestTime() { return this.p.lvl >= 50 ? 30 : 60; },
@@ -1321,13 +1661,15 @@ onclick="Core.declineEncounter()">
             // Скорость регенерации ОЗ зависит от сытости: 100% = 1 ОЗ/5с, 90% = 1 ОЗ/7с, и т.д. (+2с за каждые -10% сытости)
             getHpRegenInterval() { return 5 + (100 - this.p.satiety) * 0.2; },
 
-            // Накопление радиации в опасных биомах (сейчас — только Радиактивный Лес)
+            // Накопление опасности (радиация/холод/токсины/жар/пси-давление — в зависимости от биома)
             exposeRadiation(source) {
                 let biome = DB.biomes[this.p.currentBiome];
-                if (!biome.radDanger || this.p.rad >= 90) return;
-                let gain = Math.floor(Math.random() * biome.radDanger) + 1;
-                this.p.rad = Math.min(90, this.p.rad + gain);
-                this.log(`☢️ ${source}: заражение +${gain}% (текущий уровень: ${this.p.rad}%).`, "combat-lose");
+                if (!biome.hazard) return;
+                let current = this.getHazard();
+                if (current >= 100) return;
+                let gain = Math.floor(Math.random() * biome.hazard.rate) + 1;
+                this.setHazard(current + gain);
+                this.log(`${biome.hazard.icon} ${source}: ${biome.hazard.label} +${gain}% (текущий уровень: ${this.getHazard()}%).`, "combat-lose");
             },
 
             startCooldownTicker() {
@@ -1338,26 +1680,49 @@ onclick="Core.declineEncounter()">
             stopCooldownTicker() {
                 if (this.combatCooldownInterval) { clearInterval(this.combatCooldownInterval); this.combatCooldownInterval = null; }
             },
-            renderAbilityCooldowns() {
-                const map = { fast: 'btn-attack-fast', heavy: 'btn-attack-heavy', bleed: 'btn-attack-bleed', block: 'btn-block' };
-                const labels = { fast: '⚡ Быстрый выпад', heavy: '💥 Тяжёлый удар', bleed: '🩸 Рассечение', block: '🛡️ Занять Блок' };
-                let now = Date.now();
-                for (let key in map) {
-                    let btn = document.getElementById(map[key]);
-                    if (!btn) continue;
-                    let remain = Math.ceil(((this.abilityCooldowns[key] || 0) - now) / 1000);
-                    if (remain > 0) { btn.disabled = true; btn.innerText = `${labels[key]} (${remain}с)`; }
-                    else { btn.disabled = false; btn.innerText = labels[key]; }
+            getActiveWeaponAbilities() {
+                return DB.weaponAbilities[this.p.activeWeapon] || DB.weaponAbilities['fists'];
+            },
+            renderCombatAbilities() {
+                let container = document.getElementById('combat-ability-grid');
+                if (!container) return;
+                let abilities = this.getActiveWeaponAbilities();
+                let html = '';
+                for (let i = 0; i < abilities.length; i += 2) {
+                    let rowItems = abilities.slice(i, i + 2);
+                    html += `<div class="buttons-grid">`;
+                    rowItems.forEach(a => {
+                        let styleParts = [];
+                        if (a.sty) styleParts.push(a.sty);
+                        if (rowItems.length === 1) styleParts.push('grid-column: 1 / -1;');
+                        let styleAttr = styleParts.length ? `style="${styleParts.join(' ')}"` : '';
+                        html += `<button id="btn-attack-${a.key}" class="${a.cls || 'primary'}" ${styleAttr} onclick="Core.executeAttack('${a.key}')">${a.label}</button>`;
+                    });
+                    html += `</div>`;
                 }
+                container.innerHTML = html;
+            },
+            renderAbilityCooldowns() {
+                let abilities = this.getActiveWeaponAbilities();
+                let now = Date.now();
+                abilities.forEach(a => {
+                    let btn = document.getElementById(`btn-attack-${a.key}`);
+                    if (!btn) return;
+                    let remain = Math.ceil(((this.abilityCooldowns[a.key] || 0) - now) / 1000);
+                    if (remain > 0) { btn.disabled = true; btn.innerText = `${a.label} (${remain}с)`; }
+                    else { btn.disabled = false; btn.innerText = a.label; }
+                });
             },
 
             loop() {
                 if (this.p.hp <= 0) return;
 
-                // Сытость убывает со временем, в бою — быстрее
+                let hazardMods = this.getHazardMods();
+
+                // Сытость убывает со временем, в бою — быстрее, в опасных биомах может убывать быстрее (satietyMult)
                 if (this.p.satiety > 0) {
                     this.satietyDecayAccum = (this.satietyDecayAccum || 0) + 1;
-                    let decayInterval = this.combatState ? 4 : 12;
+                    let decayInterval = (this.combatState ? 4 : 12) / hazardMods.satietyMult;
                     if (this.satietyDecayAccum >= decayInterval) {
                         this.satietyDecayAccum -= decayInterval;
                         this.p.satiety = Math.max(0, this.p.satiety - 1);
@@ -1365,11 +1730,11 @@ onclick="Core.declineEncounter()">
                     }
                 }
 
-                // Регенерация ОЗ за счёт сытости, в бою в 2 раза медленнее
-                let allowedMax = Math.max(5, this.p.maxHp - this.p.rad);
-                if (this.p.hp < allowedMax) {
+                // Регенерация ОЗ за счёт сытости, в бою в 2 раза медленнее; в опасных биомах может быть замедлена или заблокирована
+                let allowedMax = Math.max(5, this.p.maxHp - this.getHazard());
+                if (this.p.hp < allowedMax && !hazardMods.regenBlocked) {
                     this.hpRegenAccum = (this.hpRegenAccum || 0) + 1;
-                    let interval = this.getHpRegenInterval() * (this.combatState ? 2 : 1);
+                    let interval = this.getHpRegenInterval() * (this.combatState ? 2 : 1) * hazardMods.regenMult;
                     if (this.hpRegenAccum >= interval) {
                         this.hpRegenAccum -= interval;
                         this.p.hp = Math.min(allowedMax, this.p.hp + 1);
@@ -1394,6 +1759,9 @@ onclick="Core.declineEncounter()">
                         }
                     }
                 } else { this.nextRestTick = null; let tb = document.getElementById('rest-timer'); if(tb) tb.style.display = 'none'; }
+
+                this.updateDailyTimer();
+                this.lastTick = Date.now();
             },
 
             triggerQuest(action, qty = 1) {
@@ -1412,7 +1780,7 @@ onclick="Core.declineEncounter()">
 
             checkBpLvl() {
                 while(true) {
-                    let req = this.p.bpLvl * 10; 
+                    let req = 100;
                     if(this.p.bpLvl < 50 && this.p.bpPoints >= req) {
                         this.p.bpPoints -= req;
                         this.p.bpLvl++;
@@ -1549,10 +1917,12 @@ onclick="Core.declineEncounter()">
                 this.triggerQuest("rest");
                 this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20);
                 this.log(`⛺ Вы отдохнули на привале. Энергия восстановлена на +20 ед.`);
-                if (this.p.rad > 0) {
-                    let radHeal = Math.min(this.p.rad, 15 + Math.floor(Math.random() * 10));
-                    this.p.rad -= radHeal;
-                    this.log(`☢️ Привал очищает организм от радиации: -${radHeal}% (осталось ${this.p.rad}%).`, "loot");
+                let currentHazard = this.getHazard();
+                let biomeHazard = DB.biomes[this.p.currentBiome].hazard;
+                if (biomeHazard && currentHazard > 0) {
+                    let hazardHeal = Math.min(currentHazard, 15 + Math.floor(Math.random() * 10));
+                    this.setHazard(currentHazard - hazardHeal);
+                    this.log(`${biomeHazard.icon} Привал снижает ${biomeHazard.label.toLowerCase()}: -${hazardHeal}% (осталось ${this.getHazard()}%).`, "loot");
                 }
                 this.save(); this.updateUI();
             },
@@ -1595,8 +1965,9 @@ beginCombat(){
     document.getElementById("enemy-intro-overlay").style.display = "none";
 
     this.combatState = this.pendingEnemy;
-    this.abilityCooldowns = { fast: 0, heavy: 0, bleed: 0, block: 0 };
+    this.abilityCooldowns = {};
     this.lastAttackType = null; this.sameAttackStreak = 0;
+    this.renderCombatAbilities();
     this.startCooldownTicker();
 
     if(this.combatState.isBoss){
@@ -1661,6 +2032,9 @@ startCombat(isBossFight = false) {
             executeAttack(attackType) {
                 if(!this.combatState) return;
 
+                let ability = this.getActiveWeaponAbilities().find(a => a.key === attackType);
+                if (!ability) return;
+
                 let now = Date.now();
                 if (now < (this.abilityCooldowns[attackType] || 0)) {
                     Sound.play('hit');
@@ -1674,14 +2048,15 @@ startCombat(isBossFight = false) {
                 }
 
                 Sound.play('hit');
-                this.abilityCooldowns[attackType] = now + (this.abilityCdSeconds[attackType] || 3) * 1000;
+                this.abilityCooldowns[attackType] = now + (ability.cd || 3) * 1000;
                 if (attackType === this.lastAttackType) { this.sameAttackStreak++; } else { this.lastAttackType = attackType; this.sameAttackStreak = 1; }
 
                 this.exposeRadiation("Радиационный фон боя");
+                let hazardMods = this.getHazardMods();
                 let currentWpn = DB.weapons.find(w => w.id === this.p.activeWeapon) || DB.weapons[0];
                 let upLvl = this.p.wpnUpgrades[this.p.activeWeapon] || 0;
                 
-                let baseDmg = Math.round(currentWpn.dmg * (1 + upLvl * 0.25));
+                let baseDmg = Math.round(currentWpn.dmg * (1 + upLvl * 0.25) * hazardMods.dmgDealtMult);
                 let damageSpread = (Math.random() * 0.4) - 0.2; 
                 let calculatedDmg = Math.round(baseDmg * (1 + damageSpread));
                 
@@ -1689,24 +2064,27 @@ startCombat(isBossFight = false) {
                 let isPlayerCrit = Math.random() * 100 < playerCrit;
                 let playerBlock = false;
 
-                if (attackType === 'fast') {
-                    calculatedDmg = Math.round(calculatedDmg * 0.85); 
-                    playerCrit = 0; 
-                } else if (attackType === 'heavy') {
-                    calculatedDmg = Math.round(calculatedDmg * 1.3); 
-                    playerCrit += 15;
-                    if(Math.random() < 0.35) {
-                        this.combatState.stunned = true;
-                        this.log("💥 Оглушение! Враг пропускает следующий ход.", "system");
-                    }
-                } else if (attackType === 'bleed') {
-                    calculatedDmg = Math.round(calculatedDmg * 0.9);
-                    this.combatState.bleedTicks = 3;
-                    this.log("🩸 Нанесена глубокая рана! Враг истекает кровью.", "combat-lose");
-                } else if (attackType === 'block') {
+                if (ability.dmgMult !== undefined) {
+                    calculatedDmg = Math.round(calculatedDmg * ability.dmgMult);
+                }
+                if (ability.critZero) {
+                    playerCrit = 0;
+                }
+                if (ability.critBonus) {
+                    playerCrit += ability.critBonus;
+                }
+                if (ability.stunChance && Math.random() < ability.stunChance) {
+                    this.combatState.stunned = true;
+                    this.log("💥 Оглушение! Враг пропускает следующий ход.", "system");
+                }
+                if (ability.bleedTicks) {
+                    this.combatState.bleedTicks = ability.bleedTicks;
+                    this.log(ability.bleedLog || "🩸 Нанесена глубокая рана! Враг истекает кровью.", "combat-lose");
+                }
+                if (ability.block) {
                     playerBlock = true;
                     calculatedDmg = 0;
-                    this.log("🛡️ Вы ушли в глухую оборону, готовясь поглотить урон.");
+                    this.log(ability.blockLog || "🛡️ Вы ушли в глухую оборону, готовясь поглотить урон.");
                 }
 
                 if (calculatedDmg > 0) {
@@ -1739,12 +2117,15 @@ startCombat(isBossFight = false) {
                     }
 
                     let enemyBaseDmg = Math.round(this.combatState.dmg * bossRageMult * (1 + (Math.random() * 0.2 - 0.1)));
-                    let isDodge = Math.random() * 100 < this.p.dodgeChance;
+                    let effectiveDodge = Math.max(0, this.p.dodgeChance + hazardMods.dodgeDelta);
+                    let isDodge = Math.random() * 100 < effectiveDodge;
                     
                     if (isDodge && !playerBlock) {
                         this.log(`⚡ Уклонение! Вы полностью избежали атаки [${this.combatState.name}].`, "combat-win");
                     } else {
-                        let finalIncoming = Math.max(1, enemyBaseDmg - this.p.armor);
+                        let effectiveArmor = this.p.armor + hazardMods.armorDelta;
+                        let finalIncoming = Math.max(1, enemyBaseDmg - effectiveArmor);
+                        finalIncoming = Math.round(finalIncoming * hazardMods.dmgTakenMult);
                         if (playerBlock) {
                             finalIncoming = Math.round(finalIncoming * 0.5);
                             this.log(`🛡️ Блок поглотил половину входящего урона!`);
@@ -1829,7 +2210,7 @@ startCombat(isBossFight = false) {
                 this.save(); this.updateUI();
             },
 
-            equipWeapon(wpnId) { Sound.play('click'); this.p.activeWeapon = wpnId; this.log(`⚔️ Экипировано: ${DB.weapons.find(w => w.id === wpnId).name}`); this.save(); this.updateUI(); },
+            equipWeapon(wpnId) { Sound.play('click'); this.p.activeWeapon = wpnId; this.log(`⚔️ Экипировано: ${DB.weapons.find(w => w.id === wpnId).name}`); if(this.combatState) { this.abilityCooldowns = {}; this.lastAttackType = null; this.sameAttackStreak = 0; this.renderCombatAbilities(); } this.save(); this.updateUI(); },
             
             upgradeWeapon(wpnId, cost) {
                 if ((this.p.inv["Запчасти"] || 0) < cost) return alert("Недостаточно запчастей для улучшения ствола!");
@@ -1843,7 +2224,7 @@ startCombat(isBossFight = false) {
             buyDirectPack(type) {
                 if(type === 'hp') {
                     if(this.p.caps < 20) return alert("Мало крышек!"); this.p.caps -= 20; this.triggerQuest("spend_caps", 20);
-                    let allowedMax = Math.max(5, this.p.maxHp - this.p.rad); this.p.hp = Math.min(allowedMax, this.p.hp + 20); this.log("💉 Мед-Пакет: +20 ОЗ.");
+                    let allowedMax = Math.max(5, this.p.maxHp - this.getHazard()); this.p.hp = Math.min(allowedMax, this.p.hp + 20); this.log("💉 Мед-Пакет: +20 ОЗ.");
                 } else if(type === 'energy') {
                     if(this.p.caps < 15) return alert("Мало крышек!"); this.p.caps -= 15; this.triggerQuest("spend_caps", 15);
                     this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); this.log("🔋 Батарейный Блок: +20 Энергии.");
@@ -1876,7 +2257,7 @@ startCombat(isBossFight = false) {
                                 <div class="weapon-icon-badge">${wpn.icon}</div>
                                 <div class="weapon-info">
                                     <div class="weapon-name-row">
-                                        <span class="weapon-name">${wpn.name}</span>
+                                        <span class="weapon-name">${wpn.name} <span class="weapon-class-inline">· ${wpn.class}</span></span>
                                         <span class="weapon-tier-badge">${wpn.tier}</span>
                                     </div>
                                     <div class="weapon-lvl-badge">Модернизация: Ур. ${upLvl}${overflowLvl}</div>
@@ -1963,7 +2344,7 @@ startCombat(isBossFight = false) {
                         el.innerHTML += `<div class="schem-entry" style="opacity: ${meetsLvl?1:0.55}">
                             <div class="schem-entry-header"><span>${rod.icon} ${rod.name}</span></div>
                             <div class="schem-res">${rod.desc}</div>
-                            ${meetsLvl ? resHtml : `<div class="schem-res bad">🔒 Требуется уровень ${bp.reqLvl}</div>`}
+                            ${owned ? '' : (meetsLvl ? resHtml : `<div class="schem-res bad">🔒 Требуется уровень ${bp.reqLvl}</div>`)}
                             <button class="schem-craft-btn" ${(owned||!meetsLvl)?'disabled':''} onclick="Core.craftRod('${bp.id}')">${owned?'✔ Собрано':'Собрать'}</button>
                         </div>`;
                     });
@@ -1974,8 +2355,8 @@ startCombat(isBossFight = false) {
                         let owned = this.p.weaponsOwned.includes(bp.targetId);
                         let resHtml = Object.entries(bp.cost).map(([res, count]) => { let have = this.p.inv[res] || 0; let ok = have >= count; return `<div class="schem-res ${ok?'ok':'bad'}">${res}: ${have}/${count}</div>`; }).join('');
                         el.innerHTML += `<div class="schem-entry" style="opacity: ${meetsLvl?1:0.55}">
-                            <div class="schem-entry-header"><span>🔫 ${bp.name}</span><span>Урон: ${wpnData.dmg}</span></div>
-                            ${meetsLvl ? resHtml : `<div class="schem-res bad">🔒 Требуется уровень ${bp.reqLvl}</div>`}
+                            <div class="schem-entry-header"><span>${wpnData.icon} ${bp.name} <span style="font-size:9px; color:var(--text-muted); text-transform:uppercase;">(${wpnData.class})</span></span>${owned ? '' : `<span>Урон: ${wpnData.dmg}</span>`}</div>
+                            ${owned ? '' : (meetsLvl ? resHtml : `<div class="schem-res bad">🔒 Требуется уровень ${bp.reqLvl}</div>`)}
                             <button class="schem-craft-btn" ${(owned||!meetsLvl)?'disabled':''} onclick="Core.craftWeapon('${bp.id}')">${owned?'✔ Собрано':'Собрать'}</button>
                         </div>`;
                     });
@@ -2048,28 +2429,76 @@ startCombat(isBossFight = false) {
 
             renderShop() {
                 const dEl = document.getElementById('direct-shop-list'); dEl.innerHTML = `
-                    <div class="list-item"><div>💉 Мед-Пакет (+20 ОЗ)</div><button class="primary" style="padding: 8px 12px;" onclick="Core.buyDirectPack('hp')">20 🪙</button></div>
-                    <div class="list-item"><div>🔋 Батарейный Блок (+20⚡)</div><button class="primary" style="padding: 8px 12px;" onclick="Core.buyDirectPack('energy')">15 🪙</button></div>
+                    <div class="direct-card" style="--dc-color:#ff2a5f;">
+                        <div class="direct-card-left">
+                            <div class="direct-icon-badge" style="border-color:#ff2a5f; box-shadow: 0 0 14px ${this.hexToRgba('#ff2a5f', 0.4)};">💉</div>
+                            <div>
+                                <div class="direct-card-title">Мед-Пакет</div>
+                                <div class="direct-card-sub">Восстанавливает +20 ОЗ</div>
+                            </div>
+                        </div>
+                        <button class="direct-buy-btn" onclick="Core.buyDirectPack('hp')">20 🪙</button>
+                    </div>
+                    <div class="direct-card" style="--dc-color:#00c8ff;">
+                        <div class="direct-card-left">
+                            <div class="direct-icon-badge" style="border-color:#00c8ff; box-shadow: 0 0 14px ${this.hexToRgba('#00c8ff', 0.4)};">🔋</div>
+                            <div>
+                                <div class="direct-card-title">Батарейный Блок</div>
+                                <div class="direct-card-sub">Восстанавливает +20⚡ энергии</div>
+                            </div>
+                        </div>
+                        <button class="direct-buy-btn" onclick="Core.buyDirectPack('energy')">15 🪙</button>
+                    </div>
                 `;
 
                 const el = document.getElementById('shop-list'); el.innerHTML = '';
                 DB.lootboxes.forEach((box, idx) => {
-                    el.innerHTML += `
-                        <div class="loot-card" style="--box-color: ${box.color}">
-                            <div class="loot-card-icon">📦</div>
+                    let isPremium = !!box.premium;
+                    let currency = box.currency || 'caps';
+                    let currencyIcon = currency === 'vouchers' ? '🏷️' : '🪙';
+                    if (isPremium) {
+                        // Реликварий Пустоши остаётся в прежнем, уникальном премиальном оформлении
+                        el.innerHTML += `
+                        <div class="loot-card premium-box" style="--box-color: ${box.color}">
+                            <div class="premium-ribbon">ЭКСКЛЮЗИВ</div>
+                            <div class="loot-card-icon">🗝️</div>
                             <div class="loot-card-info">
                                 <div class="loot-card-title" style="color: ${box.color}">${box.name}</div>
-                                <div class="loot-card-sub">Ресурсы, расходники и небольшой шанс на бонусный привал</div>
+                                <div class="loot-card-sub">Древний тайник со шансом на крайне редкий приз... и щедрые ресурсы</div>
                             </div>
-                            <button class="gold loot-card-btn" onclick="Core.buyBox(${idx})">📦 ${box.price} 🪙</button>
+                            <button class="direct-buy-btn" style="background: linear-gradient(135deg, #ffb703, #ff6600); color:#fff; box-shadow: 0 6px 16px rgba(255,183,3,0.4), inset 0 1px 0 rgba(255,255,255,0.35);" onclick="Core.buyBox(${idx})">${box.price} ${currencyIcon}</button>
                         </div>`;
+                    } else {
+                        el.innerHTML += `
+                        <div class="direct-card" style="--dc-color: ${box.color};">
+                            <div class="direct-card-left">
+                                <div class="direct-icon-badge" style="border-color: ${box.color}; box-shadow: 0 0 14px ${this.hexToRgba(box.color, 0.4)};">📦</div>
+                                <div>
+                                    <div class="direct-card-title">${box.name}</div>
+                                    <div class="direct-card-sub">Ресурсы, расходники и небольшой шанс на бонусный привал</div>
+                                </div>
+                            </div>
+                            <button class="direct-buy-btn" onclick="Core.buyBox(${idx})">${box.price} ${currencyIcon}</button>
+                        </div>`;
+                    }
                 });
             },
 
             buyBox(idx) {
-                const box = DB.lootboxes[idx]; if (this.p.caps < box.price) return alert("Не хватает крышек!");
-                this.p.caps -= box.price; this.triggerQuest("spend_caps", box.price);
-                
+                const box = DB.lootboxes[idx];
+                const currency = box.currency || 'caps';
+                if (currency === 'vouchers') {
+                    if (this.p.vouchers < box.price) return alert("Не хватает ваучеров!");
+                    this.p.vouchers -= box.price;
+                } else {
+                    if (this.p.caps < box.price) return alert("Не хватает крышек!");
+                    this.p.caps -= box.price; this.triggerQuest("spend_caps", box.price);
+                }
+                this.openLootboxAnimated(box);
+            },
+
+            // Анимация открытия ящика (используется и платным магазином, и бесплатными наградами вроде ежедневного пайка)
+            openLootboxAnimated(box) {
                 const overlay = document.getElementById('gacha-overlay');
                 const crate = document.getElementById('gacha-crate');
                 const rewardEmerge = document.getElementById('reward-emerge');
@@ -2098,7 +2527,11 @@ startCombat(isBossFight = false) {
                 let chosen = "", chosenIcon = "📦"; let rand = Math.random(), accum = 0;
                 for (let i = 0; i < box.table.length; i++) { accum += box.table[i].chance; if (rand <= accum) { chosen = box.table[i].item; break; } }
                 
-                if (chosen.includes("🧬")) { this.p.maxHp += 10; this.p.hp = Math.min(this.p.maxHp, this.p.hp + 10); chosenIcon = "🧬"; } 
+                if (chosen.includes("Премиум-пропуск")) {
+                    if (!this.p.bpPremium) { this.p.bpPremium = true; chosenIcon = "🎫"; }
+                    else { let bonus = 25; this.p.vouchers += bonus; chosen = `🏷️ Ваучеры x${bonus} (Премиум уже активен)`; chosenIcon = "🏷️"; }
+                }
+                else if (chosen.includes("🧬")) { this.p.maxHp += 10; this.p.hp = Math.min(this.p.maxHp, this.p.hp + 10); chosenIcon = "🧬"; } 
                 else if (chosen.includes("🔋")) { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 20); chosenIcon = "🔋"; } 
                 else if (chosen.includes("Жареное")) { this.p.food["Жареное мясо крысы"] = (this.p.food["Жареное мясо крысы"]||0) + 1; chosenIcon = "🍗"; }
                 else if (chosen.includes("Привал")) { this.restUses = Math.min(5, this.restUses + 1); chosenIcon = "⛺"; }
@@ -2135,7 +2568,100 @@ startCombat(isBossFight = false) {
             },
 
             closeGacha() { document.getElementById('gacha-overlay').style.display = 'none'; },
-            claimDaily() { if(this.dailyClaimed) return; this.dailyClaimed = true; this.p.caps += 8; this.save(); this.updateUI(); },
+
+            // Взвешенный случайный выбор награды из пула ежедневного пайка
+            pickDailyReward() {
+                const pool = DB.dailyRewardPool;
+                let total = pool.reduce((s, r) => s + r.weight, 0);
+                let rand = Math.random() * total, accum = 0;
+                for (let r of pool) { accum += r.weight; if (rand <= accum) return r; }
+                return pool[0];
+            },
+
+            claimDaily() {
+                const today = new Date().toDateString();
+                if (this.p.lastDailyClaim === today) return; // уже забрано сегодня
+
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                const wasYesterday = this.p.lastDailyClaim === yesterday.toDateString();
+
+                this.p.dailyStreak = wasYesterday ? this.p.dailyStreak + 1 : 1;
+                this.p.lastDailyClaim = today;
+
+                let reward;
+                if (this.p.dailyStreak % 7 === 0) {
+                    let qty = 2 + Math.floor(Math.random() * 3); // 2-4 ваучера гарантированно каждый 7-й день
+                    reward = { name: `🏷️ Ваучеры x${qty}`, type: "voucher", qty };
+                } else {
+                    reward = this.pickDailyReward();
+                }
+
+                this.log(`📅 Ежедневный паёк: День ${this.p.dailyStreak} подряд!`, "loot");
+                this.rewardDispatcher(reward);
+
+                this.save(); this.updateUI();
+            },
+
+            // Общий счётчик дней подряд, который покажется/будет получен, не изменяя состояние
+            getDailyPreviewStreak() {
+                const today = new Date().toDateString();
+                if (this.p.lastDailyClaim === today) return this.p.dailyStreak || 0;
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                const wasYesterday = this.p.lastDailyClaim === yesterday.toDateString();
+                return wasYesterday ? this.p.dailyStreak + 1 : 1;
+            },
+
+            renderDaily() {
+                const trackEl = document.getElementById('daily-tracker'); if (!trackEl) return;
+                const today = new Date().toDateString();
+                const claimedToday = this.p.lastDailyClaim === today;
+                const previewStreak = this.getDailyPreviewStreak();
+                const weekPos = ((previewStreak - 1) % 7) + 1; // позиция в текущей неделе цикла (1-7)
+
+                trackEl.innerHTML = '';
+                for (let d = 1; d <= 7; d++) {
+                    let cls = 'daily-day' + (d === 7 ? ' day7' : '');
+                    let icon;
+                    if (d < weekPos || (d === weekPos && claimedToday)) { cls += ' claimed'; icon = '✅'; }
+                    else if (d === weekPos && !claimedToday) { cls += ' current'; icon = d === 7 ? '🏷️' : '🎁'; }
+                    else { cls += ' locked'; icon = d === 7 ? '🏷️' : '❔'; }
+                    trackEl.innerHTML += `<div class="${cls}">
+                        <div class="dd-icon">${icon}</div>
+                        <div class="dd-num">Д.${d}</div>
+                    </div>`;
+                }
+
+                document.getElementById('daily-streak-num').innerText = this.p.dailyStreak || 0;
+                document.getElementById('daily-mystery-icon').textContent = weekPos === 7 ? '🏷️' : '🎁';
+                document.getElementById('daily-reward-label').innerText = weekPos === 7
+                    ? '🏷️ На этом этапе гарантированы ваучеры!'
+                    : '🎲 Награда каждый день случайна';
+
+                const btn = document.getElementById('daily-btn');
+                btn.disabled = claimedToday;
+                btn.innerText = claimedToday ? '✅ Получено, приходи завтра' : 'Открыть паёк';
+
+                this.updateDailyTimer();
+            },
+
+            // Компактный таймер до момента, когда паёк снова станет доступен (полночь по местному времени)
+            updateDailyTimer() {
+                const el = document.getElementById('daily-timer');
+                if (!el) return;
+                const today = new Date().toDateString();
+                if (this.p.lastDailyClaim !== today) { el.style.display = 'none'; return; }
+
+                const now = new Date();
+                const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+                let remainingMs = nextMidnight - now;
+                if (remainingMs <= 0) { el.style.display = 'none'; return; }
+
+                let h = Math.floor(remainingMs / 3600000);
+                let m = Math.floor((remainingMs % 3600000) / 60000);
+                let s = Math.floor((remainingMs % 60000) / 1000);
+                el.style.display = 'block';
+                el.innerText = `⏳ Новый паёк через ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            },
             
             setBpSubTab(tab) { this.bpSubTab = tab; document.getElementById('bp-sub-rewards').className = tab==='rewards'?'bp-tab-sub active':'bp-tab-sub'; document.getElementById('bp-sub-quests').className = tab==='quests'?'bp-tab-sub active':'bp-tab-sub'; this.renderBp(); },
             buyBpPremium() {
@@ -2169,6 +2695,7 @@ startCombat(isBossFight = false) {
                 else if(r.type === 'energy_pack') { this.p.energy = Math.min(this.p.maxEnergy, this.p.energy + 30); this.log("🎁 Награда БП: Энергия +30"); }
                 else if(r.type === 'hp_pack') { this.p.hp = Math.min(this.p.maxHp, this.p.hp + 40); this.log("🎁 Награда БП: Восстановление ОЗ +40"); }
                 else if(r.type === 'maxhp') { this.p.maxHp += 20; this.log("🎁 Награда БП: Лимит здоровья увеличен на +20 ОЗ"); }
+                else if(r.type === 'lootbox') { this.log(`🎁 Награда: Бесплатный ${DB.lootboxes[r.boxIdx].name}!`); this.openLootboxAnimated(DB.lootboxes[r.boxIdx]); }
             },
 
             itemIcons: { "Запчасти": "⚙️", "Тяжелый Хлам": "🔩", "Ядерная Батарея": "☢️", "Сырое мясо": "🥩" },
@@ -2183,6 +2710,7 @@ startCombat(isBossFight = false) {
                     case 'energy_pack': return '🔋';
                     case 'hp_pack': return '💉';
                     case 'maxhp': return '🧬';
+                    case 'lootbox': return '📦';
                     default: return '🎁';
                 }
             },
@@ -2194,9 +2722,27 @@ startCombat(isBossFight = false) {
                 return name;
             },
 
+            // Тап по кружку прогресса БП показывает всплывающую подсказку с точными очками (нативный title не работает на мобильных)
+            toggleBpTooltip() {
+                Sound.play('click');
+                const tip = document.getElementById('bp-level-tooltip');
+                if (!tip) return;
+                const reqPoints = 100;
+                tip.innerText = this.p.bpLvl >= 50 ? "МАКС УРОВЕНЬ" : `${this.p.bpPoints}/${reqPoints} очков`;
+                tip.style.display = 'block';
+                clearTimeout(this.bpTooltipTimer);
+                this.bpTooltipTimer = setTimeout(() => { tip.style.display = 'none'; }, 2200);
+            },
+
             renderBp() {
-                let reqPoints = this.p.bpLvl * 10;
-                document.getElementById('bp-level-badge').innerText = this.p.bpLvl >= 50 ? "МАКС УРОВЕНЬ" : `Лвл ${this.p.bpLvl} (${this.p.bpPoints}/${reqPoints})`;
+                let reqPoints = 100;
+                let bpPct = this.p.bpLvl >= 50 ? 100 : Math.max(0, Math.min(100, Math.round((this.p.bpPoints / reqPoints) * 100)));
+                let circleEl = document.getElementById('bp-level-circle');
+                if (circleEl) {
+                    circleEl.style.background = `conic-gradient(var(--neon-gold) ${bpPct}%, rgba(255,255,255,0.2) ${bpPct}% 100%)`;
+                }
+                let textEl = document.getElementById('bp-level-text');
+                if (textEl) textEl.innerText = this.p.bpLvl >= 50 ? "МАКС УРОВЕНЬ" : `ЭТАП ${this.p.bpLvl}`;
                 let statusEl = document.getElementById('bp-premium-status');
                 if(this.p.bpPremium) { statusEl.innerHTML = `<span style="color: var(--neon-gold); font-weight:bold;">✨ ПУСТЫННЫЙ ПРЕМИУМ АКТИВЕН</span>`; }
                 else { statusEl.innerHTML = `<button class="purple" style="padding:4px 10px; font-size:11px; border-radius:6px; margin: 4px 0;" onclick="Core.buyBpPremium()">Открыть Премиум (49 🏷️)</button>`; }
