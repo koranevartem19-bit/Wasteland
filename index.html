@@ -818,6 +818,19 @@ transform:scale(1);
                     <span class="track"><span class="thumb"></span></span>
                 </label>
             </div>
+            <div class="settings-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                <div>
+                    <div class="settings-label">🎟️ Промокод</div>
+                    <div class="settings-sub">Введите код, чтобы получить награду</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="promo-code-input" placeholder="Введите промокод" maxlength="32"
+                        style="flex:1; min-width:0; padding:10px 12px; border-radius:10px; border:1px solid var(--glass-border); background:rgba(255,255,255,0.06); color:var(--text-main); font-size:13px; font-weight:700; text-transform:lowercase;"
+                        onkeydown="if(event.key==='Enter'){Core.redeemPromoCode();}">
+                    <button class="purple" style="padding:0 16px; border-radius:10px; font-size:13px; font-weight:800;" onclick="Core.redeemPromoCode()">Ввод</button>
+                </div>
+                <div id="promo-code-feedback" style="display:none; font-size:11.5px; font-weight:700; text-align:center;"></div>
+            </div>
             <button class="primary" style="width:100%; margin-top:18px;" onclick="Core.closeSettings()">Закрыть</button>
         </div>
     </div>
@@ -1382,7 +1395,14 @@ onclick="Core.declineEncounter()">
                 { name: "🏷️ Ваучер x1", type: "voucher", qty: 1, weight: 4 },
                 { name: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", type: "maxhp", weight: 2 }
             ],
-            bpRewards: generateBpRewards()
+            bpRewards: generateBpRewards(),
+            // Промокоды: каждый можно активировать не более maxUses раз суммарно (на все аккаунты),
+            // и не более 1 раза на один аккаунт/сохранение (см. Core.redeemPromoCode)
+            promoCodes: [
+                { code: "voucher50", type: "voucher", qty: 50, maxUses: 3, desc: "🏷️ Ваучеры x50" },
+                { code: "wasteland5", type: "relic_wasteland", qty: 5, maxUses: 3, desc: "🗝️ Реликварий Пустоши x5" },
+                { code: "voucher25", type: "voucher", qty: 25, maxUses: 3, desc: "🏷️ Ваучеры x25" }
+            ]
         };
 
         // Автогенерация рецептов готовки для каждого вида рыбы (Сырая рыба -> Приготовленное блюдо)
@@ -1391,7 +1411,7 @@ onclick="Core.declineEncounter()">
         });
 
         const Core = {
-            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null },
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null, relicWasteland: 0, redeemedPromoCodes: [] },
             combatState: null, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
             hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: {},
             lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
@@ -1458,6 +1478,78 @@ onclick="Core.declineEncounter()">
             },
             saveSettings() { localStorage.setItem('w_settings_v1', JSON.stringify(this.settings)); },
             openSettings() { document.getElementById('settings-overlay').classList.add('active'); },
+
+            // ---- Система промокодов ----
+            // Хранилище глобального счётчика активаций общее для браузера (ключ localStorage),
+            // т.к. игра работает полностью на клиенте без сервера — это лучшее доступное приближение
+            // к "не более 3 активаций на промокод" без бэкенда. Отдельно от аккаунта хранится список
+            // уже использованных на ЭТОМ сохранении кодов, чтобы один и тот же аккаунт не мог
+            // активировать один и тот же код повторно.
+            getPromoGlobalUsage() {
+                let raw = localStorage.getItem('w_promo_global_v1');
+                try { return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
+            },
+            savePromoGlobalUsage(data) { localStorage.setItem('w_promo_global_v1', JSON.stringify(data)); },
+
+            showPromoFeedback(msg, kind) {
+                const feedback = document.getElementById('promo-code-feedback');
+                if(!feedback) return;
+                feedback.innerText = msg;
+                feedback.style.color = kind === 'error' ? 'var(--neon-red)' : 'var(--neon-green)';
+                feedback.style.display = 'block';
+                clearTimeout(this.promoFeedbackTimer);
+                this.promoFeedbackTimer = setTimeout(() => { feedback.style.display = 'none'; }, 4000);
+            },
+
+            redeemPromoCode() {
+                const input = document.getElementById('promo-code-input');
+                if(!input) return;
+                let code = (input.value || '').trim().toLowerCase();
+                if(!code) { this.showPromoFeedback('Введите промокод', 'error'); return; }
+
+                const promo = DB.promoCodes.find(p => p.code.toLowerCase() === code);
+                if(!promo) { Sound.play('click'); this.showPromoFeedback('❌ Такого промокода не существует', 'error'); return; }
+
+                if(!this.p.redeemedPromoCodes) this.p.redeemedPromoCodes = [];
+                if(this.p.redeemedPromoCodes.includes(promo.code)) {
+                    Sound.play('click'); this.showPromoFeedback('⚠️ Этот промокод уже активирован на вашем аккаунте', 'error'); return;
+                }
+
+                let usage = this.getPromoGlobalUsage();
+                let used = usage[promo.code] || 0;
+                if(used >= promo.maxUses) {
+                    Sound.play('click'); this.showPromoFeedback('⛔ Лимит активаций этого промокода исчерпан', 'error'); return;
+                }
+
+                // Всё в порядке — фиксируем активацию и начисляем награду
+                usage[promo.code] = used + 1;
+                this.savePromoGlobalUsage(usage);
+                this.p.redeemedPromoCodes.push(promo.code);
+
+                if(promo.type === 'voucher') {
+                    this.p.vouchers += promo.qty;
+                    this.log(`🎟️ Промокод «${promo.code}» активирован: +${promo.qty} 🏷️ Ваучеров!`, "loot");
+                } else if(promo.type === 'relic_wasteland') {
+                    if(this.p.relicWasteland === undefined) this.p.relicWasteland = 0;
+                    this.p.relicWasteland += promo.qty;
+                    this.log(`🎟️ Промокод «${promo.code}» активирован: +${promo.qty}x 🗝️ Реликварий Пустоши!`, "loot");
+                }
+
+                Sound.play('loot');
+                input.value = '';
+                this.showPromoFeedback(`✅ Активировано: ${promo.desc}`, 'success');
+                this.save(); this.updateUI(); this.renderShop();
+            },
+
+            // Открывает "Реликварий Пустоши" бесплатно за счёт запасов, полученных по промокоду
+            openFreeRelic() {
+                if(!this.p.relicWasteland || this.p.relicWasteland <= 0) return;
+                const box = DB.lootboxes.find(b => b.premium);
+                if(!box) return;
+                this.p.relicWasteland--;
+                this.save();
+                this.openLootboxAnimated(box);
+            },
             closeSettings() { document.getElementById('settings-overlay').classList.remove('active'); this.saveSettings(); },
             toggleGlass(val) { this.settings.glass = val; document.body.classList.toggle('no-glass', !val); this.saveSettings(); },
             toggleSound(val) { this.settings.sound = val; Sound.enabled = val; this.saveSettings(); },
@@ -1520,6 +1612,8 @@ onclick="Core.declineEncounter()">
                     if(!this.p.activeRod) this.p.activeRod = "rusty";
                     if(this.p.dailyStreak === undefined) this.p.dailyStreak = 0;
                     if(this.p.lastDailyClaim === undefined) this.p.lastDailyClaim = null;
+                    if(this.p.relicWasteland === undefined) this.p.relicWasteland = 0;
+                    if(!this.p.redeemedPromoCodes) this.p.redeemedPromoCodes = [];
                     if(!this.p.hazards) {
                         this.p.hazards = {};
                         // Миграция старого сохранения: единая "радиация" считалась только в Радиоактивном Лесу (id 3)
@@ -2458,15 +2552,20 @@ startCombat(isBossFight = false) {
                     let currencyIcon = currency === 'vouchers' ? '🏷️' : '🪙';
                     if (isPremium) {
                         // Реликварий Пустоши остаётся в прежнем, уникальном премиальном оформлении
+                        let owned = this.p.relicWasteland || 0;
+                        let ownedNote = owned > 0 ? `<div style="margin-top:5px; font-size:10.5px; font-weight:800; color:var(--neon-green);">🎁 Бесплатных в запасе: ${owned}</div>` : '';
+                        let freeOpenBtn = owned > 0 ? `<button class="direct-buy-btn" style="background: linear-gradient(135deg, #39ff14, #1eb800); color:#062b00; margin-top:6px; width:100%;" onclick="Core.openFreeRelic()">Открыть бесплатный (${owned})</button>` : '';
                         el.innerHTML += `
-                        <div class="loot-card premium-box" style="--box-color: ${box.color}">
+                        <div class="loot-card premium-box" style="--box-color: ${box.color}; flex-wrap: wrap;">
                             <div class="premium-ribbon">ЭКСКЛЮЗИВ</div>
                             <div class="loot-card-icon">🗝️</div>
                             <div class="loot-card-info">
                                 <div class="loot-card-title" style="color: ${box.color}">${box.name}</div>
                                 <div class="loot-card-sub">Древний тайник со шансом на крайне редкий приз... и щедрые ресурсы</div>
+                                ${ownedNote}
                             </div>
                             <button class="direct-buy-btn" style="background: linear-gradient(135deg, #ffb703, #ff6600); color:#fff; box-shadow: 0 6px 16px rgba(255,183,3,0.4), inset 0 1px 0 rgba(255,255,255,0.35);" onclick="Core.buyBox(${idx})">${box.price} ${currencyIcon}</button>
+                            ${freeOpenBtn}
                         </div>`;
                     } else {
                         el.innerHTML += `
