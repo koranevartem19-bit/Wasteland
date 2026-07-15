@@ -1464,6 +1464,17 @@ onclick="Core.declineEncounter()">
         </div>
     </div>
 
+    <div id="lake-choice-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: radial-gradient(ellipse at center top, rgba(0,60,90,0.55) 0%, rgba(4, 6, 10, 0.95) 70%); z-index: 6200; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="tut-card" style="border-color: var(--neon-blue); max-width: 340px; padding: 22px; text-align: center;">
+            <h3 style="color: var(--neon-blue); margin-bottom: 8px;">🌊 Заброшенное озеро</h3>
+            <p style="font-size: 13px; color: #fff; line-height: 1.5; margin-bottom: 18px;">Вы наткнулись на озеро посреди Пустоши. Хотите порыбачить?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="success" style="flex: 1; padding: 14px; font-size: 13px;" onclick="Core.confirmFishing(true)">🎣 Порыбачить</button>
+                <button style="flex: 1; padding: 14px; font-size: 13px;" onclick="Core.confirmFishing(false)">🚶 Пройти мимо</button>
+            </div>
+        </div>
+    </div>
+
     <div id="recipebook-overlay">
         <div class="book-container">
             <div class="book-header">
@@ -3989,10 +4000,26 @@ onclick="Core.declineEncounter()">
                         else if(lootRoll < 0.8) { this.p.inv["Сырое мясо"] = (this.p.inv["Сырое мясо"]||0)+1; this.log(`🥩 Найдено: Сырое мясо x1, Крышки (+${c} 🪙). +10 XP.`, "loot"); Scene.findEffect('meat'); }
                         else { this.p.inv["Тяжелый Хлам"] = (this.p.inv["Тяжелый Хлам"]||0)+1; this.log(`⚙️ Найдено: Тяжелый Хлам x1, Крышки (+${c} 🪙). +15 XP.`, "loot"); Scene.findEffect('heavy'); }
                         this.p.exp += 10; this.checkLvl();
-                    } else if (roll < 0.58) { this.log("🌊 Вы наткнулись на заброшенное озеро посреди Пустоши..."); Scene.findEffect('lake'); this.startFishing(); }
+                    } else if (roll < 0.58) {
+                        if (this.p.lvl < 5) { this.log("Локация чиста. Ничего интересного."); Scene.findEffect('empty'); }
+                        else { this.log("🌊 Вы наткнулись на заброшенное озеро посреди Пустоши..."); Scene.findEffect('lake'); this.offerFishing(); }
+                    }
                     else if (roll < 0.78) { Scene.findEffect('enemy'); this.startCombat(false); } else { this.log("Локация чиста. Ничего интересного."); Scene.findEffect('empty'); }
                     this.save(); this.updateUI();
                 }, 550);
+            },
+
+            offerFishing() {
+                document.getElementById('lake-choice-overlay').style.display = 'flex';
+            },
+
+            confirmFishing(agreed) {
+                document.getElementById('lake-choice-overlay').style.display = 'none';
+                if (agreed) {
+                    this.startFishing();
+                } else {
+                    this.log("Вы решили не тратить время на рыбалку и пошли дальше.");
+                }
             },
 
             startFishing() {
