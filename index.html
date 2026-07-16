@@ -1530,7 +1530,7 @@ onclick="Core.declineEncounter()">
                 </div>
                 <div class="trader-bubble">
                     <div class="trader-name">Дядя Скрап, торговец</div>
-                    <div class="trader-quote">«Что продаём, путник? Неси сюда — цену не зажму, честная крышка за честный товар!»</div>
+                    <div class="trader-quote" id="market-trader-quote">«Что продаём, путник? Неси сюда — цену не зажму, честная крышка за честный товар!»</div>
                 </div>
             </div>
             <div class="schem-body" id="market-list"></div>
@@ -3305,7 +3305,7 @@ onclick="Core.declineEncounter()">
         });
 
         const Core = {
-            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null, relicWasteland: 0, redeemedPromoCodes: [], freeBoxes: {}, nickname: "Странник", nicknameSet: false, avatar: "ranger", titleId: "newbie", unlockedTitles: ["newbie"], maxBiomeReached: 0 },
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null, relicWasteland: 0, redeemedPromoCodes: [], freeBoxes: {}, nickname: "Странник", nicknameSet: false, avatar: "ranger", titleId: "newbie", unlockedTitles: ["newbie"], maxBiomeReached: 0, bmLastSuccessDay: null, bmFailDay: null, bmFailCount: 0, marketEarnDay: null, marketEarnedToday: 0, marketDailyCapValue: null },
             combatState: null, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
             hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: {},
             lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
@@ -3546,6 +3546,12 @@ onclick="Core.declineEncounter()">
                     if(!this.p.unlockedTitles) this.p.unlockedTitles = ["newbie"];
                     if(!this.p.titleId) this.p.titleId = "newbie";
                     if(this.p.maxBiomeReached === undefined) this.p.maxBiomeReached = this.p.currentBiome || 0;
+                    if(this.p.bmLastSuccessDay === undefined) this.p.bmLastSuccessDay = null;
+                    if(this.p.bmFailDay === undefined) this.p.bmFailDay = null;
+                    if(this.p.bmFailCount === undefined) this.p.bmFailCount = 0;
+                    if(this.p.marketEarnDay === undefined) this.p.marketEarnDay = null;
+                    if(this.p.marketEarnedToday === undefined) this.p.marketEarnedToday = 0;
+                    if(this.p.marketDailyCapValue === undefined) this.p.marketDailyCapValue = null;
                     if(!this.p.hazards) {
                         this.p.hazards = {};
                         // Миграция старого сохранения: единая "радиация" считалась только в Радиоактивном Лесу (id 3)
@@ -4783,6 +4789,18 @@ startCombat(isBossFight = false) {
             renderMarket() {
                 const el = document.getElementById('market-list');
                 if (!this.marketQty) this.marketQty = {};
+                const today = new Date().toDateString();
+                if (this.p.marketEarnDay !== today) {
+                    this.p.marketEarnDay = today;
+                    this.p.marketEarnedToday = 0;
+                    this.p.marketDailyCapValue = 50 + Math.floor(Math.random() * 7) - 3;
+                }
+                const cap = this.p.marketDailyCapValue || 50;
+                const capReached = this.p.marketEarnedToday >= cap;
+                const quoteEl = document.getElementById('market-trader-quote');
+                if (quoteEl) quoteEl.textContent = capReached
+                    ? "«Я всё скупил, кошелёк пуст, загляни сюда завтра.»"
+                    : "«Что продаём, путник? Неси сюда — цену не зажму, честная крышка за честный товар!»";
                 let rows = [];
                 for (let k in this.p.inv) {
                     let price = this.getMarketPrice(k);
@@ -4803,7 +4821,7 @@ startCombat(isBossFight = false) {
                     this.marketQty[mKey] = Math.min(this.marketQty[mKey], r.qty);
                     let qty = this.marketQty[mKey];
                     el.innerHTML += `
-                    <div class="mk-card">
+                    <div class="mk-card"${capReached ? ' style="opacity:0.55;"' : ''}>
                         <div class="mk-card-icon">${this.getMarketIcon(r.name)}</div>
                         <div>
                             <div class="mk-card-title">${r.name}</div>
@@ -4811,11 +4829,11 @@ startCombat(isBossFight = false) {
                         </div>
                         <div class="mk-card-controls">
                             <div class="mk-stepper">
-                                <button onclick="Core.marketChangeQty('${mKey}', -1)">−</button>
+                                <button ${capReached ? 'disabled' : ''} onclick="Core.marketChangeQty('${mKey}', -1)">−</button>
                                 <span id="mk-qty-${mKey}">${qty}</span>
-                                <button onclick="Core.marketChangeQty('${mKey}', 1)">+</button>
+                                <button ${capReached ? 'disabled' : ''} onclick="Core.marketChangeQty('${mKey}', 1)">+</button>
                             </div>
-                            <button class="mk-sell-btn" onclick="Core.marketSell('${r.source}', '${r.name}')">Продать за <span id="mk-total-${mKey}">${qty * r.price}</span> 🪙</button>
+                            <button class="mk-sell-btn" ${capReached ? 'disabled style="cursor:not-allowed; filter:grayscale(0.6);"' : ''} onclick="Core.marketSell('${r.source}', '${r.name}')">${capReached ? '🔒 Лимит на сегодня' : `Продать за <span id="mk-total-${mKey}">${qty * r.price}</span> 🪙`}</button>
                         </div>
                     </div>`;
                 });
@@ -4837,10 +4855,33 @@ startCombat(isBossFight = false) {
                 if (qty <= 0) return;
                 let price = this.getMarketPrice(name);
                 if (price === null) return;
-                let total = price * qty;
+
+                const today = new Date().toDateString();
+                if (this.p.marketEarnDay !== today) {
+                    this.p.marketEarnDay = today;
+                    this.p.marketEarnedToday = 0;
+                    this.p.marketDailyCapValue = 50 + Math.floor(Math.random() * 7) - 3;
+                }
+                let cap = this.p.marketDailyCapValue || 50;
+                let remaining = Math.max(0, cap - this.p.marketEarnedToday);
+                if (remaining <= 0) {
+                    Sound.play('hit');
+                    this.log(`🏛️ Рынок: Дядя Скрап разводит руками — на сегодня он всё скупил, кошелёк пуст. Загляни завтра.`, "system");
+                    this.renderMarket();
+                    return;
+                }
+                if (price * qty > remaining) qty = Math.max(1, Math.min(qty, Math.floor(remaining / price)));
+                if (qty <= 0 || price > remaining) {
+                    Sound.play('hit');
+                    this.log(`🏛️ Рынок: Дядя Скрап разводит руками — на сегодня он всё скупил, кошелёк пуст. Загляни завтра.`, "system");
+                    this.renderMarket();
+                    return;
+                }
+                let total = Math.min(price * qty, remaining);
                 Sound.play('loot');
                 if (source === 'inv') this.p.inv[name] -= qty; else this.p.food[name] -= qty;
                 this.p.caps += total;
+                this.p.marketEarnedToday += total;
                 this.log(`🏛️ Рынок: продано ${name} x${qty} за ${total} 🪙.`, "loot");
                 if (this.marketQty) delete this.marketQty[mKey];
                 this.save(); this.updateUI(); this.renderInventory(); this.renderMarket();
@@ -4892,6 +4933,10 @@ startCombat(isBossFight = false) {
                     el.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:14px; text-align:center;">На чёрном рынке пока нечего продать. Раздобудьте лишнее оружие, удочки или ядерные батареи.</div>`;
                     return;
                 }
+                const today = new Date().toDateString();
+                const dealAlreadyMadeToday = this.p.bmLastSuccessDay === today;
+                const failCountToday = this.p.bmFailDay === today ? (this.p.bmFailCount || 0) : 0;
+                const compensationExhausted = failCountToday >= 3;
                 el.innerHTML = '';
                 entries.forEach(e => {
                     if (!this.bmState[e.key]) this.bmState[e.key] = { qty: 1, currency: 'caps', price: e.basePrice };
@@ -4946,7 +4991,7 @@ startCombat(isBossFight = false) {
                             </div>
                             <div class="bm-chance-bar"><div id="bm-chance-bar-${e.key}" class="bm-chance-bar-fill ${chanceCls}" style="width:${chance}%;"></div></div>
                         </div>
-                        <div class="bm-hint">Цена не выше рекомендуемой — сделка почти гарантирована. Чем сильнее задираете цену, тем ниже шанс. При неудаче товар теряется, но вы получите компенсацию 15 🪙.</div>
+                        <div class="bm-hint">${dealAlreadyMadeToday ? '<strong style="color:var(--neon-red);">⚠️ Сегодня удачная сделка уже была — покупатели устали и больше не купят, но сделку всё равно можно выставить.</strong> ' : ''}${compensationExhausted ? '<strong style="color:var(--neon-red);">⚠️ Компенсация за сорванные сделки сегодня больше не выплачивается.</strong> ' : ''}Цена не выше рекомендуемой — сделка почти гарантирована. Чем сильнее задираете цену, тем ниже шанс.${compensationExhausted ? '' : ' При неудаче товар теряется, но вы получите небольшую компенсацию.'}</div>
                         <button class="bm-sell-btn" onclick="Core.bmSell('${e.key}')">📤 Выставить на продажу</button>
                     </div>`;
                 });
@@ -4979,7 +5024,7 @@ startCombat(isBossFight = false) {
                 if (chanceEl) { chanceEl.textContent = chance + '%'; chanceEl.className = 'bm-chance-val ' + chanceCls; }
                 if (barEl) { barEl.style.width = chance + '%'; barEl.className = 'bm-chance-bar-fill ' + chanceCls; }
             },
-            bmShowResult(success, itemName, price, currencyIcon, chance) {
+            bmShowResult(success, itemName, price, currencyIcon, chance, compensation) {
                 const card = document.getElementById('bm-result-card');
                 const icon = document.getElementById('bm-result-icon');
                 const title = document.getElementById('bm-result-title');
@@ -4996,7 +5041,7 @@ startCombat(isBossFight = false) {
                     icon.innerHTML = Icon.badgeCross();
                     title.textContent = 'Сделка сорвалась';
                     name.textContent = `${itemName} потерян(а)`;
-                    stat.textContent = `Шанс был ${chance}% · компенсация 15 🪙`;
+                    stat.textContent = compensation > 0 ? `Шанс был ${chance}% · компенсация ${compensation} 🪙` : `Шанс был ${chance}% · компенсация не выплачена`;
                     card.style.setProperty('--reward-color', '#ff2a5f');
                     card.style.setProperty('--reward-color-r', '255'); card.style.setProperty('--reward-color-g', '42'); card.style.setProperty('--reward-color-b', '95');
                 }
@@ -5009,7 +5054,12 @@ startCombat(isBossFight = false) {
                 let totalBase = e.basePrice * st.qty;
                 let chance = this.bmChance(st.price, st.currency, totalBase);
                 Sound.play('click');
-                let success = Math.random() * 100 < chance;
+
+                const today = new Date().toDateString();
+                if (this.p.bmFailDay !== today) { this.p.bmFailDay = today; this.p.bmFailCount = 0; }
+                let dealAlreadyMadeToday = this.p.bmLastSuccessDay === today;
+
+                let success = !dealAlreadyMadeToday && (Math.random() * 100 < chance);
                 let currencyIcon = st.currency === 'vouchers' ? '🏷️' : '🪙';
                 let dealPrice = st.price;
 
@@ -5017,15 +5067,23 @@ startCombat(isBossFight = false) {
                 else if (e.kind === 'rod') { this.p.rodsOwned = this.p.rodsOwned.filter(r => r !== e.id); }
                 else if (e.kind === 'battery') { this.p.inv["Ядерная Батарея"] = Math.max(0, (this.p.inv["Ядерная Батарея"] || 0) - st.qty); }
 
+                let compensation = 0;
                 if (success) {
                     if (st.currency === 'vouchers') this.p.vouchers += st.price; else this.p.caps += st.price;
+                    this.p.bmLastSuccessDay = today;
                     Sound.play('loot');
                     this.log(`☠️ Чёрный рынок: сделка совершена! ${e.name} продан(а) за ${st.price} ${currencyIcon}.`, "loot");
                 } else {
-                    this.p.caps += 15;
-                    this.log(`☠️ Чёрный рынок: покупатель отказался в последний момент. ${e.name} потерян(а), компенсация: 15 🪙.`, "system");
+                    this.p.bmFailCount = (this.p.bmFailCount || 0) + 1;
+                    if (this.p.bmFailCount <= 3) {
+                        compensation = 15;
+                        this.p.caps += compensation;
+                        this.log(`☠️ Чёрный рынок: покупатель отказался в последний момент. ${e.name} потерян(а), компенсация: ${compensation} 🪙.`, "system");
+                    } else {
+                        this.log(`☠️ Чёрный рынок: покупатель отказался в последний момент. ${e.name} потерян(а). Компенсация не выплачена.`, "system");
+                    }
                 }
-                this.bmShowResult(success, e.name, dealPrice, currencyIcon, chance);
+                this.bmShowResult(success, e.name, dealPrice, currencyIcon, chance, compensation);
                 delete this.bmState[key];
                 this.save(); this.updateUI(); this.renderInventory(); this.renderBlackMarket();
             },
