@@ -859,6 +859,49 @@ transform:scale(1);
         .weapon-btn.upgrade:hover { transform: translateY(-2px); }
         .weapon-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
+        .weapon-btn-pill {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            border: none;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .weapon-btn-pill:active { transform: scale(0.96); }
+        .weapon-btn-pill.equip.active {
+            background: var(--wpn-color, var(--neon-blue));
+            color: #08131c;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 0 16px var(--wpn-glow);
+        }
+        .weapon-btn-pill.equip:not(.active):hover {
+            background: rgba(255,255,255,0.14);
+        }
+        .weapon-btn-pill.upgrade {
+            background: linear-gradient(135deg, #ffb703, #ff6600);
+            color: #1a0f00;
+            box-shadow: 0 6px 16px rgba(255,183,3,0.4), inset 0 1px 0 rgba(255,255,255,0.35);
+        }
+        .weapon-btn-pill.upgrade:hover { transform: translateY(-2px); }
+        .weapon-btn-pill.upgrade.maxed {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-muted);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .weapon-btn-pill:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
         .bottom-ui-container { 
             position: fixed; 
             bottom: 0; 
@@ -4437,6 +4480,8 @@ startCombat(isBossFight = false) {
             equipWeapon(wpnId) { Sound.play('click'); this.p.activeWeapon = wpnId; this.log(`⚔️ Экипировано: ${DB.weapons.find(w => w.id === wpnId).name}`); if(this.combatState) { this.abilityCooldowns = {}; this.lastAttackType = null; this.sameAttackStreak = 0; this.renderCombatAbilities(); } this.save(); this.updateUI(); },
             
             upgradeWeapon(wpnId, cost) {
+                let curUpLvl = this.p.wpnUpgrades[wpnId] || 0;
+                if (curUpLvl >= 10) return alert("Оружие уже достигло максимального уровня модернизации (10)!");
                 if ((this.p.inv["Запчасти"] || 0) < cost) return alert("Недостаточно запчастей для улучшения ствола!");
                 this.p.inv["Запчасти"] -= cost;
                 this.p.wpnUpgrades[wpnId] = (this.p.wpnUpgrades[wpnId] || 0) + 1;
@@ -4469,11 +4514,13 @@ startCombat(isBossFight = false) {
                     let upLvl = this.p.wpnUpgrades[wId] || 0;
                     let totalDmg = Math.round(wpn.dmg * (1 + upLvl * 0.25));
                     let isActive = this.p.activeWeapon === wId;
+                    let maxUpLvl = 10;
+                    let isMaxed = upLvl >= maxUpLvl;
                     let upgradeCost = (upLvl + 1) * 5; 
-                    let pipTotal = 10;
+                    let pipTotal = maxUpLvl;
                     let pipFilled = Math.min(upLvl, pipTotal);
                     let pipsHtml = Array.from({length: pipTotal}, (_, i) => `<div class="weapon-pip ${i < pipFilled ? 'filled' : ''}"></div>`).join('');
-                    let overflowLvl = upLvl > pipTotal ? ` (+${upLvl - pipTotal})` : '';
+                    let overflowLvl = '';
 
                     wEl.innerHTML += `
                         <div class="weapon-card ${isActive?'active':''}" style="--wpn-color:${wpn.color}; --wpn-glow:${this.hexToRgba(wpn.color, 0.45)}">
@@ -4484,7 +4531,7 @@ startCombat(isBossFight = false) {
                                         <span class="weapon-name">${wpn.name} <span class="weapon-class-inline">· ${wpn.class}</span></span>
                                         <span class="weapon-tier-badge">${wpn.tier}</span>
                                     </div>
-                                    <div class="weapon-lvl-badge">Модернизация: Ур. ${upLvl}${overflowLvl}</div>
+                                    <div class="weapon-lvl-badge">Модернизация: Ур. ${upLvl}/${maxUpLvl}${overflowLvl}</div>
                                 </div>
                                 ${isActive ? '<div class="weapon-active-flag">⚡ ЭКИПИРОВАНО</div>' : ''}
                             </div>
@@ -4494,11 +4541,11 @@ startCombat(isBossFight = false) {
                             </div>
                             <div class="weapon-pips">${pipsHtml}</div>
                             <div class="weapon-actions">
-                                <button class="weapon-btn equip ${isActive?'active':''}" ${isActive?'disabled':''} onclick="Core.equipWeapon('${wId}')">
+                                <button class="weapon-btn-pill equip ${isActive?'active':''}" ${isActive?'disabled':''} onclick="Core.equipWeapon('${wId}')">
                                     ${isActive?'⚡ Активно':'Экипировать'}
                                 </button>
-                                <button class="weapon-btn upgrade" onclick="Core.upgradeWeapon('${wId}', ${upgradeCost})">
-                                    🔺 Апгрейд · ${this.itemIcons["Запчасти"]} ${upgradeCost}
+                                <button class="weapon-btn-pill upgrade ${isMaxed?'maxed':''}" ${isMaxed?'disabled':''} onclick="Core.upgradeWeapon('${wId}', ${upgradeCost})">
+                                    ${isMaxed?'🔝 МАКС. УРОВЕНЬ':`🔺 Апгрейд · ${this.itemIcons["Запчасти"]} ${upgradeCost}`}
                                 </button>
                             </div>
                         </div>`;
