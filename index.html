@@ -291,8 +291,13 @@ transform:scale(1);
         /* ===================== Визуальная сцена биома (замена ленты уведомлений) ===================== */
         #main-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; z-index: 8; }
         .biome-stage { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; padding-top: 165px; padding-bottom: max(155px, calc(var(--bottom-ui-h, 155px) + 16px)); box-sizing: border-box; z-index: 8; pointer-events: none; transition: padding-bottom 0.25s ease; }
-        .stage-scene { position: relative; height: 100%; margin: 0 14px; border-radius: 24px; overflow: hidden; background: linear-gradient(180deg, var(--biome-glow, #111827) 0%, #05070a 100%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); transition: background 1.4s ease; pointer-events: auto; }
+        .stage-scene { position: relative; height: 100%; margin: 0 14px; border-radius: 24px; overflow: hidden; background: linear-gradient(180deg, var(--biome-glow, #111827) 0%, #05070a 100%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); transition: background 1.4s ease; pointer-events: auto; touch-action: none; }
         .stage-scene.shake { animation: stageShake 0.32s ease; }
+        /* ---- Слой масштабирования: только сцена с персонажем/врагом можно приближать жестами (пинч/двойной тап), без потери качества, т.к. содержимое — векторная SVG-графика ---- */
+        .stage-zoom-layer { position: absolute; inset: 0; transform-origin: 50% 50%; will-change: transform; transition: transform 0.28s cubic-bezier(.22,.9,.3,1); }
+        .stage-zoom-layer.zooming { transition: none; }
+        .stage-zoom-hint { position: absolute; left: 10px; bottom: 10px; z-index: 7; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 14px; border-radius: 50%; background: rgba(6,8,12,0.62); border: 1px solid rgba(255,255,255,0.16); opacity: 0.75; pointer-events: none; transition: opacity 0.3s ease; }
+        .stage-zoom-hint.hide { opacity: 0; }
         @keyframes stageShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
         .stage-sky { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -10%, var(--biome-atmo, transparent) 0%, transparent 72%); transition: background 1.4s ease; }
         .stage-biome-icon { position: absolute; right: 12px; top: 10px; font-size: 44px; opacity: 0.16; pointer-events: none; filter: grayscale(0.2); }
@@ -1747,33 +1752,36 @@ onclick="Core.declineEncounter()">
     <div id="main-view">
         <div class="biome-stage" id="biome-stage">
             <div class="stage-scene" id="stage-scene">
-                <div class="stage-sky"></div>
-                <div class="stage-ground"></div>
-                <div class="stage-environment" id="stage-environment"></div>
-                <div class="stage-particles" id="stage-particles"></div>
-                <div class="stage-biome-icon" id="stage-biome-icon">🪨</div>
+                <div class="stage-zoom-layer" id="stage-zoom-layer">
+                    <div class="stage-sky"></div>
+                    <div class="stage-ground"></div>
+                    <div class="stage-environment" id="stage-environment"></div>
+                    <div class="stage-particles" id="stage-particles"></div>
+                    <div class="stage-biome-icon" id="stage-biome-icon">🪨</div>
 
-                <div class="stage-caption" id="stage-caption"></div>
+                    <div class="stage-caption" id="stage-caption"></div>
 
-                <div class="combatant player-combatant" id="scene-player">
-                    <div class="combatant-hpbar-outer"><div class="combatant-hpbar-fill" id="scene-player-hp-fill"></div></div>
-                    <div class="combatant-sprite-wrap">
-                        <span class="combatant-sprite" id="scene-player-sprite"></span>
-                        <span class="combatant-weapon-badge" id="scene-player-weapon">👊</span>
+                    <div class="combatant player-combatant" id="scene-player">
+                        <div class="combatant-hpbar-outer"><div class="combatant-hpbar-fill" id="scene-player-hp-fill"></div></div>
+                        <div class="combatant-sprite-wrap">
+                            <span class="combatant-sprite" id="scene-player-sprite"></span>
+                            <span class="combatant-weapon-badge" id="scene-player-weapon">👊</span>
+                        </div>
                     </div>
+
+                    <div class="combatant enemy-combatant" id="scene-enemy">
+                        <div class="enemy-badges" id="scene-enemy-badges"></div>
+                        <div class="combatant-hpbar-outer"><div class="combatant-hpbar-fill enemyfill" id="scene-enemy-hp-fill"></div></div>
+                        <div class="enemy-name-tag" id="scene-enemy-name">—</div>
+                        <div class="combatant-sprite-wrap">
+                            <span class="combatant-sprite" id="scene-enemy-sprite"></span>
+                        </div>
+                    </div>
+
+                    <div class="fx-layer" id="fx-layer"></div>
                 </div>
 
-                <div class="combatant enemy-combatant" id="scene-enemy">
-                    <div class="enemy-badges" id="scene-enemy-badges"></div>
-                    <div class="combatant-hpbar-outer"><div class="combatant-hpbar-fill enemyfill" id="scene-enemy-hp-fill"></div></div>
-                    <div class="enemy-name-tag" id="scene-enemy-name">—</div>
-                    <div class="combatant-sprite-wrap">
-                        <span class="combatant-sprite" id="scene-enemy-sprite"></span>
-                    </div>
-                </div>
-
-                <div class="fx-layer" id="fx-layer"></div>
-
+                <div class="stage-zoom-hint" id="stage-zoom-hint">🔍</div>
                 <div class="stage-hint" id="stage-hint">🚶 Разведайте местность</div>
                 <button class="stage-log-toggle" id="stage-log-toggle" onclick="Scene.toggleLog()">📜 Журнал</button>
             </div>
@@ -1974,37 +1982,73 @@ onclick="Core.declineEncounter()">
 
         const Sprites = {
             player() {
-                return `<svg viewBox="0 0 64 84" xmlns="http://www.w3.org/2000/svg">
+                return `<svg viewBox="0 0 64 84" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
                     <defs>
                         <linearGradient id="pJacket" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#3a4453"/><stop offset="100%" stop-color="#20262f"/>
+                            <stop offset="0%" stop-color="#4c5666"/><stop offset="55%" stop-color="#323a47"/><stop offset="100%" stop-color="#1b2028"/>
+                        </linearGradient>
+                        <linearGradient id="pJacketShade" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#000" stop-opacity="0.32"/><stop offset="45%" stop-color="#000" stop-opacity="0"/>
                         </linearGradient>
                         <linearGradient id="pLeg" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#454f5e"/><stop offset="100%" stop-color="#262c36"/>
+                            <stop offset="0%" stop-color="#4c5666"/><stop offset="100%" stop-color="#20262f"/>
                         </linearGradient>
-                        <radialGradient id="pLens" cx="0.5" cy="0.4" r="0.7">
-                            <stop offset="0%" stop-color="#7ff3ff"/><stop offset="100%" stop-color="#0090a8"/>
+                        <linearGradient id="pBoot" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#232830"/><stop offset="100%" stop-color="#0d0f13"/>
+                        </linearGradient>
+                        <radialGradient id="pLens" cx="0.35" cy="0.35" r="0.75">
+                            <stop offset="0%" stop-color="#aefbff"/><stop offset="55%" stop-color="#22c7e0"/><stop offset="100%" stop-color="#00647a"/>
+                        </radialGradient>
+                        <radialGradient id="pSkin" cx="0.4" cy="0.35" r="0.7">
+                            <stop offset="0%" stop-color="#f0c297"/><stop offset="100%" stop-color="#c69f72"/>
                         </radialGradient>
                     </defs>
-                    <rect x="17" y="27" width="12" height="10" rx="4" fill="#252b34" opacity="0.9"/>
-                    <path class="scarf" d="M40 30 Q52 34 48 46 Q44 40 38 38 Z" fill="var(--neon-blue)" opacity="0.8"/>
-                    <rect x="14" y="46" width="9" height="24" rx="4" fill="url(#pLeg)"/>
-                    <rect x="41" y="46" width="9" height="24" rx="4" fill="url(#pLeg)"/>
-                    <rect x="21" y="66" width="10" height="14" rx="3" fill="#12151c"/>
-                    <rect x="33" y="66" width="10" height="14" rx="3" fill="#12151c"/>
-                    <rect x="21" y="76" width="10" height="4" rx="2" fill="#03d0e8" opacity="0.55"/>
-                    <rect x="33" y="76" width="10" height="4" rx="2" fill="#03d0e8" opacity="0.55"/>
-                    <rect x="16" y="24" width="32" height="30" rx="9" fill="url(#pJacket)" stroke="rgba(0,240,255,0.55)" stroke-width="1.5"/>
-                    <path d="M16 30 L48 48" stroke="var(--neon-blue)" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
-                    <path d="M20 27 L20 50" stroke="#12151c" stroke-width="1.4" opacity="0.5"/>
-                    <rect x="18" y="46" width="28" height="5" fill="#141922"/>
-                    <circle cx="14" cy="40" r="3" fill="var(--neon-gold)" opacity="0.85"/>
-                    <circle cx="32" cy="14" r="10" fill="#d8ad84"/>
-                    <path d="M20 10 Q32 -3 44 10 L44 14 Q32 5 20 14 Z" fill="#1b1f27"/>
+
+                    <!-- шарф — аккуратно облегает шею, не выходит за контур куртки -->
+                    <path class="scarf" d="M23 25 Q17 28 17.5 37 Q20.5 33.5 24.5 32.5 Q22.5 29 23 25 Z" fill="var(--neon-blue)" opacity="0.85"/>
+                    <path class="scarf" d="M23 25 Q28.5 29.5 26.5 39 Q23 35.5 20.5 33.5 Q21.5 29 23 25 Z" fill="var(--neon-blue)" opacity="0.5"/>
+
+                    <!-- руки: рукава заходят под куртку у плеча, кисти в перчатках видны поверх -->
+                    <path d="M19 28 Q10 33 12 43 L19 43 Q17 35 22 29 Z" fill="url(#pJacket)"/>
+                    <path d="M45 28 Q54 33 52 43 L45 43 Q47 35 42 29 Z" fill="url(#pJacket)"/>
+
+                    <!-- ноги -->
+                    <rect x="19" y="48" width="9" height="19" rx="4" fill="url(#pLeg)"/>
+                    <rect x="36" y="48" width="9" height="19" rx="4" fill="url(#pLeg)"/>
+                    <!-- ботинки, полностью внутри контура корпуса -->
+                    <rect x="17" y="65" width="12" height="13" rx="4" fill="url(#pBoot)"/>
+                    <rect x="35" y="65" width="12" height="13" rx="4" fill="url(#pBoot)"/>
+                    <rect x="17" y="74.5" width="12" height="3.2" rx="1.6" fill="#04c9e6" opacity="0.5"/>
+                    <rect x="35" y="74.5" width="12" height="3.2" rx="1.6" fill="#04c9e6" opacity="0.5"/>
+
+                    <!-- куртка: единый анатомичный силуэт вместо прямоугольника -->
+                    <path d="M17 26 Q32 20 47 26 L48 50 Q32 56 16 50 Z" fill="url(#pJacket)" stroke="rgba(0,240,255,0.5)" stroke-width="1.4"/>
+                    <path d="M17 26 Q32 20 47 26 L48 50 Q32 56 16 50 Z" fill="url(#pJacketShade)"/>
+                    <!-- воротник -->
+                    <path d="M25 25 Q32 30 39 25 L37 29.5 Q32 33 27 29.5 Z" fill="#141922"/>
+                    <!-- молния, короткая и вертикальная — без диагональных полос через весь корпус -->
+                    <path d="M32 30 L32 48.5" stroke="#0d0f14" stroke-width="1.5" opacity="0.55"/>
+                    <!-- ремень -->
+                    <rect x="17" y="46" width="30" height="4.2" rx="1" fill="#141922"/>
+                    <circle cx="32" cy="48.1" r="1.9" fill="var(--neon-gold)" opacity="0.9"/>
+                    <!-- нашивка на груди, вписана в силуэт куртки -->
+                    <circle cx="23" cy="33" r="2.4" fill="none" stroke="var(--neon-blue)" stroke-width="1.2" opacity="0.85"/>
+
+                    <!-- предплечья и кисти в перчатках — поверх куртки, чтобы руки были видны целиком -->
+                    <path d="M11 41 Q9 47 12 52 L18 52 L18 43 Z" fill="url(#pLeg)"/>
+                    <path d="M53 41 Q55 47 52 52 L46 52 L46 43 Z" fill="url(#pLeg)"/>
+                    <circle cx="13" cy="51" r="3.6" fill="#1c2128"/>
+                    <circle cx="51" cy="51" r="3.6" fill="#1c2128"/>
+                    <circle cx="13" cy="51" r="3.6" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                    <circle cx="51" cy="51" r="3.6" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+                    <!-- голова -->
+                    <circle cx="32" cy="14" r="10" fill="url(#pSkin)"/>
+                    <path d="M20 10 Q32 -3 44 10 L44 15 Q32 6 20 15 Z" fill="#1b1f27"/>
                     <rect x="24" y="11" width="16" height="5" rx="2.5" fill="url(#pLens)" opacity="0.95"/>
-                    <circle cx="27.5" cy="13.5" r="2" class="eye-glow" fill="#031014"/>
-                    <circle cx="36.5" cy="13.5" r="2" class="eye-glow" fill="#031014"/>
-                    <path d="M23 20 Q32 24 41 20" stroke="#0a0c10" stroke-width="2" fill="none" opacity="0.45"/>
+                    <circle cx="27.5" cy="13.5" r="1.9" class="eye-glow" fill="#031014"/>
+                    <circle cx="36.5" cy="13.5" r="1.9" class="eye-glow" fill="#031014"/>
+                    <path d="M23 20 Q32 24 41 20" stroke="#0a0c10" stroke-width="1.8" fill="none" opacity="0.4"/>
                 </svg>`;
             },
             enemySets: {
@@ -5320,6 +5364,10 @@ startCombat(isBossFight = false) {
                 const claimedToday = this.p.lastDailyClaim === today;
                 const previewStreak = this.getDailyPreviewStreak();
                 const weekPos = ((previewStreak - 1) % 7) + 1; // позиция в текущей неделе цикла (1-7)
+                // Номер недели (0, 1, 2...), нужен только чтобы подписать клетки реальными
+                // днями серии (8, 9, 10...), а не заново 1-7 — сама серия никогда не сбрасывается,
+                // просто ряд из 7 клеток отображает очередную неделю цикла.
+                const weekIndex = Math.floor((previewStreak - 1) / 7);
 
                 trackEl.innerHTML = '';
                 for (let d = 1; d <= 7; d++) {
@@ -5328,9 +5376,10 @@ startCombat(isBossFight = false) {
                     if (d < weekPos || (d === weekPos && claimedToday)) { cls += ' claimed'; icon = Icon.check('var(--neon-green)'); }
                     else if (d === weekPos && !claimedToday) { cls += ' current'; icon = d === 7 ? '🏷️' : '🎁'; }
                     else { cls += ' locked'; icon = d === 7 ? '🏷️' : '❔'; }
+                    const realDay = weekIndex * 7 + d;
                     trackEl.innerHTML += `<div class="${cls}">
                         <div class="dd-icon">${icon}</div>
-                        <div class="dd-num">Д.${d}</div>
+                        <div class="dd-num">Д.${realDay}</div>
                     </div>`;
                 }
 
@@ -5513,6 +5562,154 @@ startCombat(isBossFight = false) {
 
 
 
+        // ---- Зум боевой сцены (персонаж + враг): пинч двумя пальцами и двойной тап.
+        //      Работает только внутри #stage-scene — весь остальной интерфейс зумить нельзя.
+        //      Контент векторный (SVG), поэтому качество не теряется при увеличении. ----
+        function initStageZoom() {
+            const stage = document.getElementById('stage-scene');
+            const layer = document.getElementById('stage-zoom-layer');
+            const hint = document.getElementById('stage-zoom-hint');
+            if (!stage || !layer) return;
+
+            const MIN_SCALE = 1, MAX_SCALE = 3, DOUBLE_TAP_SCALE = 2.2;
+            let scale = 1, panX = 0, panY = 0;
+            let pointers = new Map();
+            // anchorX/anchorY — точка контента (в локальных, немасштабированных пикселях
+            // относительно ЦЕНТРА сцены), которая должна оставаться под пальцами/курсором
+            // всё время жеста — благодаря этому масштабирование идёт именно туда, куда
+            // направлен жест, а не от произвольного угла экрана.
+            let anchorX = 0, anchorY = 0;
+            let pinchStartDist = 0, pinchStartScale = 1;
+            let dragStartX = 0, dragStartY = 0, dragStartPanX = 0, dragStartPanY = 0;
+            let lastTapTime = 0, lastTapX = 0, lastTapY = 0;
+            let hintShown = false;
+
+            function center() {
+                const rect = stage.getBoundingClientRect();
+                return { cx: rect.left + rect.width / 2, cy: rect.top + rect.height / 2, rect };
+            }
+
+            function clampPan(rect) {
+                const maxX = (rect.width * (scale - 1)) / 2;
+                const maxY = (rect.height * (scale - 1)) / 2;
+                panX = Math.max(-maxX, Math.min(maxX, panX));
+                panY = Math.max(-maxY, Math.min(maxY, panY));
+            }
+
+            function apply() {
+                if (scale <= 1.001) { scale = 1; panX = 0; panY = 0; }
+                const { rect } = center();
+                clampPan(rect);
+                layer.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+                if (hint && !hintShown && scale > 1.01) { hintShown = true; hint.classList.add('hide'); }
+            }
+
+            // Пересчитывает anchorX/anchorY так, чтобы экранная точка (px,py) сейчас
+            // совпадала с тем же местом содержимого при текущих scale/pan.
+            function setAnchorFromScreenPoint(px, py) {
+                const { cx, cy } = center();
+                anchorX = (px - cx - panX) / scale;
+                anchorY = (py - cy - panY) / scale;
+            }
+
+            // По новой точке экрана и новому масштабу выставляет pan так, чтобы
+            // anchorX/anchorY остались под этой точкой (собственно «зум в точку»).
+            function panToKeepAnchorUnder(px, py) {
+                const { cx, cy } = center();
+                panX = (px - cx) - scale * anchorX;
+                panY = (py - cy) - scale * anchorY;
+            }
+
+            function midpoint(pts) {
+                return { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+            }
+
+            stage.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                stage.setPointerCapture(e.pointerId);
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                layer.classList.add('zooming');
+
+                if (pointers.size === 1) {
+                    dragStartX = e.clientX; dragStartY = e.clientY;
+                    dragStartPanX = panX; dragStartPanY = panY;
+
+                    const now = Date.now();
+                    const dt = now - lastTapTime;
+                    const dist = Math.hypot(e.clientX - lastTapX, e.clientY - lastTapY);
+                    if (dt < 320 && dist < 30) {
+                        // Двойной тап: зумим именно в точку тапа
+                        if (scale > 1.05) {
+                            scale = 1; panX = 0; panY = 0;
+                        } else {
+                            setAnchorFromScreenPoint(e.clientX, e.clientY);
+                            scale = DOUBLE_TAP_SCALE;
+                            panToKeepAnchorUnder(e.clientX, e.clientY);
+                        }
+                        layer.classList.remove('zooming');
+                        apply();
+                        lastTapTime = 0;
+                        return;
+                    }
+                    lastTapTime = now; lastTapX = e.clientX; lastTapY = e.clientY;
+                } else if (pointers.size === 2) {
+                    const pts = [...pointers.values()];
+                    pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1;
+                    pinchStartScale = scale;
+                    const mid = midpoint(pts);
+                    setAnchorFromScreenPoint(mid.x, mid.y);
+                }
+            });
+
+            stage.addEventListener('pointermove', (e) => {
+                if (!pointers.has(e.pointerId)) return;
+                pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+                if (pointers.size === 2) {
+                    const pts = [...pointers.values()];
+                    const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1;
+                    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, pinchStartScale * (dist / pinchStartDist)));
+                    const mid = midpoint(pts);
+                    panToKeepAnchorUnder(mid.x, mid.y);
+                    apply();
+                } else if (pointers.size === 1 && scale > 1.001) {
+                    // Свободное панорамирование одним пальцем по всей увеличенной сцене
+                    panX = dragStartPanX + (e.clientX - dragStartX);
+                    panY = dragStartPanY + (e.clientY - dragStartY);
+                    apply();
+                }
+            });
+
+            function release(e) {
+                pointers.delete(e.pointerId);
+                // если осталась ровно одна точка после снятия второй — переинициализируем
+                // её как точку одиночного перетаскивания, чтобы не было рывка
+                if (pointers.size === 1) {
+                    const [[, p]] = pointers;
+                    dragStartX = p.x; dragStartY = p.y;
+                    dragStartPanX = panX; dragStartPanY = panY;
+                }
+                if (pointers.size === 0) {
+                    layer.classList.remove('zooming');
+                    apply();
+                }
+            }
+            stage.addEventListener('pointerup', release);
+            stage.addEventListener('pointercancel', release);
+            stage.addEventListener('pointerleave', (e) => { if (pointers.has(e.pointerId)) release(e); });
+
+            // Колесо мыши с Ctrl (трекпад-пинч на десктопе) — тоже зумит именно туда,
+            // где стоит курсор, и только внутри сцены
+            stage.addEventListener('wheel', (e) => {
+                if (!e.ctrlKey) return;
+                e.preventDefault();
+                setAnchorFromScreenPoint(e.clientX, e.clientY);
+                scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale - e.deltaY * 0.01));
+                panToKeepAnchorUnder(e.clientX, e.clientY);
+                apply();
+            }, { passive: false });
+        }
+
         function initBottomUiTracker() {
             const el = document.getElementById('bottom-ui-container');
             if (!el) return;
@@ -5521,7 +5718,7 @@ startCombat(isBossFight = false) {
             apply();
             window.addEventListener('resize', apply);
         }
-        window.onload = () => { Core.init(); Scene.initPlayerSprite(); initBottomUiTracker(); };
+        window.onload = () => { Core.init(); Scene.initPlayerSprite(); initBottomUiTracker(); initStageZoom(); };
     </script>
 </body>
 </html>
