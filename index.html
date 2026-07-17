@@ -1096,6 +1096,97 @@ transform:scale(1);
         .daily-day.day7.current { border-color: var(--neon-gold); background: rgba(255,183,3,0.12); box-shadow: 0 0 16px rgba(255,183,3,0.5); }
         @keyframes dailyPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
 
+        /* ===== Вход в меню скинов (по аналогии с Пропуском Пустоши) ===== */
+        .skin-collapsed-bar {
+            background: linear-gradient(135deg, rgba(0,240,255,0.22) 0%, rgba(0,240,255,0.08) 100%), var(--glass-bg-strong);
+            backdrop-filter: blur(var(--glass-blur)) saturate(200%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(200%);
+            border: 2.5px solid rgba(0, 240, 255, 0.55);
+            border-radius: 20px;
+            padding: 12px 16px;
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.22), 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .skin-collapsed-bar:active { transform: scale(0.98); }
+        .skin-collapsed-bar:hover { box-shadow: 0 0 40px rgba(0, 240, 255, 0.38), 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.12); }
+        .skin-collapsed-icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: radial-gradient(circle, rgba(0,240,255,0.32), rgba(0,240,255,0.06)); border: 1.5px solid var(--neon-blue); display: flex; align-items: center; justify-content: center; font-size: 21px; box-shadow: 0 0 14px rgba(0,240,255,0.4), inset 0 1px 0 rgba(255,255,255,0.2); }
+        .skin-collapsed-text { flex: 1; min-width: 0; }
+        .skin-collapsed-title { color: var(--neon-blue); font-weight: 900; font-size: 13px; letter-spacing: 0.3px; }
+        .skin-collapsed-sub { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .skin-collapsed-discount-flag { display: none; font-size: 9.5px; font-weight: 900; color: #fff; background: linear-gradient(135deg, #ff2a5f, #ff6600); padding: 4px 8px; border-radius: 7px; white-space: nowrap; box-shadow: 0 0 10px rgba(255,42,95,0.5); }
+        .skin-collapsed-discount-flag.active { display: inline-block; }
+
+        /* ===== Полноэкранное меню скинов ===== */
+        #skin-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4,6,10,0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 7000; display: none; justify-content: center; align-items: center; padding: 16px; }
+        #skin-overlay.active { display: flex; }
+        .skin-overlay-container { position: relative; max-width: 380px; width: 100%; max-height: 88dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: linear-gradient(160deg, rgba(10,14,22,0.97) 0%, rgba(6,8,13,0.99) 100%); border: 1.5px solid rgba(0,240,255,0.3); border-radius: 22px; padding: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,240,255,0.12); }
+
+        /* ===== Витрина скинов персонажа ===== */
+        .skin-tab-row { display: flex; gap: 10px; }
+        .skin-tab-btn { flex: 1; padding: 12px 14px; font-size: 12.5px; background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1.5px solid rgba(255,255,255,0.15); color: var(--text-muted); border-radius: 14px; font-weight: 800; letter-spacing: 0.3px; transition: all 0.25s ease; cursor: pointer; }
+        .skin-tab-btn:hover { border-color: rgba(0,240,255,0.4); background: rgba(255,255,255,0.08); }
+        .skin-tab-btn.active { background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%); color: #001b1f; border: 1.5px solid rgba(0,240,255,0.85); box-shadow: 0 0 25px rgba(0,240,255,0.5), inset 0 1px 0 rgba(255,255,255,0.25); }
+        .skin-tab-pane { display: none; flex-direction: column; gap: 12px; }
+        .skin-tab-pane.active { display: flex; }
+        .skin-shop-empty-note { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 18px 14px; }
+        .skin-wardrobe-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .skin-wardrobe-card { position: relative; background: linear-gradient(150deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%), rgba(14,16,25,0.92); border: 1.5px solid color-mix(in srgb, var(--skin-color) 45%, rgba(255,255,255,0.12)); border-radius: 16px; padding: 12px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+        .skin-wardrobe-card.equipped { border-color: var(--skin-color); box-shadow: 0 0 18px color-mix(in srgb, var(--skin-color) 40%, transparent); }
+        .skin-wardrobe-preview { width: 56px; height: 70px; flex-shrink: 0; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)); border: 1.5px solid var(--skin-color); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 0 14px color-mix(in srgb, var(--skin-color) 35%, transparent); overflow: hidden; padding: 3px 6px; }
+        .skin-wardrobe-preview svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); }
+        .skin-wardrobe-name { font-size: 11px; font-weight: 900; color: #fff; line-height: 1.3; }
+        .skin-wardrobe-card .skin-btn-pill { width: 100%; padding: 8px 10px; font-size: 11px; }
+        .skin-shop-banners { display: flex; flex-direction: column; gap: 6px; }
+        .skin-rotation-banner { font-size: 10.5px; font-weight: 700; color: var(--text-muted); background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 8px 12px; }
+        .skin-rotation-banner span { color: var(--neon-blue); font-weight: 900; }
+        .skin-discount-banner { display: none; font-size: 11.5px; font-weight: 900; color: #fff; text-align: center; background: linear-gradient(135deg, rgba(255,42,95,0.35), rgba(255,102,0,0.35)); border: 1.5px solid var(--neon-red); border-radius: 12px; padding: 9px 12px; box-shadow: 0 0 18px rgba(255,42,95,0.35); animation: skinDiscountPulse 1.6s ease-in-out infinite; }
+        .skin-discount-banner.active { display: block; }
+        .skin-discount-banner span { color: #ffe082; }
+        @keyframes skinDiscountPulse { 0%, 100% { box-shadow: 0 0 12px rgba(255,42,95,0.3); } 50% { box-shadow: 0 0 24px rgba(255,42,95,0.6); } }
+
+        .skin-shop-list { display: flex; flex-direction: column; gap: 12px; }
+        .skin-card {
+            --skin-color: var(--neon-blue);
+            position: relative;
+            background:
+                radial-gradient(circle at 100% 0%, var(--skin-color) 0%, transparent 55%),
+                linear-gradient(150deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 45%, rgba(0,0,0,0.15) 100%),
+                rgba(14, 16, 25, 0.92);
+            background-blend-mode: normal, normal, normal;
+            backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+            border: 1.5px solid color-mix(in srgb, var(--skin-color) 45%, rgba(255,255,255,0.12));
+            border-radius: 20px; padding: 16px;
+            display: flex; flex-direction: column; gap: 12px; overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 26px rgba(0,0,0,0.45);
+        }
+        .skin-card::before { content: ''; position: absolute; inset: 0; opacity: 0.16; pointer-events: none; background: radial-gradient(circle at 100% 0%, var(--skin-color) 0%, transparent 60%); }
+        .skin-card::after { content: ''; position: absolute; left: 0; top: 0; width: 5px; height: 100%; background: var(--skin-color); box-shadow: 0 0 12px var(--skin-color); }
+        .skin-card.equipped { border-color: var(--skin-color); box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 0 26px color-mix(in srgb, var(--skin-color) 45%, transparent); }
+        .skin-card-header { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+        .skin-preview-badge { width: 60px; height: 76px; flex-shrink: 0; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)); border: 1.5px solid var(--skin-color); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 0 16px color-mix(in srgb, var(--skin-color) 35%, transparent); overflow: hidden; padding: 4px 7px; }
+        .skin-preview-badge svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); }
+        .skin-info { flex: 1; min-width: 0; }
+        .skin-name-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+        .skin-name { font-size: 15px; font-weight: 900; color: #fff; letter-spacing: 0.2px; }
+        .skin-discount-tag { font-size: 8.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 7px; border-radius: 6px; background: rgba(255,42,95,0.25); border: 1px solid var(--neon-red); color: #ff8aa8; }
+        .skin-desc { font-size: 11px; color: var(--text-muted); margin-top: 5px; line-height: 1.45; }
+        .skin-equipped-flag { flex-shrink: 0; font-size: 9.5px; font-weight: 900; color: var(--skin-color); background: color-mix(in srgb, var(--skin-color) 18%, transparent); border: 1px solid var(--skin-color); border-radius: 8px; padding: 4px 8px; white-space: nowrap; }
+        .skin-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; position: relative; z-index: 1; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .skin-price-block { display: flex; align-items: baseline; gap: 6px; }
+        .skin-price-old { font-size: 11px; color: var(--text-muted); text-decoration: line-through; opacity: 0.75; }
+        .skin-price-new { font-size: 15px; font-weight: 900; color: var(--neon-gold); }
+        .skin-btn-pill { flex-shrink: 0; padding: 10px 18px; border-radius: 12px; border: none; font-weight: 800; font-size: 12px; cursor: pointer; white-space: nowrap; }
+        .skin-btn-pill.buy { background: linear-gradient(135deg, #da22ff, #9114ff); color: #fff; box-shadow: 0 4px 14px rgba(145,20,255,0.4); }
+        .skin-btn-pill.buy:disabled { background: #2d3748; color: #718096; box-shadow: none; cursor: not-allowed; }
+        .skin-btn-pill.equip { background: var(--glass-bg); border: 1px solid var(--skin-color); color: var(--skin-color); }
+        .skin-btn-pill.equip.active { background: var(--skin-color); color: #00161c; cursor: default; }
+        .skin-locked-note { font-size: 10px; font-weight: 700; color: var(--text-muted); }
+
         #settings-btn { background: var(--glass-bg-strong); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow-soft); border-radius: 16px; font-size: 13px; font-weight: 800; color: var(--text-main); }
 
         #settings-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(4,6,10,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9000; display: none; justify-content: center; align-items: center; padding: 20px; }
@@ -1289,15 +1380,25 @@ transform:scale(1);
                     <span id="glass-intensity-val" style="font-size: 12px; color: var(--text-muted); min-width: 36px; text-align: right; font-weight: 700;">70%</span>
                 </div>
             </div>
-            <div class="settings-row">
+            <div class="settings-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                 <div>
-                    <div class="settings-label">🔊 Звук</div>
-                    <div class="settings-sub">Звуковые эффекты</div>
+                    <div class="settings-label">🔊 Звуки</div>
+                    <div class="settings-sub">Громкость звуковых эффектов</div>
                 </div>
-                <label class="ios-switch">
-                    <input type="checkbox" id="setting-sound" onchange="Core.toggleSound(this.checked)">
-                    <span class="track"><span class="thumb"></span></span>
-                </label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="range" id="setting-sound-volume" min="0" max="100" value="70" oninput="Core.setSoundVolume(this.value)" style="flex: 1; accent-color: var(--neon-blue);">
+                    <span id="sound-volume-val" style="font-size: 12px; color: var(--text-muted); min-width: 36px; text-align: right; font-weight: 700;">70%</span>
+                </div>
+            </div>
+            <div class="settings-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                <div>
+                    <div class="settings-label">🎵 Музыка</div>
+                    <div class="settings-sub">Громкость фоновой музыки и боевых тем</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="range" id="setting-music-volume" min="0" max="100" value="45" oninput="Core.setMusicVolume(this.value)" style="flex: 1; accent-color: var(--neon-blue);">
+                    <span id="music-volume-val" style="font-size: 12px; color: var(--text-muted); min-width: 36px; text-align: right; font-weight: 700;">45%</span>
+                </div>
             </div>
             <div class="settings-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                 <div>
@@ -1493,6 +1594,32 @@ onclick="Core.declineEncounter()">
             </div>
             <div id="bp-premium-status" style="font-size: 11px; text-align: center;"></div>
             <div id="bp-content-render" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+    </div>
+
+    <div id="skin-overlay">
+        <div class="skin-overlay-container">
+            <button class="bp-overlay-close" onclick="Core.closeSkinOverlay()">✕</button>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="color: var(--neon-blue); font-weight: 900; font-size: 14px;">🎨 СКИНЫ СТРАННИКА</span>
+                    <div style="font-size: 9px; color: var(--neon-gold); font-weight: bold; text-transform: uppercase;">Косметика для боевой модели</div>
+                </div>
+            </div>
+            <div class="skin-tab-row">
+                <button class="skin-tab-btn active" id="skin-tab-btn-shop" onclick="Core.setSkinTab('shop')">🏷️ Скины в продаже</button>
+                <button class="skin-tab-btn" id="skin-tab-btn-wardrobe" onclick="Core.setSkinTab('wardrobe')">🎒 Гардероб</button>
+            </div>
+            <div class="skin-tab-pane active" id="skin-tab-shop">
+                <div class="skin-shop-banners">
+                    <div class="skin-rotation-banner" id="skin-rotation-banner">🔄 Ротация витрины: <span id="skin-rotation-timer">--:--:--</span></div>
+                    <div class="skin-discount-banner" id="skin-discount-banner">🔥 Скидка −30% на скины! Осталось: <span id="skin-discount-timer">--:--:--</span></div>
+                </div>
+                <div id="skin-shop-list" class="skin-shop-list"></div>
+            </div>
+            <div class="skin-tab-pane" id="skin-tab-wardrobe">
+                <div id="skin-wardrobe-list" class="skin-wardrobe-list"></div>
+            </div>
         </div>
     </div>
 
@@ -1848,6 +1975,17 @@ onclick="Core.declineEncounter()">
                 <div class="market-entry-lock">🔒 Ур. 25</div>
             </button>
         </div>
+        <div class="skin-collapsed-bar" id="skin-collapsed-bar" onclick="Core.openSkinOverlay()">
+            <div class="skin-collapsed-icon" id="skin-collapsed-icon">🧥</div>
+            <div class="skin-collapsed-text">
+                <span class="skin-collapsed-title">СКИНЫ СТРАННИКА</span>
+                <div class="skin-collapsed-sub" id="skin-collapsed-sub">Экипировано: Стандартный комплект</div>
+            </div>
+            <div class="bp-collapsed-right">
+                <span class="skin-collapsed-discount-flag" id="skin-collapsed-discount-flag">🔥 СКИДКА</span>
+                <span class="bp-collapsed-arrow" style="color: var(--neon-blue);">›</span>
+            </div>
+        </div>
         <div class="screen-title">📅 Пост Снабжения</div>
         <div class="daily-card" id="daily-card">
             <div class="daily-card-glow"></div>
@@ -1939,11 +2077,245 @@ onclick="Core.declineEncounter()">
     </div>
 
     <script>
-        const Sound = {
-            ctx: null, enabled: true,
-            init() { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} },
-            play(type) { if (!this.enabled) return; if (!this.ctx) this.init(); if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (!this.ctx) return; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.connect(gain); gain.connect(this.ctx.destination); const now = this.ctx.currentTime; if (type === 'click') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); gain.gain.setValueAtTime(0.03, now); osc.start(now); osc.stop(now + 0.05); } else if (type === 'hit') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1, now); osc.start(now); osc.stop(now + 0.08); } else if (type === 'loot') { osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now + 0.1); gain.gain.setValueAtTime(0.08, now); osc.start(now); osc.stop(now + 0.2); } }
+        // ===================================================================
+        // AudioCore: общий AudioContext + две шины (звуки и музыка), чтобы
+        // громкость звуков и музыки регулировались независимо друг от друга.
+        // ===================================================================
+        const AudioCore = {
+            ctx: null, sfxBus: null, musicBus: null,
+            init() {
+                if (this.ctx) return;
+                try {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    this.sfxBus = this.ctx.createGain(); this.sfxBus.gain.value = 1;
+                    this.musicBus = this.ctx.createGain(); this.musicBus.gain.value = 1;
+                    this.sfxBus.connect(this.ctx.destination);
+                    this.musicBus.connect(this.ctx.destination);
+                } catch(e) {}
+            },
+            resume() { if (this.ctx && this.ctx.state === 'suspended') { this.ctx.resume().catch(() => {}); } }
         };
+
+        const Sound = {
+            enabled: true, volume: 70,
+            init() { AudioCore.init(); },
+            setVolume(v) { this.volume = +v; },
+            play(type) {
+                if (!this.enabled || this.volume <= 0) return;
+                AudioCore.init(); AudioCore.resume();
+                const ctx = AudioCore.ctx;
+                if (!ctx) return;
+                const v = this.volume / 100;
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(AudioCore.sfxBus);
+                const now = ctx.currentTime;
+                if (type === 'click') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); gain.gain.setValueAtTime(0.03 * v, now); osc.start(now); osc.stop(now + 0.05); }
+                else if (type === 'hit') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1 * v, now); osc.start(now); osc.stop(now + 0.08); }
+                else if (type === 'loot') { osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now + 0.1); gain.gain.setValueAtTime(0.08 * v, now); osc.start(now); osc.stop(now + 0.2); }
+            }
+        };
+
+        // ===================================================================
+        // Music: процедурная фоновая музыка (без внешних аудиофайлов — вся
+        // игра работает офлайн на клиенте). Два настроения:
+        //  - 'ambient' — спокойная атмосфера пустоши для исследования/меню
+        //  - 'combat'  — напряжённый ритмичный трек для боя
+        // Переключение между ними идёт с плавным кроссфейдом.
+        // ===================================================================
+        const Music = {
+            enabled: true, volume: 45,
+            mode: null,      // желаемое настроение ('ambient' | 'combat')
+            running: null,   // что реально сейчас звучит
+            busGain: null,
+            timers: [],
+            _cleanupFns: [],
+            _genId: 0,
+            _noiseBuf: null,
+
+            noiseBuffer(ctx) {
+                if (this._noiseBuf && this._noiseBufCtx === ctx) return this._noiseBuf;
+                const size = ctx.sampleRate * 2;
+                const buffer = ctx.createBuffer(1, size, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < size; i++) data[i] = Math.random() * 2 - 1;
+                this._noiseBuf = buffer; this._noiseBufCtx = ctx;
+                return buffer;
+            },
+
+            setVolume(v) {
+                this.volume = +v;
+                if (this.busGain && AudioCore.ctx) {
+                    this.busGain.gain.setTargetAtTime(this.volume / 100, AudioCore.ctx.currentTime, 0.15);
+                }
+                if (this.volume <= 0) { this.enabled = false; this._stopAll(200); }
+                else if (!this.enabled) { this.enabled = true; if (this.mode) this._playMode(this.mode); }
+            },
+
+            // Запросить смену настроения (вызывается из игровой логики)
+            play(mode) {
+                this.mode = mode;
+                if (!this.enabled || this.volume <= 0 || !AudioCore.ctx) return;
+                if (this.running === mode) return;
+                this._playMode(mode);
+            },
+
+            _clearTimers() { this.timers.forEach(t => clearTimeout(t)); this.timers = []; },
+
+            _stopAll(fadeMs = 500) {
+                this._clearTimers();
+                const cleanupFns = this._cleanupFns; this._cleanupFns = [];
+                const oldBus = this.busGain;
+                if (oldBus && AudioCore.ctx) {
+                    const ctx = AudioCore.ctx;
+                    oldBus.gain.cancelScheduledValues(ctx.currentTime);
+                    oldBus.gain.setValueAtTime(oldBus.gain.value, ctx.currentTime);
+                    oldBus.gain.linearRampToValueAtTime(0, ctx.currentTime + fadeMs / 1000);
+                }
+                setTimeout(() => {
+                    cleanupFns.forEach(fn => { try { fn(); } catch(e) {} });
+                    try { oldBus && oldBus.disconnect(); } catch(e) {}
+                }, fadeMs + 80);
+                this.busGain = null;
+                this.running = null;
+                this._genId++;
+            },
+
+            _isCurrent(gen) { return gen === this._genId && this.busGain; },
+
+            _playMode(mode) {
+                AudioCore.init(); AudioCore.resume();
+                const ctx = AudioCore.ctx;
+                if (!ctx) return;
+                this._stopAll(400);
+                this.running = mode;
+                const gen = this._genId;
+                const bus = ctx.createGain();
+                bus.gain.value = 0;
+                bus.connect(AudioCore.musicBus);
+                bus.gain.setTargetAtTime(this.volume / 100, ctx.currentTime, 0.6);
+                this.busGain = bus;
+                if (mode === 'combat') this._scheduleCombat(ctx, bus, gen);
+                else this._scheduleAmbient(ctx, bus, gen);
+            },
+
+            // ---- Спокойная фоновая тема: плывущие аккорды + ветер пустоши ----
+            _scheduleAmbient(ctx, bus, gen) {
+                const noise = ctx.createBufferSource();
+                noise.buffer = this.noiseBuffer(ctx); noise.loop = true;
+                const windFilter = ctx.createBiquadFilter();
+                windFilter.type = 'bandpass'; windFilter.frequency.value = 500; windFilter.Q.value = 0.6;
+                const windGain = ctx.createGain(); windGain.gain.value = 0.05;
+                noise.connect(windFilter); windFilter.connect(windGain); windGain.connect(bus);
+                noise.start();
+                const lfo = ctx.createOscillator(); lfo.frequency.value = 0.07;
+                const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.035;
+                lfo.connect(lfoGain); lfoGain.connect(windGain.gain); lfo.start();
+                this._cleanupFns.push(() => { noise.stop(); lfo.stop(); });
+
+                const progressions = [
+                    [220.00, 261.63, 329.63],
+                    [174.61, 220.00, 261.63],
+                    [196.00, 246.94, 293.66],
+                    [164.81, 196.00, 246.94]
+                ];
+                let chordIdx = 0;
+                const playChord = () => {
+                    if (!this._isCurrent(gen)) return;
+                    const chord = progressions[chordIdx % progressions.length]; chordIdx++;
+                    const dur = 9;
+                    const now = ctx.currentTime;
+                    chord.forEach((freq, i) => {
+                        const osc = ctx.createOscillator();
+                        osc.type = i === 0 ? 'triangle' : 'sine';
+                        osc.frequency.value = freq * (i === 2 ? 2 : 1);
+                        const g = ctx.createGain();
+                        g.gain.setValueAtTime(0, now);
+                        g.gain.linearRampToValueAtTime(0.09 / chord.length * (i === 0 ? 1.4 : 1), now + 2.5);
+                        g.gain.linearRampToValueAtTime(0, now + dur);
+                        osc.connect(g); g.connect(bus);
+                        osc.start(now); osc.stop(now + dur + 0.1);
+                    });
+                    if (Math.random() < 0.6) {
+                        const pentatonic = [523.25, 587.33, 659.25, 783.99, 880.00];
+                        const pf = pentatonic[Math.floor(Math.random() * pentatonic.length)];
+                        const t = now + 1 + Math.random() * 4;
+                        const posc = ctx.createOscillator(); posc.type = 'sine'; posc.frequency.value = pf;
+                        const pg = ctx.createGain();
+                        pg.gain.setValueAtTime(0, t);
+                        pg.gain.linearRampToValueAtTime(0.05, t + 0.3);
+                        pg.gain.linearRampToValueAtTime(0, t + 2.2);
+                        posc.connect(pg); pg.connect(bus);
+                        posc.start(t); posc.stop(t + 2.3);
+                    }
+                    this.timers.push(setTimeout(playChord, (dur - 1.5) * 1000));
+                };
+                playChord();
+            },
+
+            // ---- Боевая тема: пульсирующий бас, перкуссия, тревожный лид ----
+            _scheduleCombat(ctx, bus, gen) {
+                const bpm = 132;
+                const step = 60 / bpm / 2;
+                let stepIdx = 0;
+                const bassNotes = [55.00, 55.00, 61.74, 55.00, 49.00, 49.00, 58.27, 55.00];
+                const leadScale = [220.00, 261.63, 293.66, 329.63, 349.23];
+                const scheduleStep = () => {
+                    if (!this._isCurrent(gen)) return;
+                    const now = ctx.currentTime;
+                    const i = stepIdx % bassNotes.length;
+
+                    const bosc = ctx.createOscillator(); bosc.type = 'sawtooth'; bosc.frequency.value = bassNotes[i];
+                    const bfilter = ctx.createBiquadFilter(); bfilter.type = 'lowpass'; bfilter.frequency.value = 400;
+                    const bgain = ctx.createGain();
+                    bgain.gain.setValueAtTime(0.16, now);
+                    bgain.gain.exponentialRampToValueAtTime(0.001, now + step * 0.9);
+                    bosc.connect(bfilter); bfilter.connect(bgain); bgain.connect(bus);
+                    bosc.start(now); bosc.stop(now + step);
+
+                    if (i % 2 === 0) {
+                        const kick = ctx.createBufferSource(); kick.buffer = this.noiseBuffer(ctx);
+                        const nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 180;
+                        const ng = ctx.createGain();
+                        ng.gain.setValueAtTime(0.22, now);
+                        ng.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                        kick.connect(nf); nf.connect(ng); ng.connect(bus);
+                        kick.start(now); kick.stop(now + 0.2);
+                    } else {
+                        const hat = ctx.createBufferSource(); hat.buffer = this.noiseBuffer(ctx);
+                        const nf = ctx.createBiquadFilter(); nf.type = 'highpass'; nf.frequency.value = 4000;
+                        const ng = ctx.createGain();
+                        ng.gain.setValueAtTime(0.05, now);
+                        ng.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                        hat.connect(nf); nf.connect(ng); ng.connect(bus);
+                        hat.start(now); hat.stop(now + 0.06);
+                    }
+
+                    if (Math.random() < 0.55) {
+                        const freq = leadScale[Math.floor(Math.random() * leadScale.length)];
+                        const losc = ctx.createOscillator(); losc.type = 'square'; losc.frequency.value = freq;
+                        const lg = ctx.createGain();
+                        lg.gain.setValueAtTime(0.045, now);
+                        lg.gain.exponentialRampToValueAtTime(0.001, now + step * 0.8);
+                        losc.connect(lg); lg.connect(bus);
+                        losc.start(now); losc.stop(now + step);
+                    }
+
+                    stepIdx++;
+                    this.timers.push(setTimeout(scheduleStep, step * 1000));
+                };
+                scheduleStep();
+            }
+        };
+
+        // Разблокировка звука по первому взаимодействию пользователя (политика браузеров)
+        function unlockAudioOnce() {
+            AudioCore.init(); AudioCore.resume();
+            if (Music.mode) Music.play(Music.mode);
+            window.removeEventListener('pointerdown', unlockAudioOnce);
+            window.removeEventListener('keydown', unlockAudioOnce);
+        }
+        window.addEventListener('pointerdown', unlockAudioOnce, { once: true });
+        window.addEventListener('keydown', unlockAudioOnce, { once: true });
 
         // ===================================================================
         // Scene: визуальная сцена биома. Полностью надстройка над рендером —
@@ -1981,74 +2353,127 @@ onclick="Core.declineEncounter()">
         };
 
         const Sprites = {
-            player() {
+            // Палитры скинов персонажа: структура модели (все path/rect) остаётся ПОЛНОСТЬЮ
+            // неизменной — меняются только цвета материалов и добавляются тематические
+            // декоративные акценты поверх (звёзды, песчинки, грязевые пятна).
+            skinPalettes: {
+                default: {
+                    jacket: ['#4c5666', '#323a47', '#1b2028'], jacketStroke: 'rgba(0,240,255,0.5)',
+                    leg: ['#4c5666', '#20262f'], boot: ['#232830', '#0d0f13'], sole: '#04c9e6',
+                    lens: ['#aefbff', '#22c7e0', '#00647a'], skin: ['#f0c297', '#c69f72'],
+                    scarf: 'var(--neon-blue)', belt: '#141922', buckle: 'var(--neon-gold)', emblem: 'var(--neon-blue)',
+                    glove: '#1c2128', hood: '#1b1f27'
+                },
+                sand: {
+                    jacket: ['#e8caa0', '#c99f66', '#8a6a3c'], jacketStroke: 'rgba(255,214,140,0.65)',
+                    leg: ['#d9b787', '#8a6a3c'], boot: ['#7a5a34', '#4a3418'], sole: '#ffcf7a',
+                    lens: ['#fff2c8', '#e8b53a', '#8a5a10'], skin: ['#f0c297', '#c69f72'],
+                    scarf: '#e0803a', belt: '#4a3418', buckle: '#ffd76a', emblem: '#ffb703',
+                    glove: '#5a4020', hood: '#6a4c26'
+                },
+                cosmo: {
+                    jacket: ['#5a5fc9', '#2c2f6b', '#12122e'], jacketStroke: 'rgba(143,217,255,0.75)',
+                    leg: ['#4a4fb0', '#1c1e44'], boot: ['#20223f', '#0a0a1a'], sole: '#8fd9ff',
+                    lens: ['#e8f9ff', '#8fd9ff', '#2a6a9a'], skin: ['#f0c297', '#c69f72'],
+                    scarf: '#bf5af2', belt: '#12122e', buckle: '#8fd9ff', emblem: '#bf5af2',
+                    glove: '#0e0f22', hood: '#161a3a'
+                },
+                grime: {
+                    jacket: ['#6b6a4e', '#4a4a34', '#2a2a1c'], jacketStroke: 'rgba(140,150,90,0.55)',
+                    leg: ['#5a5a3e', '#302f1e'], boot: ['#3a3524', '#1a170e'], sole: '#8a9a4e',
+                    lens: ['#c9d68a', '#7a8a4a', '#3a4a1a'], skin: ['#c2a888', '#8a7458'],
+                    scarf: '#6a7a3a', belt: '#201e12', buckle: '#8a9a4e', emblem: '#8a9a4e',
+                    glove: '#2a2818', hood: '#33321e'
+                }
+            },
+            player(skinId) {
+                skinId = skinId || (typeof Core !== 'undefined' && Core.p && Core.p.activeSkin) || 'default';
+                const p = this.skinPalettes[skinId] || this.skinPalettes.default;
+                // суффикс id-градиентов должен быть уникальным для каждого вызова, а не только для скина:
+                // один и тот же скин часто отрисован одновременно в двух местах (модель в бою + карточка в магазине скинов),
+                // и одинаковые id у <linearGradient>/<radialGradient> ломают заливку через url(#...) — из-за этого скины становились прозрачными.
+                this._playerSpriteSeq = (this._playerSpriteSeq || 0) + 1;
+                const id = skinId + '-' + this._playerSpriteSeq;
+
+                let extra = '';
+                if (skinId === 'sand') {
+                    extra = `<g opacity="0.55" fill="#fff2c8"><circle cx="20" cy="34" r="0.7"/><circle cx="41" cy="31" r="0.6"/><circle cx="26" cy="45" r="0.6"/><circle cx="38" cy="48" r="0.7"/><circle cx="22" cy="58" r="0.6"/><circle cx="30" cy="18" r="0.5"/></g>`;
+                } else if (skinId === 'cosmo') {
+                    extra = `<g fill="#fff"><circle cx="21" cy="30" r="0.8" opacity="0.9"/><circle cx="40" cy="33" r="0.6" opacity="0.7"/><circle cx="27" cy="42" r="0.7" opacity="0.8"/><circle cx="37" cy="46" r="0.5" opacity="0.6"/></g>
+                             <circle cx="32" cy="40" r="3.2" fill="none" stroke="#8fd9ff" stroke-width="1" opacity="0.85" class="eye-glow"/>
+                             <circle cx="32" cy="40" r="1.5" fill="#8fd9ff" opacity="0.95" class="eye-glow"/>`;
+                } else if (skinId === 'grime') {
+                    extra = `<g opacity="0.55" fill="#2a2a16"><ellipse cx="22" cy="32" rx="3" ry="2"/><ellipse cx="40" cy="44" rx="2.6" ry="1.8"/><ellipse cx="26" cy="50" rx="2.2" ry="1.6"/><ellipse cx="35" cy="12" rx="2" ry="1.3"/></g>`;
+                }
+
                 return `<svg viewBox="0 0 64 84" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
                     <defs>
-                        <linearGradient id="pJacket" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#4c5666"/><stop offset="55%" stop-color="#323a47"/><stop offset="100%" stop-color="#1b2028"/>
+                        <linearGradient id="pJacket-${id}" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="${p.jacket[0]}"/><stop offset="55%" stop-color="${p.jacket[1]}"/><stop offset="100%" stop-color="${p.jacket[2]}"/>
                         </linearGradient>
-                        <linearGradient id="pJacketShade" x1="0" y1="0" x2="1" y2="0">
+                        <linearGradient id="pJacketShade-${id}" x1="0" y1="0" x2="1" y2="0">
                             <stop offset="0%" stop-color="#000" stop-opacity="0.32"/><stop offset="45%" stop-color="#000" stop-opacity="0"/>
                         </linearGradient>
-                        <linearGradient id="pLeg" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#4c5666"/><stop offset="100%" stop-color="#20262f"/>
+                        <linearGradient id="pLeg-${id}" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="${p.leg[0]}"/><stop offset="100%" stop-color="${p.leg[1]}"/>
                         </linearGradient>
-                        <linearGradient id="pBoot" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#232830"/><stop offset="100%" stop-color="#0d0f13"/>
+                        <linearGradient id="pBoot-${id}" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="${p.boot[0]}"/><stop offset="100%" stop-color="${p.boot[1]}"/>
                         </linearGradient>
-                        <radialGradient id="pLens" cx="0.35" cy="0.35" r="0.75">
-                            <stop offset="0%" stop-color="#aefbff"/><stop offset="55%" stop-color="#22c7e0"/><stop offset="100%" stop-color="#00647a"/>
+                        <radialGradient id="pLens-${id}" cx="0.35" cy="0.35" r="0.75">
+                            <stop offset="0%" stop-color="${p.lens[0]}"/><stop offset="55%" stop-color="${p.lens[1]}"/><stop offset="100%" stop-color="${p.lens[2]}"/>
                         </radialGradient>
-                        <radialGradient id="pSkin" cx="0.4" cy="0.35" r="0.7">
-                            <stop offset="0%" stop-color="#f0c297"/><stop offset="100%" stop-color="#c69f72"/>
+                        <radialGradient id="pSkin-${id}" cx="0.4" cy="0.35" r="0.7">
+                            <stop offset="0%" stop-color="${p.skin[0]}"/><stop offset="100%" stop-color="${p.skin[1]}"/>
                         </radialGradient>
                     </defs>
 
                     <!-- шарф — аккуратно облегает шею, не выходит за контур куртки -->
-                    <path class="scarf" d="M23 25 Q17 28 17.5 37 Q20.5 33.5 24.5 32.5 Q22.5 29 23 25 Z" fill="var(--neon-blue)" opacity="0.85"/>
-                    <path class="scarf" d="M23 25 Q28.5 29.5 26.5 39 Q23 35.5 20.5 33.5 Q21.5 29 23 25 Z" fill="var(--neon-blue)" opacity="0.5"/>
+                    <path class="scarf" d="M23 25 Q17 28 17.5 37 Q20.5 33.5 24.5 32.5 Q22.5 29 23 25 Z" fill="${p.scarf}" opacity="0.85"/>
+                    <path class="scarf" d="M23 25 Q28.5 29.5 26.5 39 Q23 35.5 20.5 33.5 Q21.5 29 23 25 Z" fill="${p.scarf}" opacity="0.5"/>
 
                     <!-- руки: рукава заходят под куртку у плеча, кисти в перчатках видны поверх -->
-                    <path d="M19 28 Q10 33 12 43 L19 43 Q17 35 22 29 Z" fill="url(#pJacket)"/>
-                    <path d="M45 28 Q54 33 52 43 L45 43 Q47 35 42 29 Z" fill="url(#pJacket)"/>
+                    <path d="M19 28 Q10 33 12 43 L19 43 Q17 35 22 29 Z" fill="url(#pJacket-${id})"/>
+                    <path d="M45 28 Q54 33 52 43 L45 43 Q47 35 42 29 Z" fill="url(#pJacket-${id})"/>
 
                     <!-- ноги -->
-                    <rect x="19" y="48" width="9" height="19" rx="4" fill="url(#pLeg)"/>
-                    <rect x="36" y="48" width="9" height="19" rx="4" fill="url(#pLeg)"/>
+                    <rect x="19" y="48" width="9" height="19" rx="4" fill="url(#pLeg-${id})"/>
+                    <rect x="36" y="48" width="9" height="19" rx="4" fill="url(#pLeg-${id})"/>
                     <!-- ботинки, полностью внутри контура корпуса -->
-                    <rect x="17" y="65" width="12" height="13" rx="4" fill="url(#pBoot)"/>
-                    <rect x="35" y="65" width="12" height="13" rx="4" fill="url(#pBoot)"/>
-                    <rect x="17" y="74.5" width="12" height="3.2" rx="1.6" fill="#04c9e6" opacity="0.5"/>
-                    <rect x="35" y="74.5" width="12" height="3.2" rx="1.6" fill="#04c9e6" opacity="0.5"/>
+                    <rect x="17" y="65" width="12" height="13" rx="4" fill="url(#pBoot-${id})"/>
+                    <rect x="35" y="65" width="12" height="13" rx="4" fill="url(#pBoot-${id})"/>
+                    <rect x="17" y="74.5" width="12" height="3.2" rx="1.6" fill="${p.sole}" opacity="0.5"/>
+                    <rect x="35" y="74.5" width="12" height="3.2" rx="1.6" fill="${p.sole}" opacity="0.5"/>
 
                     <!-- куртка: единый анатомичный силуэт вместо прямоугольника -->
-                    <path d="M17 26 Q32 20 47 26 L48 50 Q32 56 16 50 Z" fill="url(#pJacket)" stroke="rgba(0,240,255,0.5)" stroke-width="1.4"/>
-                    <path d="M17 26 Q32 20 47 26 L48 50 Q32 56 16 50 Z" fill="url(#pJacketShade)"/>
+                    <path d="M17 26 Q32 20 47 26 L48 50 Q32 56 16 50 Z" fill="url(#pJacket-${id})" stroke="${p.jacketStroke}" stroke-width="1.4"/>
+                    <path d="M17 26 Q32 20 47 26 L48 50 Q32 56 16 50 Z" fill="url(#pJacketShade-${id})"/>
                     <!-- воротник -->
-                    <path d="M25 25 Q32 30 39 25 L37 29.5 Q32 33 27 29.5 Z" fill="#141922"/>
+                    <path d="M25 25 Q32 30 39 25 L37 29.5 Q32 33 27 29.5 Z" fill="${p.hood}"/>
                     <!-- молния, короткая и вертикальная — без диагональных полос через весь корпус -->
                     <path d="M32 30 L32 48.5" stroke="#0d0f14" stroke-width="1.5" opacity="0.55"/>
                     <!-- ремень -->
-                    <rect x="17" y="46" width="30" height="4.2" rx="1" fill="#141922"/>
-                    <circle cx="32" cy="48.1" r="1.9" fill="var(--neon-gold)" opacity="0.9"/>
+                    <rect x="17" y="46" width="30" height="4.2" rx="1" fill="${p.belt}"/>
+                    <circle cx="32" cy="48.1" r="1.9" fill="${p.buckle}" opacity="0.9"/>
                     <!-- нашивка на груди, вписана в силуэт куртки -->
-                    <circle cx="23" cy="33" r="2.4" fill="none" stroke="var(--neon-blue)" stroke-width="1.2" opacity="0.85"/>
+                    <circle cx="23" cy="33" r="2.4" fill="none" stroke="${p.emblem}" stroke-width="1.2" opacity="0.85"/>
 
                     <!-- предплечья и кисти в перчатках — поверх куртки, чтобы руки были видны целиком -->
-                    <path d="M11 41 Q9 47 12 52 L18 52 L18 43 Z" fill="url(#pLeg)"/>
-                    <path d="M53 41 Q55 47 52 52 L46 52 L46 43 Z" fill="url(#pLeg)"/>
-                    <circle cx="13" cy="51" r="3.6" fill="#1c2128"/>
-                    <circle cx="51" cy="51" r="3.6" fill="#1c2128"/>
+                    <path d="M11 41 Q9 47 12 52 L18 52 L18 43 Z" fill="url(#pLeg-${id})"/>
+                    <path d="M53 41 Q55 47 52 52 L46 52 L46 43 Z" fill="url(#pLeg-${id})"/>
+                    <circle cx="13" cy="51" r="3.6" fill="${p.glove}"/>
+                    <circle cx="51" cy="51" r="3.6" fill="${p.glove}"/>
                     <circle cx="13" cy="51" r="3.6" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
                     <circle cx="51" cy="51" r="3.6" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
 
                     <!-- голова -->
-                    <circle cx="32" cy="14" r="10" fill="url(#pSkin)"/>
-                    <path d="M20 10 Q32 -3 44 10 L44 15 Q32 6 20 15 Z" fill="#1b1f27"/>
-                    <rect x="24" y="11" width="16" height="5" rx="2.5" fill="url(#pLens)" opacity="0.95"/>
+                    <circle cx="32" cy="14" r="10" fill="url(#pSkin-${id})"/>
+                    <path d="M20 10 Q32 -3 44 10 L44 15 Q32 6 20 15 Z" fill="${p.hood}"/>
+                    <rect x="24" y="11" width="16" height="5" rx="2.5" fill="url(#pLens-${id})" opacity="0.95"/>
                     <circle cx="27.5" cy="13.5" r="1.9" class="eye-glow" fill="#031014"/>
                     <circle cx="36.5" cy="13.5" r="1.9" class="eye-glow" fill="#031014"/>
                     <path d="M23 20 Q32 24 41 20" stroke="#0a0c10" stroke-width="1.8" fill="none" opacity="0.4"/>
+                    ${extra}
                 </svg>`;
             },
             enemySets: {
@@ -2420,7 +2845,12 @@ onclick="Core.declineEncounter()">
             },
             initPlayerSprite() {
                 const sprite = document.getElementById('scene-player-sprite');
-                if (sprite && !sprite.dataset.rendered) { sprite.innerHTML = Sprites.player(); sprite.dataset.rendered = '1'; }
+                if (sprite && !sprite.dataset.rendered) { sprite.innerHTML = Sprites.player(Core.p && Core.p.activeSkin); sprite.dataset.rendered = '1'; }
+            },
+            // Принудительно перерисовывает модель игрока (используется при смене экипированного скина)
+            refreshPlayerSprite() {
+                const sprite = document.getElementById('scene-player-sprite');
+                if (sprite) { sprite.innerHTML = Sprites.player(Core.p && Core.p.activeSkin); sprite.dataset.rendered = '1'; }
             },
 
             // ---- Биом: фон, частицы, окружение ----
@@ -3360,6 +3790,14 @@ onclick="Core.declineEncounter()">
                 { id: "capsMagnate", icon: "🪙", name: "Крышечный Магнат", desc: "Накопите 1000 крышек одновременно.", check: p => (p.caps || 0) >= 1000 },
                 { id: "bpMaster", icon: "🎫", name: "Хозяин Пропуска Пустоши", desc: "Достигните 50 уровня Пропуска Пустоши.", check: p => (p.bpLvl || 0) >= 50 }
             ],
+            // Косметические скины персонажа. Цена — исключительно в ваучерах (премиум-валюта),
+            // не влияют ни на один игровой показатель — только внешний вид боевой модели.
+            skins: [
+                { id: "default", name: "Стандартный комплект", icon: "🧥", price: 0, accent: "var(--neon-blue)", desc: "Стандартная экипировка Странника Пустошей. Всегда доступна." },
+                { id: "sand", name: "Песочный Странник", icon: "🏜️", price: 60, accent: "#e8b06a", desc: "Пропылённая до костей экипировка кочевника — сливается с барханами и держит зной." },
+                { id: "cosmo", name: "Космо-Странник", icon: "🌌", price: 85, accent: "#8fd9ff", desc: "Скафандр из орбитальных обломков со звёздной пылью и мерцающим реактором на груди." },
+                { id: "grime", name: "Грязный Странник", icon: "🦠", price: 20, accent: "#8a9a4e", desc: "Заляпанная болотной тиной куртка. Выглядит так себе, зато почти задаром." }
+            ],
             lootboxes: [
                 { name: "Скрап-Ящик", price: 15, color: "#00f0ff", tier: 1, maxVouchers: 2, table: [{ item: "Запчасти x4", chance: 0.679 }, { item: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", chance: 0.291 }, { item: "⛺ Привал x1", chance: 0.03 }] },
                 { name: "Продуктовый ящик", price: 20, color: "#39ff14", tier: 2, maxVouchers: 3, table: [{ item: "Сырое мясо x2", chance: 0.57 }, { item: "Жареное мясо крысы x1", chance: 0.38 }, { item: "⛺ Привал x1", chance: 0.05 }] },
@@ -3379,6 +3817,25 @@ onclick="Core.declineEncounter()">
                 { name: "🧬 Сыворотка ОЗ (+10 к Макс ОЗ)", type: "maxhp", weight: 2 }
             ],
             bpRewards: generateBpRewards(),
+            // Пул шаблонов ежедневных заданий Пропуска Пустоши: каждый день выбирается
+            // 3 случайных незанятых шаблона, они действуют 24 часа и сменяются на новые.
+            dailyQuestPool: [
+                { text: "Победить 3 врагов в бою", target: 3, points: 25, trigger: "kill_any" },
+                { text: "Победить 6 врагов в бою", target: 6, points: 40, trigger: "kill_any" },
+                { text: "Победить 10 врагов в бою", target: 10, points: 55, trigger: "kill_any" },
+                { text: "Провести 5 разведок местности", target: 5, points: 20, trigger: "explore" },
+                { text: "Провести 10 разведок местности", target: 10, points: 35, trigger: "explore" },
+                { text: "Провести 15 разведок местности", target: 15, points: 45, trigger: "explore" },
+                { text: "Отдохнуть у костра 3 раза", target: 3, points: 20, trigger: "rest" },
+                { text: "Отдохнуть у костра 5 раз", target: 5, points: 30, trigger: "rest" },
+                { text: "Приготовить еду на костре 2 раза", target: 2, points: 25, trigger: "craft_food" },
+                { text: "Приготовить еду на костре 4 раза", target: 4, points: 35, trigger: "craft_food" },
+                { text: "Сбежать из боя 2 раза", target: 2, points: 25, trigger: "flee" },
+                { text: "Сбежать из боя 4 раза", target: 4, points: 35, trigger: "flee" },
+                { text: "Потратить 40 крышек в магазине", target: 40, points: 20, trigger: "spend_caps" },
+                { text: "Потратить 100 крышек в магазине", target: 100, points: 40, trigger: "spend_caps" },
+                { text: "Победить стража биома (босса)", target: 1, points: 60, trigger: "kill_boss" }
+            ],
             // Промокоды: каждый можно активировать не более maxUses раз суммарно (на все аккаунты),
             // и не более 1 раза на один аккаунт/сохранение (см. Core.redeemPromoCode)
             promoCodes: [
@@ -3392,7 +3849,7 @@ onclick="Core.declineEncounter()">
         });
 
         const Core = {
-            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null, relicWasteland: 0, redeemedPromoCodes: [], freeBoxes: {}, nickname: "Странник", nicknameSet: false, avatar: "ranger", titleId: "newbie", unlockedTitles: ["newbie"], maxBiomeReached: 0, bmLastSuccessDay: null, bmFailDay: null, bmFailCount: 0, marketEarnDay: null, marketEarnedToday: 0, marketDailyCapValue: null },
+            p: { hp: 50, maxHp: 50, energy: 100, maxEnergy: 100, rad: 0, hazards: {}, satiety: 100, lvl: 1, exp: 0, nextExp: 50, caps: 30, vouchers: 0, armor: 2, dodgeChance: 8, inv: { "Запчасти": 6, "Тяжелый Хлам": 0, "Ядерная Батарея": 0, "Сырое мясо": 1 }, weaponsOwned: ["fists"], wpnUpgrades: { "fists": 0, "pipe": 0, "machete": 0, "pistol": 0, "revolver": 0, "shotgun": 0, "assault": 0, "plasma": 0, "minigun": 0, "gauss": 0 }, activeWeapon: "fists", rodsOwned: ["rusty"], activeRod: "rusty", food: { "Жареное мясо крысы": 1 }, currentBiome: 0, bossesDefeated: [], bpLvl: 1, bpPoints: 0, bpPremium: false, bpClaimedFree: [], bpClaimedPrem: [], dailyStreak: 0, lastDailyClaim: null, relicWasteland: 0, redeemedPromoCodes: [], freeBoxes: {}, nickname: "Странник", nicknameSet: false, avatar: "ranger", titleId: "newbie", unlockedTitles: ["newbie"], maxBiomeReached: 0, bmLastSuccessDay: null, bmFailDay: null, bmFailCount: 0, marketEarnDay: null, marketEarnedToday: 0, marketDailyCapValue: null, skinsOwned: ["default"], activeSkin: "default", dailyQuests: [], dailyQuestsDay: null },
             combatState: null, restUses: 5, nextRestTick: null, bpSubTab: 'rewards',
             hpRegenAccum: 0, satietyDecayAccum: 0, abilityCooldowns: {},
             lastAttackType: null, sameAttackStreak: 0, combatCooldownInterval: null,
@@ -3411,11 +3868,40 @@ onclick="Core.declineEncounter()">
                 { id: "q12", text: "Успешно сбежать из боя 5 раз", progress: 0, target: 5, points: 110, done: false, trigger: "flee" },
                 { id: "q13", text: "Потратить 150 крышек в магазине", progress: 0, target: 150, points: 160, done: false, trigger: "spend_caps" },
                 { id: "q14", text: "Приготовить еду на костре 5 раз", progress: 0, target: 5, points: 130, done: false, trigger: "craft_food" },
-                { id: "q15", text: "Убить 20 мутантов-крыс", progress: 0, target: 20, points: 180, done: false, trigger: "kill_Кибер-Крыса" }
+                { id: "q15", text: "Убить 20 мутантов-крыс", progress: 0, target: 20, points: 180, done: false, trigger: "kill_Кибер-Крыса" },
+                // ---- Расширение: задания по каждому виду противника из всех биомов ----
+                { id: "q16", text: "Убить 6 сточных клерков", progress: 0, target: 6, points: 95, done: false, trigger: "kill_Сточный Клерк" },
+                { id: "q17", text: "Убить 5 штурмотронов v5", progress: 0, target: 5, points: 120, done: false, trigger: "kill_Штурмотрон v5" },
+                { id: "q18", text: "Убить 6 заражённых оленей", progress: 0, target: 6, points: 145, done: false, trigger: "kill_Зараженный Олень" },
+                { id: "q19", text: "Убить 5 лесных леших", progress: 0, target: 5, points: 150, done: false, trigger: "kill_Лесной Леший" },
+                { id: "q20", text: "Убить 5 замёрзших беглецов", progress: 0, target: 5, points: 170, done: false, trigger: "kill_Замёрзший Беглец" },
+                { id: "q21", text: "Убить 4 ледяных сталкеров", progress: 0, target: 4, points: 175, done: false, trigger: "kill_Ледяной Сталкер" },
+                { id: "q22", text: "Уничтожить 4 авто-турели x4", progress: 0, target: 4, points: 195, done: false, trigger: "kill_Авто-Турель x4" },
+                { id: "q23", text: "Уничтожить 4 робота-погрузчика", progress: 0, target: 4, points: 200, done: false, trigger: "kill_Робот-Погрузчик" },
+                { id: "q24", text: "Убить 4 магматических слизней", progress: 0, target: 4, points: 220, done: false, trigger: "kill_Магматический Слизень" },
+                { id: "q25", text: "Убить 3 пепельных скитальцев", progress: 0, target: 3, points: 225, done: false, trigger: "kill_Пепельный Скиталец" },
+                { id: "q26", text: "Убить 3 штормовых мутантов", progress: 0, target: 3, points: 245, done: false, trigger: "kill_Штормовой Мутант" },
+                { id: "q27", text: "Убить 3 наэлектризованных жнецов", progress: 0, target: 3, points: 250, done: false, trigger: "kill_Наэлектризованный Жнец" },
+                { id: "q28", text: "Убить 3 заражённых санитаров", progress: 0, target: 3, points: 270, done: false, trigger: "kill_Заражённый Санитар" },
+                { id: "q29", text: "Убить 3 мутантов-носителей", progress: 0, target: 3, points: 275, done: false, trigger: "kill_Мутант-Носитель" },
+                { id: "q30", text: "Уничтожить 3 дрона-разведчика «Икар»", progress: 0, target: 3, points: 295, done: false, trigger: "kill_Дрон-Разведчик «Икар»" },
+                { id: "q31", text: "Убить 2 обезумевших киборгов", progress: 0, target: 2, points: 300, done: false, trigger: "kill_Обезумевший Киборг" },
+                { id: "q32", text: "Убить 2 стражей Цитадели", progress: 0, target: 2, points: 320, done: false, trigger: "kill_Страж Цитадели" },
+                { id: "q33", text: "Убить 2 гвардейцев Омега", progress: 0, target: 2, points: 325, done: false, trigger: "kill_Гвардеец Омега" },
+                // ---- Расширение: дополнительные общие задания на выносливость ----
+                { id: "q34", text: "Провести 40 разведок местности", progress: 0, target: 40, points: 220, done: false, trigger: "explore" },
+                { id: "q35", text: "Провести 60 разведок местности", progress: 0, target: 60, points: 280, done: false, trigger: "explore" },
+                { id: "q36", text: "Перекусить на привале 10 раз", progress: 0, target: 10, points: 150, done: false, trigger: "rest" },
+                { id: "q37", text: "Приготовить еду на костре 10 раз", progress: 0, target: 10, points: 180, done: false, trigger: "craft_food" },
+                { id: "q38", text: "Приготовить еду на костре 15 раз", progress: 0, target: 15, points: 230, done: false, trigger: "craft_food" },
+                { id: "q39", text: "Успешно сбежать из боя 10 раз", progress: 0, target: 10, points: 170, done: false, trigger: "flee" },
+                { id: "q40", text: "Потратить 300 крышек в магазине", progress: 0, target: 300, points: 220, done: false, trigger: "spend_caps" },
+                { id: "q41", text: "Потратить 500 крышек в магазине", progress: 0, target: 500, points: 300, done: false, trigger: "spend_caps" }
             ],
 
             init() {
                 this.load();
+                this.generateDailyQuests();
                 this.loadSettings(); this.applyBiomeTheme(this.p.currentBiome); Tut.init(); this.updateUI();
                 setInterval(() => this.loop(), 1000);
                 // Оффлайн-прогресс: досчитываем время, пока вкладка была свёрнута/неактивна
@@ -3448,15 +3934,27 @@ onclick="Core.declineEncounter()">
 
             loadSettings() {
                 let raw = localStorage.getItem('w_settings_v1');
-                this.settings = raw ? JSON.parse(raw) : { glass: false, sound: true, glassIntensity: 70 };
+                this.settings = raw ? JSON.parse(raw) : { glass: false, glassIntensity: 70, soundVolume: 70, musicVolume: 45 };
                 if (this.settings.glassIntensity === undefined) this.settings.glassIntensity = 70;
+                // Миграция со старого формата "sound: true/false" на громкость в процентах
+                if (this.settings.soundVolume === undefined) {
+                    this.settings.soundVolume = (this.settings.sound === false) ? 0 : 70;
+                }
+                if (this.settings.musicVolume === undefined) this.settings.musicVolume = 45;
                 document.body.classList.toggle('no-glass', !this.settings.glass);
-                Sound.enabled = this.settings.sound;
+                Sound.enabled = this.settings.soundVolume > 0;
+                Sound.setVolume(this.settings.soundVolume);
+                Music.enabled = this.settings.musicVolume > 0;
+                Music.volume = this.settings.musicVolume;
+                Music.mode = 'ambient';
                 this.applyGlassIntensity(this.settings.glassIntensity);
                 document.getElementById('setting-glass').checked = this.settings.glass;
-                document.getElementById('setting-sound').checked = this.settings.sound;
                 document.getElementById('setting-glass-intensity').value = this.settings.glassIntensity;
                 document.getElementById('glass-intensity-val').innerText = this.settings.glassIntensity + '%';
+                document.getElementById('setting-sound-volume').value = this.settings.soundVolume;
+                document.getElementById('sound-volume-val').innerText = this.settings.soundVolume + '%';
+                document.getElementById('setting-music-volume').value = this.settings.musicVolume;
+                document.getElementById('music-volume-val').innerText = this.settings.musicVolume + '%';
             },
             saveSettings() { localStorage.setItem('w_settings_v1', JSON.stringify(this.settings)); },
             openSettings() { document.getElementById('settings-overlay').classList.add('active'); },
@@ -3564,8 +4062,25 @@ onclick="Core.declineEncounter()">
                 setTimeout(() => Tips.show('battlepass', "Пропуск Пустоши — бесплатная и платная линейка наград за этапы. Даже без доплаты ты получаешь бесплатные призы по мере роста уровня, а платная ветка добавляет более щедрые бонусы за те же этапы."), 350);
             },
             closeBpOverlay() { document.getElementById('bp-overlay').classList.remove('active'); },
+            openSkinOverlay() { document.getElementById('skin-overlay').classList.add('active'); this.setSkinTab('shop'); this.renderSkinShop(); },
+            closeSkinOverlay() { document.getElementById('skin-overlay').classList.remove('active'); },
             toggleGlass(val) { this.settings.glass = val; document.body.classList.toggle('no-glass', !val); this.saveSettings(); },
-            toggleSound(val) { this.settings.sound = val; Sound.enabled = val; this.saveSettings(); },
+            setSoundVolume(val) {
+                val = +val;
+                this.settings.soundVolume = val;
+                Sound.enabled = val > 0;
+                Sound.setVolume(val);
+                document.getElementById('sound-volume-val').innerText = val + '%';
+                this.saveSettings();
+                if (val > 0) Sound.play('click');
+            },
+            setMusicVolume(val) {
+                val = +val;
+                this.settings.musicVolume = val;
+                Music.setVolume(val);
+                document.getElementById('music-volume-val').innerText = val + '%';
+                this.saveSettings();
+            },
 
             setGlassIntensity(val) {
                 val = parseInt(val);
@@ -3623,6 +4138,8 @@ onclick="Core.declineEncounter()">
                     if(this.p.satiety === undefined) this.p.satiety = 100;
                     if(!this.p.rodsOwned) this.p.rodsOwned = ["rusty"];
                     if(!this.p.activeRod) this.p.activeRod = "rusty";
+                    if(!this.p.dailyQuests) this.p.dailyQuests = [];
+                    if(this.p.dailyQuestsDay === undefined) this.p.dailyQuestsDay = null;
                     if(this.p.dailyStreak === undefined) this.p.dailyStreak = 0;
                     if(this.p.lastDailyClaim === undefined) this.p.lastDailyClaim = null;
                     if(this.p.relicWasteland === undefined) this.p.relicWasteland = 0;
@@ -3639,6 +4156,8 @@ onclick="Core.declineEncounter()">
                     if(this.p.marketEarnDay === undefined) this.p.marketEarnDay = null;
                     if(this.p.marketEarnedToday === undefined) this.p.marketEarnedToday = 0;
                     if(this.p.marketDailyCapValue === undefined) this.p.marketDailyCapValue = null;
+                    if(!this.p.skinsOwned || !this.p.skinsOwned.includes("default")) this.p.skinsOwned = [...new Set([...(this.p.skinsOwned||[]), "default"])];
+                    if(!this.p.activeSkin || !DB.skins.some(s => s.id === this.p.activeSkin)) this.p.activeSkin = "default";
                     if(!this.p.hazards) {
                         this.p.hazards = {};
                         // Миграция старого сохранения: единая "радиация" считалась только в Радиоактивном Лесу (id 3)
@@ -4035,7 +4554,36 @@ onclick="Core.declineEncounter()">
                 } else { this.nextRestTick = null; let tb = document.getElementById('rest-timer'); if(tb) tb.style.display = 'none'; }
 
                 this.updateDailyTimer();
+                this.updateSkinShopTimers();
+                this.generateDailyQuests();
                 this.lastTick = Date.now();
+            },
+
+            // Обновляет пул из 3 ежедневных заданий Пропуска Пустоши раз в сутки
+            // (по местной полуночи, как и ежедневный паёк). Уже начатые задания
+            // сегодняшнего дня не трогает — только полная смена набора на новый день.
+            generateDailyQuests() {
+                const today = new Date().toDateString();
+                if (this.p.dailyQuestsDay === today && this.p.dailyQuests && this.p.dailyQuests.length) return;
+                let pool = DB.dailyQuestPool.slice();
+                let picked = [];
+                for (let i = 0; i < 3 && pool.length; i++) {
+                    let idx = Math.floor(Math.random() * pool.length);
+                    picked.push(pool.splice(idx, 1)[0]);
+                }
+                this.p.dailyQuests = picked.map((t, i) => ({ id: `d${i}`, text: t.text, target: t.target, points: t.points, trigger: t.trigger, progress: 0, done: false }));
+                this.p.dailyQuestsDay = today;
+                this.save();
+            },
+
+            // Компактный таймер до смены набора ежедневных заданий (полночь по местному времени)
+            getDailyQuestsTimerText() {
+                const now = new Date();
+                const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+                let remainingMs = nextMidnight - now;
+                let h = Math.floor(remainingMs / 3600000);
+                let m = Math.floor((remainingMs % 3600000) / 60000);
+                return `⏳ ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
             },
 
             triggerQuest(action, qty = 1) {
@@ -4050,11 +4598,24 @@ onclick="Core.declineEncounter()">
                         }
                     }
                 });
+                (this.p.dailyQuests || []).forEach(q => {
+                    if(!q.done && q.trigger === action) {
+                        q.progress += qty;
+                        if(q.progress >= q.target) {
+                            q.done = true; q.progress = q.target;
+                            this.p.bpPoints += q.points;
+                            this.log(`🔄 Ежедневное задание выполнено! +${q.points} очков Пустынного пропуска.`, "system");
+                            this.checkBpLvl();
+                        }
+                    }
+                });
             },
+
+            bpReqForLevel(lvl) { return Math.min(lvl * 10, 100); },
 
             checkBpLvl() {
                 while(true) {
-                    let req = 100;
+                    let req = this.bpReqForLevel(this.p.bpLvl);
                     if(this.p.bpLvl < 50 && this.p.bpPoints >= req) {
                         this.p.bpPoints -= req;
                         this.p.bpLvl++;
@@ -4263,6 +4824,7 @@ beginCombat(){
     this.renderCombatAbilities();
     this.startCooldownTicker();
     Scene.showEnemy(this.combatState);
+    Music.play('combat');
 
     if(this.combatState.isBoss){
 
@@ -4453,9 +5015,12 @@ startCombat(isBossFight = false) {
                     this.p.bossesDefeated.push(this.p.currentBiome);
                     this.p.caps += this.combatState.rewardCaps;
                     this.log(`🏆 ЛЕГЕНДАРНО! Сверх-босс ${this.combatState.name} пал! Получено крышек: +${this.combatState.rewardCaps} 🪙. Опыт: +${this.combatState.exp} XP.`, "combat-win");
+                    this.triggerQuest("kill_boss");
+                    this.triggerQuest("kill_any");
                 } else {
                     this.log(`🎉 Победа! Противник ${this.combatState.name} уничтожен. +${this.combatState.exp} XP.`, "combat-win");
                     this.triggerQuest(`kill_${this.combatState.name}`);
+                    this.triggerQuest("kill_any");
                 }
                 Scene.enemyDefeated(this.combatState.isBoss);
                 this.p.exp += this.combatState.exp; this.checkLvl(); this.endCombat();
@@ -4478,7 +5043,7 @@ startCombat(isBossFight = false) {
                     this.save(); this.updateUI();
                 }
             },
-            endCombat() { this.combatState = null; this.stopCooldownTicker(); document.getElementById('combat-actions').style.display = 'none'; document.getElementById('default-actions').style.display = 'grid'; Scene.hideEnemy(); this.save(); this.updateUI(); },
+            endCombat() { this.combatState = null; this.stopCooldownTicker(); document.getElementById('combat-actions').style.display = 'none'; document.getElementById('default-actions').style.display = 'grid'; Scene.hideEnemy(); Music.play('ambient'); this.save(); this.updateUI(); },
 
             triggerDeath() {
                 this.p.hp = 0;
@@ -4845,12 +5410,194 @@ startCombat(isBossFight = false) {
                     }
                 });
                 this.renderMarketEntryLocks();
+                this.renderSkinShop();
             },
             renderMarketEntryLocks() {
                 const mBtn = document.getElementById('market-entry-btn');
                 const bBtn = document.getElementById('blackmarket-entry-btn');
                 if (mBtn) mBtn.classList.toggle('locked', this.p.lvl < 15);
                 if (bBtn) bBtn.classList.toggle('locked', this.p.lvl < 25);
+            },
+
+            // ================= СКИНЫ ПЕРСОНАЖА (только за ваучеры, ротация витрины + периодические скидки) =================
+            // Продаваемые скины (без "default", он даётся бесплатно всем и всегда доступен)
+            SKIN_ROTATION_POOL: ["sand", "cosmo", "grime"],
+            // Комбинации по 1-2 скина, которые сменяют друг друга на витрине
+            SKIN_ROTATION_COMBOS: [["sand"], ["cosmo"], ["grime"], ["sand", "cosmo"], ["sand", "grime"], ["cosmo", "grime"]],
+            SKIN_ROTATION_PERIOD_MS: 8 * 60 * 60 * 1000, // витрина скинов обновляется раз в 8 часов
+            SKIN_DISCOUNT_CYCLE_MS: 6 * 60 * 60 * 1000,  // каждые 6 часов...
+            SKIN_DISCOUNT_DURATION_MS: 60 * 60 * 1000,   // ...на 1 час появляется скидка
+            SKIN_DISCOUNT_PERCENT: 30,                   // размер скидки
+
+            // Какие скины сейчас представлены на витрине (для покупки)
+            getSkinRotation() {
+                const period = this.SKIN_ROTATION_PERIOD_MS;
+                const slot = Math.floor(Date.now() / period);
+                const combo = this.SKIN_ROTATION_COMBOS[slot % this.SKIN_ROTATION_COMBOS.length];
+                const msUntilNext = (slot + 1) * period - Date.now();
+                return { combo, msUntilNext, slot };
+            },
+            isSkinInRotation(id) { return this.getSkinRotation().combo.includes(id); },
+
+            // Активна ли сейчас скидка на скины, и сколько до её начала/конца
+            getSkinDiscountInfo() {
+                const cycle = this.SKIN_DISCOUNT_CYCLE_MS, dur = this.SKIN_DISCOUNT_DURATION_MS;
+                const now = Date.now();
+                const blockStart = Math.floor(now / cycle) * cycle;
+                const elapsed = now - blockStart;
+                if (elapsed < dur) {
+                    return { active: true, msRemaining: blockStart + dur - now };
+                }
+                return { active: false, msRemaining: blockStart + cycle - now };
+            },
+            // Итоговая цена скина в ваучерах с учётом активной скидки
+            getSkinPrice(skin) {
+                if (!skin.price) return 0;
+                const disc = this.getSkinDiscountInfo();
+                if (disc.active) return Math.max(1, Math.round(skin.price * (1 - this.SKIN_DISCOUNT_PERCENT / 100)));
+                return skin.price;
+            },
+            formatHMS(ms) {
+                let s = Math.max(0, Math.ceil(ms / 1000));
+                let h = Math.floor(s / 3600); s -= h * 3600;
+                let m = Math.floor(s / 60); s -= m * 60;
+                return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            },
+
+            buySkin(id) {
+                const skin = DB.skins.find(s => s.id === id);
+                if (!skin || id === "default") return;
+                if (!this.p.skinsOwned) this.p.skinsOwned = ["default"];
+                if (this.p.skinsOwned.includes(id)) return;
+                if (!this.isSkinInRotation(id)) return; // скин сейчас не на витрине — покупка недоступна
+                const price = this.getSkinPrice(skin);
+                if (this.p.vouchers < price) { alert(`Недостаточно ваучеров! Нужно: ${price} 🏷️`); return; }
+                this.p.vouchers -= price;
+                this.p.skinsOwned.push(id);
+                this.p.activeSkin = id;
+                Sound.play('loot');
+                this.log(`🎨 Приобретён и экипирован скин: ${skin.name}!`, "loot");
+                Scene.refreshPlayerSprite();
+                this.save(); this.updateUI();
+            },
+
+            equipSkin(id) {
+                if (!this.p.skinsOwned || !this.p.skinsOwned.includes(id)) return;
+                if (this.p.activeSkin === id) return;
+                Sound.play('click');
+                this.p.activeSkin = id;
+                const skin = DB.skins.find(s => s.id === id);
+                this.log(`🧥 Экипирован скин: ${skin ? skin.name : id}`);
+                Scene.refreshPlayerSprite();
+                this.save(); this.updateUI();
+            },
+
+            // Вкладка "Скины в продаже" — только то, что сейчас реально можно купить (на витрине и ещё не куплено)
+            setSkinTab(tab) {
+                this.skinTab = tab;
+                const shopBtn = document.getElementById('skin-tab-btn-shop');
+                const wardrobeBtn = document.getElementById('skin-tab-btn-wardrobe');
+                const shopPane = document.getElementById('skin-tab-shop');
+                const wardrobePane = document.getElementById('skin-tab-wardrobe');
+                if (shopBtn) shopBtn.classList.toggle('active', tab === 'shop');
+                if (wardrobeBtn) wardrobeBtn.classList.toggle('active', tab === 'wardrobe');
+                if (shopPane) shopPane.classList.toggle('active', tab === 'shop');
+                if (wardrobePane) wardrobePane.classList.toggle('active', tab === 'wardrobe');
+            },
+
+            renderSkinShop() {
+                if (!this.p.skinsOwned) this.p.skinsOwned = ["default"];
+                const rotation = this.getSkinRotation();
+                const discount = this.getSkinDiscountInfo();
+
+                // ---- Вкладка "Скины в продаже": только скины из текущей ротации витрины, которые ещё не куплены ----
+                const shopEl = document.getElementById('skin-shop-list');
+                if (shopEl) {
+                    const purchasableSkins = DB.skins.filter(s => rotation.combo.includes(s.id) && !this.p.skinsOwned.includes(s.id));
+
+                    if (purchasableSkins.length === 0) {
+                        shopEl.innerHTML = `<div class="skin-shop-empty-note">🎉 Все скины из текущей витрины уже куплены! Загляните позже — ассортимент обновится.</div>`;
+                    } else {
+                        shopEl.innerHTML = purchasableSkins.map(skin => {
+                            const price = this.getSkinPrice(skin);
+                            const hasDiscount = discount.active && skin.price > 0 && price < skin.price;
+
+                            const footerHtml = `<div class="skin-price-block">
+                                    ${hasDiscount ? `<span class="skin-price-old">${skin.price} 🏷️</span>` : ''}
+                                    <span class="skin-price-new">${price} 🏷️</span>
+                                </div>
+                                <button class="skin-btn-pill buy" ${this.p.vouchers < price ? 'disabled' : ''} onclick="Core.buySkin('${skin.id}')">Купить</button>`;
+
+                            return `<div class="skin-card" style="--skin-color:${skin.accent};">
+                                <div class="skin-card-header">
+                                    <div class="skin-preview-badge">${Sprites.player(skin.id)}</div>
+                                    <div class="skin-info">
+                                        <div class="skin-name-row">
+                                            <span class="skin-name">${skin.icon} ${skin.name}</span>
+                                            ${hasDiscount ? `<span class="skin-discount-tag">−${this.SKIN_DISCOUNT_PERCENT}%</span>` : ''}
+                                        </div>
+                                        <div class="skin-desc">${skin.desc}</div>
+                                    </div>
+                                </div>
+                                <div class="skin-card-footer">${footerHtml}</div>
+                            </div>`;
+                        }).join('');
+                    }
+                }
+
+                this.renderSkinWardrobe();
+
+                // Обновляем компактную панель-вход в меню скинов
+                const activeSkin = DB.skins.find(s => s.id === this.p.activeSkin) || DB.skins[0];
+                const subEl = document.getElementById('skin-collapsed-sub');
+                if (subEl) subEl.innerText = `Экипировано: ${activeSkin.name}`;
+                const iconEl = document.getElementById('skin-collapsed-icon');
+                if (iconEl) iconEl.innerText = activeSkin.icon;
+                const flagEl = document.getElementById('skin-collapsed-discount-flag');
+                if (flagEl) flagEl.classList.toggle('active', discount.active);
+
+                this.updateSkinShopTimers();
+            },
+
+            // ---- Вкладка "Гардероб": только уже купленные скины — превью, название и кнопка "Надеть" ----
+            renderSkinWardrobe() {
+                const el = document.getElementById('skin-wardrobe-list'); if (!el) return;
+                if (!this.p.skinsOwned) this.p.skinsOwned = ["default"];
+                const ownedSkins = DB.skins.filter(s => this.p.skinsOwned.includes(s.id));
+
+                el.innerHTML = ownedSkins.map(skin => {
+                    const equipped = this.p.activeSkin === skin.id;
+                    return `<div class="skin-wardrobe-card ${equipped ? 'equipped' : ''}" style="--skin-color:${skin.accent};">
+                        <div class="skin-wardrobe-preview">${Sprites.player(skin.id)}</div>
+                        <div class="skin-wardrobe-name">${skin.icon} ${skin.name}</div>
+                        <button class="skin-btn-pill equip ${equipped ? 'active' : ''}" ${equipped ? 'disabled' : ''} onclick="Core.equipSkin('${skin.id}')">${equipped ? '⚡ Надето' : 'Надеть'}</button>
+                    </div>`;
+                }).join('');
+            },
+
+            // Лёгкое обновление только текста таймеров (вызывается раз в секунду из loop(),
+            // полная перерисовка карточек — только когда реально меняется ротация/скидка)
+            updateSkinShopTimers() {
+                const rotation = this.getSkinRotation();
+                const discount = this.getSkinDiscountInfo();
+
+                const rotTimerEl = document.getElementById('skin-rotation-timer');
+                if (rotTimerEl) rotTimerEl.innerText = this.formatHMS(rotation.msUntilNext);
+
+                const discBanner = document.getElementById('skin-discount-banner');
+                const discTimerEl = document.getElementById('skin-discount-timer');
+                if (discBanner) {
+                    discBanner.classList.toggle('active', discount.active);
+                    if (discTimerEl) discTimerEl.innerText = this.formatHMS(discount.msRemaining);
+                }
+
+                // Если сменился слот ротации или переключилось состояние скидки — перерисовываем карточки целиком
+                const stateKey = rotation.slot + ':' + discount.active;
+                if (this._skinShopStateKey !== stateKey) {
+                    this._skinShopStateKey = stateKey;
+                    if (this._skinShopStateKeyInit) this.renderSkinShop();
+                    this._skinShopStateKeyInit = true;
+                }
             },
 
             // ================= РЫНОК (продажа за крышки, цену назначает игра) =================
@@ -5479,7 +6226,7 @@ startCombat(isBossFight = false) {
                 Sound.play('click');
                 const tip = document.getElementById('bp-level-tooltip');
                 if (!tip) return;
-                const reqPoints = 100;
+                const reqPoints = this.bpReqForLevel(this.p.bpLvl);
                 tip.innerText = this.p.bpLvl >= 50 ? "МАКС УРОВЕНЬ" : `${this.p.bpPoints}/${reqPoints} очков`;
                 tip.style.display = 'block';
                 clearTimeout(this.bpTooltipTimer);
@@ -5487,7 +6234,7 @@ startCombat(isBossFight = false) {
             },
 
             renderBp() {
-                let reqPoints = 100;
+                let reqPoints = this.bpReqForLevel(this.p.bpLvl);
                 let bpPct = this.p.bpLvl >= 50 ? 100 : Math.max(0, Math.min(100, Math.round((this.p.bpPoints / reqPoints) * 100)));
                 let circleEl = document.getElementById('bp-level-circle');
                 if (circleEl) {
@@ -5530,8 +6277,12 @@ startCombat(isBossFight = false) {
                         </div>`;
                     });
                 } else {
-                    this.quests.forEach(q => {
-                        container.innerHTML += `<div class="list-item" style="margin-bottom:4px; padding:8px;">
+                    let html = `<div style="font-size:11px; font-weight:900; color:var(--neon-gold); display:flex; justify-content:space-between; align-items:center; margin:2px 0 2px;">
+                        <span>🔄 Ежедневные задания</span>
+                        <span style="font-weight:700; color:var(--text-muted); font-size:10px;">${this.getDailyQuestsTimerText()}</span>
+                    </div>`;
+                    (this.p.dailyQuests || []).forEach(q => {
+                        html += `<div class="list-item" style="margin-bottom:4px; padding:8px; border-left: 3px solid var(--neon-gold);">
                             <div style="font-size:11px;">
                                 <b>${q.text}</b>
                                 <div style="color:var(--text-muted)">Прогресс: ${q.progress}/${q.target} (+${q.points} очков)</div>
@@ -5539,6 +6290,17 @@ startCombat(isBossFight = false) {
                             <div>${q.done?Icon.check('var(--neon-green)'):''}</div>
                         </div>`;
                     });
+                    html += `<div style="font-size:11px; font-weight:900; color:var(--neon-purple); margin:14px 0 2px;">📜 Задания сезона</div>`;
+                    this.quests.forEach(q => {
+                        html += `<div class="list-item" style="margin-bottom:4px; padding:8px;">
+                            <div style="font-size:11px;">
+                                <b>${q.text}</b>
+                                <div style="color:var(--text-muted)">Прогресс: ${q.progress}/${q.target} (+${q.points} очков)</div>
+                            </div>
+                            <div>${q.done?Icon.check('var(--neon-green)'):''}</div>
+                        </div>`;
+                    });
+                    container.innerHTML = html;
                 }
             },
 
