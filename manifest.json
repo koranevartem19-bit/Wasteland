@@ -1,0 +1,25 @@
+{
+  "name": "Wasteland Echoes: Overdrive",
+  "short_name": "Wasteland",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#140c08",
+  "theme_color": "#3a1c0c",
+  "description": "Выживание в постапокалиптической пустоши",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+Открой файл index.html в своём репозитории на GitHub и вставь эти строки
+ВНУТРИ тега <head>...</head> (например, сразу после строки с <title>):
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3a1c0c">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js');
+    });
+  }
+</script>
+
+Больше ничего менять не нужно.
